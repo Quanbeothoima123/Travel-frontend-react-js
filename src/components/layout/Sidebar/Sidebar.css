@@ -1,0 +1,150 @@
+/* ========== SIDEBAR ========== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 260px;
+  height: 100%;
+  background: #243045; /* Xanh đậm sáng hơn */
+  padding: 20px 15px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  transition: left 0.35s ease;
+  z-index: 1000;
+  overflow-y: auto;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+/* Nút đóng */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  border: none;
+  background: none;
+  font-size: 1.6rem;
+  color: #f1f5f9;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.3s ease;
+}
+.close-btn:hover {
+  color: #38bdf8;
+  transform: rotate(90deg);
+}
+
+/* Menu list */
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin-top: 50px;
+}
+
+/* Item */
+.sidebar-item {
+  margin-bottom: 6px;
+}
+
+/* Link chính */
+.sidebar-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #f8fafc;
+  font-weight: 500;
+  font-size: 15px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.sidebar-link:hover {
+  background: #334155;
+  color: #38bdf8;
+}
+
+.sidebar-link.active {
+  background: #0ea5e9;
+  color: #fff;
+}
+
+/* ✅ Khi mở rộng menu cha */
+.sidebar-item.open > .sidebar-link {
+  background: #bd7aa1; /* nền khác biệt */
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+/* Icon toggle */
+.toggle-icon {
+  font-size: 0.9rem;
+  margin-left: 8px;
+  transition: transform 0.3s ease, color 0.3s ease;
+  color: #cbd5e1;
+}
+.sidebar-link:hover .toggle-icon {
+  color: #38bdf8;
+}
+.sidebar-item.open .toggle-icon {
+  transform: rotate(90deg);
+  color: #38bdf8;
+}
+
+/* Submenu */
+.sidebar-submenu {
+  list-style: none;
+  padding-left: 18px;
+  margin-top: 4px;
+  display: none;
+}
+.sidebar-item.open .sidebar-submenu {
+  display: block;
+  animation: fadeSlide 0.3s ease;
+}
+
+/* Submenu item */
+.sidebar-submenu .sidebar-link {
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  color: #e2e8f0;
+  background: transparent;
+}
+.sidebar-submenu .sidebar-link:hover {
+  background: #475569;
+  color: #38bdf8;
+}
+
+/* Scrollbar */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: #64748b;
+  border-radius: 4px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Animation */
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Ẩn sidebar trên desktop nếu bạn chỉ muốn mobile */
+@media (min-width: 1024px) {
+  .sidebar {
+    display: none;
+  }
+}
