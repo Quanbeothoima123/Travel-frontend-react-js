@@ -1,0 +1,168 @@
+.tour-card {
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto 20px;
+}
+
+.tour-card .discount-badge {
+  position: absolute;
+  top: 10px;
+  left: -30px;
+  background-color: #ef4444;
+  color: white;
+  padding: 4px 30px;
+  transform: rotate(-45deg);
+  font-size: 14px;
+  z-index: 1;
+}
+
+.tour-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.tour-card img:hover {
+  transform: scale(1.1);
+}
+
+.tour-card h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 8px 0;
+  text-align: left;
+  padding: 0 10px;
+  word-break: break-word;
+}
+
+.tour-card p {
+  font-size: 14px;
+  color: #666;
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: break-word;
+}
+
+.tour-card p svg {
+  margin-right: 8px;
+}
+
+.tour-card .price {
+  margin: 8px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tour-card .original-price {
+  text-decoration: line-through;
+  color: #999;
+  margin-right: 0;
+  font-size: 14px;
+}
+
+.tour-card .discounted-price {
+  color: #ef4444;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.tour-card a {
+  color: #3b82f6;
+  margin-top: 8px;
+  display: inline-block;
+  text-decoration: none;
+}
+
+/* Responsive design */
+@media (min-width: 1198px) {
+  .tour-card {
+    max-width: 400px; /* Kích thước mặc định cho màn hình lớn */
+    flex: 0 0 33.33%; /* 3 cards per row */
+    margin: 0 10px 20px;
+  }
+  .tour-card img {
+    height: 180px;
+  }
+  .tour-card h3 {
+    font-size: 18px;
+  }
+  .tour-card p {
+    font-size: 14px;
+  }
+  .tour-card .discounted-price {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 1197px) and (min-width: 992px) {
+  .tour-card {
+    max-width: 350px; /* Tăng kích thước card */
+    flex: 0 0 33.33%; /* Vẫn 3 cards per row */
+    margin: 0 10px 20px;
+  }
+  .tour-card img {
+    height: 220px; /* Tăng kích thước hình */
+  }
+  .tour-card h3 {
+    font-size: 22px; /* Tăng font-size tiêu đề */
+  }
+  .tour-card p {
+    font-size: 16px; /* Tăng font-size nội dung */
+  }
+  .tour-card .discounted-price {
+    font-size: 22px; /* Tăng font-size giá */
+  }
+}
+
+@media (max-width: 768px) {
+  .tour-card {
+    max-width: 400px; /* Tăng kích thước card */
+    flex: 0 0 50%; /* 2 cards per row */
+    margin: 0 5px 20px;
+  }
+  .tour-card img {
+    height: 250px; /* Tăng kích thước hình */
+  }
+  .tour-card h3 {
+    font-size: 24px; /* Tăng font-size tiêu đề */
+  }
+  .tour-card p {
+    font-size: 18px; /* Tăng font-size nội dung */
+  }
+  .tour-card .discounted-price {
+    font-size: 24px; /* Tăng font-size giá */
+  }
+}
+
+@media (max-width: 768px) {
+  .tour-card {
+    max-width: 100%; /* 1 card per row */
+    flex: 0 0 100%;
+    margin: 0 0 20px;
+  }
+  .tour-card img {
+    height: 300px; /* Tăng kích thước hình lớn hơn */
+  }
+  .tour-card h3 {
+    font-size: 26px; /* Tăng font-size tiêu đề */
+  }
+  .tour-card p {
+    font-size: 20px; /* Tăng font-size nội dung */
+  }
+  .tour-card .discounted-price {
+    font-size: 28px; /* Tăng font-size giá */
+  }
+}

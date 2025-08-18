@@ -1,0 +1,33 @@
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.button-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  border-radius: 5px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.button-container button:hover,
+.button-container button.active {
+  color: #000;
+}
+
+.button-container button.active::after,
+.button-container button:hover::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #ff0000;
+}

@@ -1,27 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
-import Sidebar from "../Sidebar/Sidebar";
+import Sidebar from "../Sidebar";
 import "./Header.css";
 
-const staticMenuItems = [
-  { _id: "1", title: "Trang chủ", slug: "", children: [] },
-  { _id: "3", title: "Dịch vụ", slug: "dich-vu", children: [] },
-  { _id: "4", title: "Tin tức", slug: "tin-tuc", children: [] },
-  { _id: "5", title: "Thư viện", slug: "thu-vien", children: [] },
-  { _id: "6", title: "Liên hệ", slug: "lien-he", children: [] },
-  { _id: "7", title: "Giới thiệu", slug: "gioi-thieu", children: [] },
-];
-
-/**
- * Đệ quy render menu nhiều cấp
- * depth = 0: item top-level trên navbar
- * depth >= 1: item nằm trong dropdown
- */
+// Component render đệ quy menu nhiều cấp
 const MenuItem = ({ item, depth = 0 }) => {
   const hasChildren = Array.isArray(item.children) && item.children.length > 0;
 
-  // Leaf item
   if (!hasChildren) {
     return depth === 0 ? (
       <li className="nav-item">
@@ -38,9 +24,7 @@ const MenuItem = ({ item, depth = 0 }) => {
     );
   }
 
-  // Node có children
   return depth === 0 ? (
-    // Top-level: dùng .dropdown
     <li className="nav-item dropdown">
       <Link
         className="nav-link dropdown-toggle"
@@ -58,7 +42,6 @@ const MenuItem = ({ item, depth = 0 }) => {
       </ul>
     </li>
   ) : (
-    // Cấp sâu: dùng .dropdown-submenu (tự định nghĩa)
     <li className="dropdown-submenu">
       <Link
         className="dropdown-item dropdown-toggle"
@@ -68,9 +51,7 @@ const MenuItem = ({ item, depth = 0 }) => {
         aria-expanded="false"
       >
         {item.title}
-        <span className="submenu-caret" aria-hidden>
-          ›
-        </span>
+        <span className="submenu-caret">›</span>
       </Link>
       <ul className="dropdown-menu">
         {item.children.map((child) => (
@@ -83,27 +64,73 @@ const MenuItem = ({ item, depth = 0 }) => {
 
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [tourData, setTourData] = useState(null);
+  const [menuData, setMenuData] = useState([]);
 
   useEffect(() => {
-    const fetchTourCategories = async () => {
+    const fetchMenus = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/v1/tourCategory");
-        const data = await res.json();
-        setTourData(data);
+        // Bạn thay link fetch thực tế vào đây
+        const endpoints = {
+          home: "http://localhost:5000/api/v1/homePage",
+          tour: "http://localhost:5000/api/v1/tour",
+          service: "http://localhost:5000/api/v1/service",
+          news: "http://localhost:5000/api/v1/news",
+          library: "http://localhost:5000/api/v1/library",
+          contact: "http://localhost:5000/api/v1/contact",
+          about: "http://localhost:5000/api/v1/info",
+        };
+
+        // Promise.all fetch tất cả
+        const [
+          homeRes,
+          tourRes,
+          serviceRes,
+          newsRes,
+          libraryRes,
+          contactRes,
+          aboutRes,
+        ] = await Promise.all([
+          fetch(endpoints.home),
+          fetch(endpoints.tour),
+          fetch(endpoints.service),
+          fetch(endpoints.news),
+          fetch(endpoints.library),
+          fetch(endpoints.contact),
+          fetch(endpoints.about),
+        ]);
+
+        const [home, tour, service, news, library, contact, about] =
+          await Promise.all([
+            homeRes.json(),
+            tourRes.json(),
+            serviceRes.json(),
+            newsRes.json(),
+            libraryRes.json(),
+            contactRes.json(),
+            aboutRes.json(),
+          ]);
+
+        // Giữ đúng thứ tự danh mục
+        const ordered = [
+          home[0],
+          tour[0],
+          service[0],
+          news[0],
+          library[0],
+          contact[0],
+          about[0],
+        ];
+
+        setMenuData(ordered);
       } catch (e) {
-        console.error("Error fetching tour categories:", e);
+        console.error("Error fetching menus:", e);
       }
     };
-    fetchTourCategories();
+
+    fetchMenus();
   }, []);
 
   const toggleSidebar = () => setIsSidebarOpen((s) => !s);
-
-  // Chèn “Tour du lịch” (giả định là phần tử đầu tiên từ API)
-  const menuItems = tourData
-    ? [...staticMenuItems, tourData[0]]
-    : staticMenuItems;
 
   return (
     <header className="header">
@@ -130,7 +157,7 @@ const Header = () => {
           {/* Menu desktop */}
           <div className="collapse navbar-collapse justify-content-center d-none d-lg-flex">
             <ul className="navbar-nav">
-              {menuItems.map((item) => (
+              {menuData.map((item) => (
                 <MenuItem key={item._id} item={item} />
               ))}
             </ul>
@@ -138,9 +165,9 @@ const Header = () => {
         </div>
       </nav>
 
-      {/* Sidebar mobile (bạn đã có) */}
+      {/* Sidebar mobile */}
       <Sidebar
-        menuItems={menuItems}
+        menuItems={menuData}
         isOpen={isSidebarOpen}
         onToggle={toggleSidebar}
       />

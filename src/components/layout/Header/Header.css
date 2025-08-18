@@ -1,101 +1,136 @@
-/* Khung header */
+/* ===== Header & Navbar ===== */
 .header {
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 1001;
 }
-
 .navbar {
   padding: 1rem 0;
 }
 
 /* Logo */
 .navbar-brand .logo {
-  max-height: 60px;
+  max-height: 50px;
   transition: transform 0.3s ease;
 }
 .navbar-brand .logo:hover {
   transform: scale(1.05);
 }
 
-/* Link top-level */
+/* ===== Link cấp 1 ===== */
 .navbar-nav .nav-link {
   font-size: 1rem;
   font-weight: 500;
   color: #333;
-  margin: 0 15px;
-  padding: 8px 15px;
-  border-radius: 5px;
+  margin: 0 12px;
+  padding: 8px 14px;
+  border-radius: 6px;
   transition: all 0.3s ease;
   text-transform: uppercase;
 }
 .navbar-nav .nav-link:hover,
-.navbar-nav .nav-link.active {
+.navbar-nav .nav-link.active,
+.navbar-nav .dropdown:hover > .nav-link {
   color: #007bff;
   background-color: #e9f0fa;
 }
 
-/* Dropdown cơ bản */
+/* ===== Dropdown (hiệu ứng mượt) ===== */
 .navbar-nav .dropdown-menu {
   min-width: 220px;
   padding: 8px 0;
-  border-radius: 5px;
+  border-radius: 6px;
   border: none;
+  background-color: #fff;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.25s ease;
+  display: block;
+  visibility: hidden;
 }
+.navbar-nav .dropdown.show > .dropdown-menu,
+.navbar-nav .dropdown:hover > .dropdown-menu {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+/* Item con */
 .dropdown-item {
   font-size: 0.95rem;
   color: #333;
   padding: 8px 16px;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
-.dropdown-item:hover {
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-submenu:hover > .dropdown-item {
   background-color: #e9f0fa;
   color: #007bff;
 }
-.navbar-nav .dropdown-toggle::after {
-  margin-left: 6px;
-  vertical-align: middle;
+
+/* ===== Caret / icon ===== */
+/* Ẩn caret mặc định bootstrap */
+.dropdown-item.dropdown-toggle::after {
+  display: none;
 }
 
-/* ====== HỖ TRỢ ĐA CẤP (BS4 không có sẵn) ====== */
+/* Cấp 1 (menu cha) có caret ▼ */
+.navbar-nav > .dropdown > .nav-link.dropdown-toggle::after {
+  content: "▼";
+  font-size: 0.6rem;
+  margin-left: 6px;
+  vertical-align: middle;
+  color: #666;
+  transition: transform 0.25s ease;
+}
+.navbar-nav > .dropdown.show > .nav-link.dropdown-toggle::after,
+.navbar-nav > .dropdown:hover > .nav-link.dropdown-toggle::after {
+  transform: rotate(180deg);
+}
+
+/* Submenu có con → hiện caret › */
+.dropdown-submenu > .dropdown-item.dropdown-toggle::after {
+  content: "";
+  border: solid #333;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 4px;
+  transform: rotate(-45deg); /* mũi tên sang phải */
+  float: right;
+  margin-top: 4px;
+  margin-left: 8px;
+}
+
+.dropdown-submenu:hover > .dropdown-item.dropdown-toggle::after {
+  color: #007bff;
+}
+
+/* ===== Submenu nhiều cấp ===== */
 .dropdown-submenu {
   position: relative;
 }
-
-/* Mũi tên chỉ ra có submenu (cấp sâu) */
-.dropdown-item.dropdown-toggle {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.submenu-caret {
-  margin-left: 10px;
-}
-
-/* Vị trí dropdown cấp 2 trở đi: mở ngang bên phải */
 .dropdown-submenu > .dropdown-menu {
   top: 0;
   left: 100%;
   margin-top: -6px;
-  margin-left: 1px; /* tránh bị dính đường viền */
-  border-radius: 5px;
+  margin-left: 1px;
+  border-radius: 6px;
+  background-color: #fafafa;
 }
 
-/* Hiển thị dropdown khi hover (desktop) */
+/* Hover hiển thị submenu (desktop) */
 @media (min-width: 1024px) {
-  /* cấp 1 */
-  .navbar .dropdown:hover > .dropdown-menu {
-    display: block;
-  }
-  /* cấp 2+ */
   .navbar .dropdown-submenu:hover > .dropdown-menu {
-    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
   }
 }
 
-/* Toggle button (mobile) */
+/* ===== Responsive ===== */
 .navbar-toggler {
   border: none;
   font-size: 1.5rem;
@@ -107,7 +142,6 @@
   box-shadow: none;
 }
 
-/* Desktop bắt buộc hiện menu + ẩn hamburger */
 @media (min-width: 1024px) {
   .navbar-collapse {
     display: flex !important;
@@ -120,7 +154,6 @@
   }
 }
 
-/* Mobile: chỉ hiện logo + hamburger */
 .d-lg-none {
   display: none !important;
 }
@@ -132,95 +165,6 @@
     display: block !important;
   }
   .navbar-brand .logo {
-    max-height: 50px;
+    max-height: 45px;
   }
-}
-
-/* ====== Sidebar (bạn đã có) ====== */
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: -250px;
-  width: 250px;
-  height: 100%;
-  background-color: #f8f9fa;
-  padding: 20px 15px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  transition: left 0.3s ease;
-  z-index: 1000;
-  overflow-y: auto;
-}
-.sidebar.open {
-  left: 0;
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  border: none;
-  background: none;
-  font-size: 1.5rem;
-  color: #333;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-.close-btn:hover {
-  color: #007bff;
-}
-
-.sidebar-menu {
-  list-style: none;
-  padding: 0;
-}
-.sidebar-item {
-  margin-bottom: 15px;
-}
-
-.sidebar-link {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-.sidebar-link:hover {
-  background-color: #e9f0fa;
-}
-.sidebar-link a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
-  font-size: 1rem;
-}
-.toggle-icon {
-  font-size: 1rem;
-  color: #666;
-}
-
-.sidebar-submenu {
-  list-style: none;
-  padding-left: 20px;
-  margin-top: 5px;
-}
-.sidebar-submenu .sidebar-link {
-  padding: 8px 10px;
-  font-size: 0.9rem;
-}
-
-/* Scrollbar đẹp hơn */
-.sidebar::-webkit-scrollbar {
-  width: 8px;
-}
-.sidebar::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-.sidebar::-webkit-scrollbar-thumb {
-  background: #007bff;
-  border-radius: 4px;
-}
-.sidebar::-webkit-scrollbar-thumb:hover {
-  background: #0056b3;
 }
