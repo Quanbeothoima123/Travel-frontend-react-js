@@ -1,4 +1,3 @@
-// src/components/common/TourExperience/index.jsx
 import React from "react";
 import "./TourExperience.css";
 
@@ -11,6 +10,7 @@ const TourExperience = ({ tour }) => {
       <div
         className="experience-content"
         dangerouslySetInnerHTML={{ __html: specialExperience }}
+        style={{ marginTop: "20px" }} // Thêm khoảng cách trên
       />
     </div>
   );

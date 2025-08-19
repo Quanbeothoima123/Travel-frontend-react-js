@@ -5,6 +5,7 @@ import TourCarousel from "../../../src/components/common/TourCarousel";
 import TourInfo from "../../../src/components/common/TourInfo";
 import TourExperience from "../../../src/components/common/TourExperience";
 import TourSchedule from "../../../src/components/common/TourSchedule";
+import TourTerms from "../../../src/components/common/TourTerms";
 import "./DetailTour.css";
 
 const DetailTour = () => {
@@ -21,6 +22,7 @@ const DetailTour = () => {
         );
         if (!response.ok) throw new Error("Failed to fetch tour details");
         const data = await response.json();
+        console.log(data);
         setTourDetail(data.tourDetail);
       } catch (err) {
         setError(err.message);
@@ -45,6 +47,7 @@ const DetailTour = () => {
           />
           <TourExperience tour={tourDetail} />
           <TourSchedule tour={tourDetail} />
+          <TourTerms terms={tourDetail.term} />
         </div>
         <div className="right-column">
           <TourInfo tourDetail={tourDetail} />

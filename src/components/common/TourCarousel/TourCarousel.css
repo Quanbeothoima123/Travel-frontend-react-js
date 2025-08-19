@@ -1,77 +1,84 @@
-/* styles.css */
 .TourCarousel {
   width: 690px;
   max-width: 100%;
   margin: 0 auto;
   padding: 20px;
   background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.TourCarousel .slick-slide img {
+.main-image {
+  width: 676px;
+  height: 462px;
+  object-fit: cover;
+  border-radius: 12px;
+  max-width: 100%;
+}
+
+/* Thumbnail images */
+.thumb-image {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
   border-radius: 8px;
-  transition: transform 0.3s ease;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.TourCarousel .slick-slide img:hover {
+.thumb-image:hover {
   transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
 }
 
+.active-thumb {
+  border: 3px solid #ff4500;
+  box-shadow: 0 0 12px rgba(255, 69, 0, 0.7);
+}
+
+/* Slick custom arrows */
 .TourCarousel .slick-prev,
 .TourCarousel .slick-next {
-  width: 30px;
-  height: 30px;
-  background: rgba(0, 0, 0, 0.5);
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.6);
   border-radius: 50%;
-  z-index: 1;
+  z-index: 2;
+  transition: background 0.3s ease;
+}
+
+.TourCarousel .slick-prev:hover,
+.TourCarousel .slick-next:hover {
+  background: rgba(0, 0, 0, 0.8);
 }
 
 .TourCarousel .slick-prev:before,
 .TourCarousel .slick-next:before {
   color: #fff;
-  font-size: 20px;
+  font-size: 22px;
 }
 
-.TourCarousel .slick-prev {
-  left: 10px;
-}
-
-.TourCarousel .slick-next {
-  right: 10px;
-}
-
-.TourCarousel .slick-dots {
-  bottom: -10px;
-}
-
-.TourCarousel .slick-dots li button:before {
-  color: #333;
-}
-
-.TourCarousel .slick-dots li.slick-active button:before {
-  color: #ff4500;
-}
-
+/* Responsive */
 @media (max-width: 768px) {
   .TourCarousel {
     padding: 10px;
   }
 
-  .TourCarousel .slick-slide img {
+  .main-image {
     width: 100% !important;
     height: auto !important;
   }
 
-  .TourCarousel .slick-prev,
-  .TourCarousel .slick-next {
-    display: none !important;
+  .thumb-image {
+    width: 100px;
+    height: 70px;
   }
 }
 
 @media (max-width: 480px) {
-  .TourCarousel .slick-slide img {
-    width: 100% !important;
-    height: auto !important;
+  .thumb-image {
+    width: 80px;
+    height: 60px;
   }
 }

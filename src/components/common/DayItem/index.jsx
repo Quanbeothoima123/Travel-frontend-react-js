@@ -21,7 +21,6 @@ const DayItem = ({ day, title, image, description, isOpen }) => {
       {(open || isOpen) && (
         <div className="day-content">
           <div dangerouslySetInnerHTML={{ __html: description }} />
-          <img src={image} alt={`Day ${day}`} className="day-image" />
         </div>
       )}
     </div>

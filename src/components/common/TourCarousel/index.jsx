@@ -1,18 +1,25 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./TourCarousel.css";
+
 const TourCarousel = ({ thumbnail, images }) => {
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
   const slider1 = useRef(null);
   const slider2 = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  // Combine thumbnail with images
+  // Combine thumbnail + images
   const fullImages = [{ url: thumbnail, index: 0 }, ...images].sort(
     (a, b) => a.index - b.index
   );
+
+  useEffect(() => {
+    setNav1(slider1.current);
+    setNav2(slider2.current);
+  }, []);
 
   const mainSettings = {
     slidesToShow: 1,
@@ -22,6 +29,7 @@ const TourCarousel = ({ thumbnail, images }) => {
     autoplaySpeed: 3000,
     asNavFor: nav2,
     ref: (slider) => (slider1.current = slider),
+    beforeChange: (_, next) => setActiveIndex(next),
     responsive: [{ breakpoint: 768, settings: { arrows: false } }],
   };
 
@@ -29,7 +37,7 @@ const TourCarousel = ({ thumbnail, images }) => {
     slidesToShow: 5,
     slidesToScroll: 1,
     asNavFor: nav1,
-    centerMode: true,
+    centerMode: false,
     focusOnSelect: true,
     ref: (slider) => (slider2.current = slider),
     responsive: [
@@ -39,35 +47,32 @@ const TourCarousel = ({ thumbnail, images }) => {
   };
 
   return (
-    <div style={{ width: "690px", maxWidth: "100%", margin: "0 auto" }}>
-      <Slider {...mainSettings} afterChange={() => setNav1(slider1.current)}>
+    <div className="TourCarousel">
+      {/* Main slider */}
+      <Slider {...mainSettings}>
         {fullImages.map((img, idx) => (
           <div key={idx}>
-            <img
-              src={img.url}
-              alt={`Tour ${idx}`}
-              style={{
-                width: "676px",
-                height: "462px",
-                objectFit: "cover",
-                maxWidth: "100%",
-              }}
-            />
+            <img src={img.url} alt={`Tour ${idx}`} className="main-image" />
           </div>
         ))}
       </Slider>
-      <div style={{ height: "20px" }} /> {/* Gap */}
-      <Slider {...thumbSettings} afterChange={() => setNav2(slider2.current)}>
+
+      {/* Gap */}
+      <div style={{ height: "20px" }} />
+
+      {/* Thumbnail slider */}
+      <Slider {...thumbSettings}>
         {fullImages.map((img, idx) => (
           <div key={idx}>
             <img
               src={img.url}
               alt={`Thumb ${idx}`}
-              style={{
-                width: "125px",
-                height: "125px",
-                objectFit: "cover",
-                cursor: "pointer",
+              className={`thumb-image ${
+                idx === activeIndex ? "active-thumb" : ""
+              }`}
+              onClick={() => {
+                slider1.current.slickGoTo(idx);
+                setActiveIndex(idx);
               }}
             />
           </div>
