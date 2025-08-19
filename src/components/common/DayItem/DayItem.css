@@ -1,0 +1,88 @@
+/* DayItem.css */
+.day-item {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Đảm bảo mỗi item chiếm toàn bộ chiều rộng container */
+}
+
+.day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.day-thumbnail {
+  width: 100px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 15px;
+}
+
+.day-title {
+  flex: 1;
+  transition: margin-left 0.3s ease;
+}
+
+.day-title.expanded {
+  margin-left: 0;
+}
+
+.day-title span {
+  font-size: 14px;
+  color: #888;
+}
+
+.day-title h3 {
+  font-size: 16px;
+  margin: 5px 0 0;
+}
+
+.dropdown-icon {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.dropdown-icon.open {
+  transform: rotate(180deg);
+}
+
+.day-content {
+  margin-top: 15px;
+  font-size: 14px;
+  line-height: 1.6;
+  animation: fadeIn 0.3s ease;
+}
+
+.day-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .day-thumbnail {
+    width: 80px;
+    height: 50px;
+  }
+
+  .day-title h3 {
+    font-size: 14px;
+  }
+}

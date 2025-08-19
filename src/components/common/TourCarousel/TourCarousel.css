@@ -1,0 +1,77 @@
+/* styles.css */
+.TourCarousel {
+  width: 690px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.TourCarousel .slick-slide img {
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.TourCarousel .slick-slide img:hover {
+  transform: scale(1.05);
+}
+
+.TourCarousel .slick-prev,
+.TourCarousel .slick-next {
+  width: 30px;
+  height: 30px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.TourCarousel .slick-prev:before,
+.TourCarousel .slick-next:before {
+  color: #fff;
+  font-size: 20px;
+}
+
+.TourCarousel .slick-prev {
+  left: 10px;
+}
+
+.TourCarousel .slick-next {
+  right: 10px;
+}
+
+.TourCarousel .slick-dots {
+  bottom: -10px;
+}
+
+.TourCarousel .slick-dots li button:before {
+  color: #333;
+}
+
+.TourCarousel .slick-dots li.slick-active button:before {
+  color: #ff4500;
+}
+
+@media (max-width: 768px) {
+  .TourCarousel {
+    padding: 10px;
+  }
+
+  .TourCarousel .slick-slide img {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .TourCarousel .slick-prev,
+  .TourCarousel .slick-next {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .TourCarousel .slick-slide img {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
