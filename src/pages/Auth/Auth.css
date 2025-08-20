@@ -57,6 +57,10 @@
   font-size: 16px;
   cursor: pointer;
   transition: 0.3s;
+
+  display: flex; /* thêm */
+  justify-content: center; /* căn giữa ngang */
+  align-items: center; /* căn giữa dọc */
 }
 
 .auth-btn:hover {
@@ -67,84 +71,27 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.re-auth {
+  width: 50%;
+  padding: 5px;
+  background: linear-gradient(to right, #d67f4d, #d65d0c);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  font-size: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 20px;
+  display: flex; /* thêm */
+  justify-content: center; /* căn giữa ngang */
+  align-items: center; /* căn giữa dọc */
+}
 .otp-hint {
   margin-bottom: 10px;
   font-size: 14px;
   opacity: 0.9;
-}
-
-/* Toast notification */
-.toast-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 2000;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.toast {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  max-width: 280px;
-  max-height: 60px; /* chiều cao tối thiểu vừa gọn */
-  padding: 8px 12px; /* padding gọn */
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 400;
-  color: #fff;
-  background: #333;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-
-  opacity: 0;
-  transform: translateX(120%);
-  animation: slideIn 0.3s ease forwards, slideOut 0.3s ease 4.7s forwards;
-
-  line-height: 1.4; /* khoảng cách chữ hợp lý */
-  word-break: break-word; /* tự xuống dòng khi text dài */
-}
-
-.toast p,
-.toast span,
-.toast div {
-  margin: 0; /* xoá margin mặc định để không bị cao */
-  padding: 0;
-}
-
-.toast.success {
-  background: #16a34a; /* xanh lá */
-}
-
-.toast.error {
-  background: #dc2626; /* đỏ */
-}
-
-.toast-icon {
-  font-size: 16px;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(120%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideOut {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateX(120%);
-  }
 }
 
 /* Nút phụ */

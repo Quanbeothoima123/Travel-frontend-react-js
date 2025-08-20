@@ -1,37 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "../../contexts/ToastContext";
 import "./Auth.css";
 
 const OTP_FLOW = "register";
 
 const Register = () => {
-  const [form, setForm] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-  });
-  const [step, setStep] = useState("register"); // register | otp
+  const [form, setForm] = useState({ fullName: "", email: "", password: "" });
+  const [step, setStep] = useState("register");
   const [otp, setOtp] = useState("");
   const [userId, setUserId] = useState(null);
   const [regEmail, setRegEmail] = useState("");
-
-  // Resend OTP cooldown
   const [resendCountdown, setResendCountdown] = useState(0);
 
-  // Toast state
-  const [toasts, setToasts] = useState([]);
-
+  const { showToast } = useToast(); // lấy từ context
   const navigate = useNavigate();
 
-  const showToast = (message, type = "success") => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 5000);
-  };
-
-  // tick countdown resend
   useEffect(() => {
     if (resendCountdown <= 0) return;
     const t = setInterval(() => {
@@ -58,7 +42,7 @@ const Register = () => {
         setUserId(data.userId);
         setRegEmail(data.email || form.email);
         setStep("otp");
-        setResendCountdown(60); // cho gửi lại sau 60s
+        setResendCountdown(60);
         showToast(
           data.message || "Vui lòng nhập mã OTP để xác thực",
           "success"
@@ -162,6 +146,9 @@ const Register = () => {
               <button type="submit" className="auth-btn">
                 Đăng ký
               </button>
+              <Link to={"/re-auth"} className="re-auth">
+                Xác thực tài khoản
+              </Link>
             </form>
           </>
         )}
@@ -203,21 +190,6 @@ const Register = () => {
             </button>
           </>
         )}
-      </div>
-
-      {/* Toast container */}
-      <div className="toast-container">
-        {toasts.map((toast) => (
-          <div
-            key={toast.id}
-            className={`toast ${toast.type === "error" ? "error" : "success"}`}
-          >
-            <span className="toast-icon">
-              {toast.type === "error" ? "⚠️" : "✅"}
-            </span>
-            <span>{toast.message}</span>
-          </div>
-        ))}
       </div>
     </div>
   );
