@@ -5,6 +5,61 @@
   position: relative;
   z-index: 1001;
 }
+
+/* Đặt lại style auth section */
+.header .auth-section {
+  margin-left: auto;
+  display: flex;
+  align-items: center; /* căn giữa theo chiều dọc */
+  gap: 8px;
+}
+
+/* Nút custom riêng thay cho Bootstrap */
+.auth-btn {
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+/* Nút login/register màu hồng cánh sen */
+.login-btn,
+.register-btn {
+  background: #ff6fa5; /* hồng cánh sen */
+  color: white;
+}
+
+.login-btn:hover,
+.register-btn:hover {
+  background: #ff4f90;
+}
+
+/* Nút logout nhỏ gọn */
+.logout-btn {
+  background: #ff6fa5;
+  color: white;
+}
+
+.logout-btn:hover {
+  background: #ff4f90;
+}
+
+/* Thu gọn user-info */
+.header .user-info {
+  background: #fff;
+  padding: 4px 10px;
+  border-radius: 25px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+}
+
 .navbar {
   padding: 1rem 0;
 }

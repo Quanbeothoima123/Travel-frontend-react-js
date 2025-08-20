@@ -1,6 +1,7 @@
+// src/components/layout/Header.jsx
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaBars } from "react-icons/fa";
+import { FaBars, FaUserCircle } from "react-icons/fa";
 import Sidebar from "../Sidebar";
 import "./Header.css";
 
@@ -65,11 +66,11 @@ const MenuItem = ({ item, depth = 0 }) => {
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [menuData, setMenuData] = useState([]);
+  const [user, setUser] = useState(null); // null = chưa đăng nhập
 
   useEffect(() => {
     const fetchMenus = async () => {
       try {
-        // Bạn thay link fetch thực tế vào đây
         const endpoints = {
           home: "http://localhost:5000/api/v1/homePage",
           tour: "http://localhost:5000/api/v1/tour",
@@ -80,7 +81,6 @@ const Header = () => {
           about: "http://localhost:5000/api/v1/info",
         };
 
-        // Promise.all fetch tất cả
         const [
           homeRes,
           tourRes,
@@ -110,7 +110,6 @@ const Header = () => {
             aboutRes.json(),
           ]);
 
-        // Giữ đúng thứ tự danh mục
         const ordered = [
           home[0],
           tour[0],
@@ -132,10 +131,19 @@ const Header = () => {
 
   const toggleSidebar = () => setIsSidebarOpen((s) => !s);
 
+  // Giả lập login (sau này thay bằng API thực)
+  const handleLogin = () => {
+    setUser({ name: "Nguyen Van A" });
+  };
+  const handleLogout = () => {
+    setUser(null);
+  };
+
   return (
     <header className="header">
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container">
+          {/* Logo */}
           <Link className="navbar-brand" to="/">
             <img
               src="/assets/images/logo.jpg"
@@ -162,6 +170,29 @@ const Header = () => {
               ))}
             </ul>
           </div>
+          {/* Auth section */}
+          <div className="auth-section d-none d-lg-flex">
+            {!user ? (
+              <>
+                <Link to="/login" className="auth-btn login-btn me-2">
+                  <FaUserCircle className="me-1" />
+                  Đăng nhập
+                </Link>
+                <Link to="/register" className="auth-btn register-btn">
+                  <FaUserCircle className="me-1" />
+                  Đăng ký
+                </Link>
+              </>
+            ) : (
+              <div className="user-info d-flex align-items-center">
+                <FaUserCircle size={22} className="me-2 text-primary" />
+                <span className="me-2">{user.name}</span>
+                <button onClick={handleLogout} className="auth-btn logout-btn">
+                  Thoát
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -170,6 +201,8 @@ const Header = () => {
         menuItems={menuData}
         isOpen={isSidebarOpen}
         onToggle={toggleSidebar}
+        user={user} // truyền user
+        handleLogout={handleLogout} // truyền hàm logout
       />
     </header>
   );
