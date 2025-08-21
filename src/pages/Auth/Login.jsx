@@ -1,8 +1,15 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "../../contexts/ToastContext";
+import { useAuth } from "../../contexts/AuthContext";
 import "./Auth.css";
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { showToast } = useToast();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -10,8 +17,16 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login info:", form);
-    // TODO: gọi API đăng nhập
+    setLoading(true);
+    try {
+      await login(form); // <-- login + refresh /me + setUser trong context
+      showToast("Đăng nhập thành công!", "success");
+      navigate("/"); // Header sẽ re-render ngay vì user trong context đã thay đổi
+    } catch (err) {
+      showToast(err.message || "Đăng nhập thất bại", "error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -43,8 +58,8 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" className="auth-btn">
-            Đăng nhập
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? "Đang đăng nhập..." : "Đăng nhập"}
           </button>
         </form>
       </div>

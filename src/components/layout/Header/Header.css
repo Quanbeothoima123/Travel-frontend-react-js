@@ -6,71 +6,152 @@
   z-index: 1001;
 }
 
-/* Đặt lại style auth section */
+/* Auth section wrapper */
 .header .auth-section {
   margin-left: auto;
   display: flex;
-  align-items: center; /* căn giữa theo chiều dọc */
-  gap: 8px;
+  align-items: center;
+  gap: 10px;
 }
 
-/* Nút custom riêng thay cho Bootstrap */
+/* ==== Buttons: login / register (nhỏ gọn) ==== */
+/* Style chung cho nút đăng nhập & đăng ký */
 .auth-btn {
-  padding: 6px 14px;
+  padding: 6px 18px;
   font-size: 14px;
   font-weight: 500;
   border-radius: 20px;
   border: none;
   cursor: pointer;
   text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  color: #fff;
+  background: #007bff; /* xanh nước biển */
+  transition: all 0.3s ease;
+}
+
+/* Hover hiệu ứng */
+.auth-btn:hover {
+  background: #0056b3; /* xanh đậm hơn khi hover */
+}
+
+/* ==== User dropdown (thuần CSS + JS toggle) ==== */
+.user-dropdown {
+  position: relative;
+}
+
+.user-toggle {
+  --h: 34px;
+  height: var(--h);
+  padding: 0 12px;
+  border: none;
+  background: #fff;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-toggle:hover {
+  background: #f6f7f9;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-toggle .avatar {
+  font-size: 16px;
+  color: #1a73e8;
+}
+.user-toggle .user-name {
+  font-size: 13px;
+  font-weight: 600;
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-toggle .caret {
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+.user-dropdown.open .caret {
+  transform: rotate(180deg);
+}
+
+/* Menu nổi */
+.user-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  min-width: 200px;
+  padding: 6px 0;
+  box-shadow: 0 10px 24px rgba(18, 38, 63, 0.18);
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 1000;
+}
+
+/* mũi tên nhỏ nối liền khối */
+.user-menu::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 18px;
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  transform: rotate(45deg);
+  box-shadow: -2px -2px 4px rgba(18, 38, 63, 0.05);
+}
+
+.user-dropdown.open .user-menu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.menu-item {
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 4px;
-  transition: all 0.2s ease;
-}
-
-/* Nút login/register màu hồng cánh sen */
-.login-btn,
-.register-btn {
-  background: #ff6fa5; /* hồng cánh sen */
-  color: white;
-}
-
-.login-btn:hover,
-.register-btn:hover {
-  background: #ff4f90;
-}
-
-/* Nút logout nhỏ gọn */
-.logout-btn {
-  background: #ff6fa5;
-  color: white;
-}
-
-.logout-btn:hover {
-  background: #ff4f90;
-}
-
-/* Thu gọn user-info */
-.header .user-info {
-  background: #fff;
-  padding: 4px 10px;
-  border-radius: 25px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  gap: 10px;
+  padding: 10px 14px;
   font-size: 14px;
+  color: #2d2f31;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: background 0.15s ease, padding-left 0.15s ease;
+}
+.menu-item:hover {
+  background: #f5f7fb;
+  padding-left: 18px;
+}
+.menu-item svg {
+  opacity: 0.85;
+}
+.menu-item.danger {
+  color: #e11d48;
 }
 
+/* ======= Navbar / Logo ======= */
 .navbar {
   padding: 1rem 0;
 }
-
-/* Logo */
 .navbar-brand .logo {
   max-height: 50px;
-  transition: transform 0.3s ease;
+  transition: transform 0.25s ease;
 }
 .navbar-brand .logo:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 /* ===== Link cấp 1 ===== */
@@ -81,25 +162,24 @@
   margin: 0 12px;
   padding: 8px 14px;
   border-radius: 6px;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   text-transform: uppercase;
 }
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link.active,
 .navbar-nav .dropdown:hover > .nav-link {
-  color: #007bff;
+  color: #1a73e8;
   background-color: #e9f0fa;
 }
 
-/* ===== Dropdown (hiệu ứng mượt) ===== */
+/* ===== Dropdown nhiều cấp của menu chính (giữ nguyên logic hover) ===== */
 .navbar-nav .dropdown-menu {
   min-width: 220px;
   padding: 8px 0;
-  border-radius: 6px;
+  border-radius: 8px;
   border: none;
   background-color: #fff;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-
   opacity: 0;
   transform: translateY(10px);
   transition: all 0.25s ease;
@@ -113,7 +193,7 @@
   visibility: visible;
 }
 
-/* Item con */
+/* Item con của menu chính */
 .dropdown-item {
   font-size: 0.95rem;
   color: #333;
@@ -123,16 +203,13 @@
 .dropdown-menu .dropdown-item:hover,
 .dropdown-menu .dropdown-submenu:hover > .dropdown-item {
   background-color: #e9f0fa;
-  color: #007bff;
+  color: #1a73e8;
 }
 
-/* ===== Caret / icon ===== */
-/* Ẩn caret mặc định bootstrap */
+/* Caret cho menu chính */
 .dropdown-item.dropdown-toggle::after {
   display: none;
 }
-
-/* Cấp 1 (menu cha) có caret ▼ */
 .navbar-nav > .dropdown > .nav-link.dropdown-toggle::after {
   content: "▼";
   font-size: 0.6rem;
@@ -146,24 +223,7 @@
   transform: rotate(180deg);
 }
 
-/* Submenu có con → hiện caret › */
-.dropdown-submenu > .dropdown-item.dropdown-toggle::after {
-  content: "";
-  border: solid #333;
-  border-width: 0 2px 2px 0;
-  display: inline-block;
-  padding: 4px;
-  transform: rotate(-45deg); /* mũi tên sang phải */
-  float: right;
-  margin-top: 4px;
-  margin-left: 8px;
-}
-
-.dropdown-submenu:hover > .dropdown-item.dropdown-toggle::after {
-  color: #007bff;
-}
-
-/* ===== Submenu nhiều cấp ===== */
+/* Submenu nhiều cấp */
 .dropdown-submenu {
   position: relative;
 }
@@ -172,7 +232,7 @@
   left: 100%;
   margin-top: -6px;
   margin-left: 1px;
-  border-radius: 6px;
+  border-radius: 8px;
   background-color: #fafafa;
 }
 
@@ -221,5 +281,20 @@
   }
   .navbar-brand .logo {
     max-height: 45px;
+  }
+
+  /* Thu nhỏ chút ở mobile lớn */
+  .user-toggle {
+    height: 32px;
+    padding: 0 10px;
+  }
+  .user-toggle .user-name {
+    max-width: 140px;
+    font-size: 12px;
+  }
+  .auth-btn {
+    height: 28px;
+    font-size: 11px;
+    padding: 0 10px;
   }
 }

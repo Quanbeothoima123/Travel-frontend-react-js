@@ -1,11 +1,18 @@
-// src/components/layout/Header.jsx
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaBars, FaUserCircle } from "react-icons/fa";
+import {
+  FaUser,
+  FaCaretDown,
+  FaUserEdit,
+  FaHistory,
+  FaSignOutAlt,
+  FaBars,
+} from "react-icons/fa";
 import Sidebar from "../Sidebar";
+import { useAuth } from "../../../contexts/AuthContext";
 import "./Header.css";
 
-// Component render đệ quy menu nhiều cấp
+// Render menu đệ quy
 const MenuItem = ({ item, depth = 0 }) => {
   const hasChildren = Array.isArray(item.children) && item.children.length > 0;
 
@@ -66,8 +73,13 @@ const MenuItem = ({ item, depth = 0 }) => {
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [menuData, setMenuData] = useState([]);
-  const [user, setUser] = useState(null); // null = chưa đăng nhập
+  const { user, loading, logout } = useAuth();
 
+  // trạng thái mở/đóng dropdown user
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
+
+  // Fetch menu
   useEffect(() => {
     const fetchMenus = async () => {
       try {
@@ -80,63 +92,41 @@ const Header = () => {
           contact: "http://localhost:5000/api/v1/contact",
           about: "http://localhost:5000/api/v1/info",
         };
-
-        const [
-          homeRes,
-          tourRes,
-          serviceRes,
-          newsRes,
-          libraryRes,
-          contactRes,
-          aboutRes,
-        ] = await Promise.all([
-          fetch(endpoints.home),
-          fetch(endpoints.tour),
-          fetch(endpoints.service),
-          fetch(endpoints.news),
-          fetch(endpoints.library),
-          fetch(endpoints.contact),
-          fetch(endpoints.about),
-        ]);
-
-        const [home, tour, service, news, library, contact, about] =
-          await Promise.all([
-            homeRes.json(),
-            tourRes.json(),
-            serviceRes.json(),
-            newsRes.json(),
-            libraryRes.json(),
-            contactRes.json(),
-            aboutRes.json(),
-          ]);
-
-        const ordered = [
-          home[0],
-          tour[0],
-          service[0],
-          news[0],
-          library[0],
-          contact[0],
-          about[0],
-        ];
-
-        setMenuData(ordered);
+        const responses = await Promise.all(
+          Object.values(endpoints).map((url) => fetch(url))
+        );
+        const data = await Promise.all(responses.map((res) => res.json()));
+        setMenuData(data.map((d) => d[0]));
       } catch (e) {
         console.error("Error fetching menus:", e);
       }
     };
-
     fetchMenus();
   }, []);
 
   const toggleSidebar = () => setIsSidebarOpen((s) => !s);
 
-  // Giả lập login (sau này thay bằng API thực)
-  const handleLogin = () => {
-    setUser({ name: "Nguyen Van A" });
-  };
-  const handleLogout = () => {
-    setUser(null);
+  // đóng dropdown khi click ra ngoài hoặc nhấn ESC
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (!userMenuRef.current) return;
+      if (!userMenuRef.current.contains(e.target)) setIsUserMenuOpen(false);
+    };
+    const onKey = (e) => {
+      if (e.key === "Escape") setIsUserMenuOpen(false);
+    };
+    document.addEventListener("mousedown", onDocClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDocClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, []);
+
+  const handleToggleUserMenu = () => setIsUserMenuOpen((s) => !s);
+  const handleLogout = async () => {
+    await logout();
+    setIsUserMenuOpen(false);
   };
 
   return (
@@ -152,7 +142,7 @@ const Header = () => {
             />
           </Link>
 
-          {/* Hamburger chỉ hiện dưới 1024px */}
+          {/* Hamburger mobile */}
           <button
             className="navbar-toggler d-lg-none"
             type="button"
@@ -170,26 +160,65 @@ const Header = () => {
               ))}
             </ul>
           </div>
+
           {/* Auth section */}
           <div className="auth-section d-none d-lg-flex">
-            {!user ? (
+            {loading ? null : !user ? (
               <>
-                <Link to="/login" className="auth-btn login-btn me-2">
-                  <FaUserCircle className="me-1" />
+                <Link to="/login" className="auth-btn me-2">
                   Đăng nhập
                 </Link>
-                <Link to="/register" className="auth-btn register-btn">
-                  <FaUserCircle className="me-1" />
+                <Link to="/register" className="auth-btn">
                   Đăng ký
                 </Link>
               </>
             ) : (
-              <div className="user-info d-flex align-items-center">
-                <FaUserCircle size={22} className="me-2 text-primary" />
-                <span className="me-2">{user.name}</span>
-                <button onClick={handleLogout} className="auth-btn logout-btn">
-                  Thoát
+              <div
+                ref={userMenuRef}
+                className={`user-dropdown ${isUserMenuOpen ? "open" : ""}`}
+              >
+                <button
+                  className="user-toggle"
+                  type="button"
+                  aria-haspopup="menu"
+                  aria-expanded={isUserMenuOpen}
+                  onClick={handleToggleUserMenu}
+                >
+                  <FaUser className="avatar" />
+                  <span className="user-name">
+                    Chào, {user.fullName || user.name}
+                  </span>
+                  <FaCaretDown className="caret" />
                 </button>
+
+                <div className="user-menu" role="menu">
+                  <Link
+                    to="/"
+                    className="menu-item"
+                    role="menuitem"
+                    onClick={() => setIsUserMenuOpen(false)}
+                  >
+                    <FaUserEdit />
+                    <span>Thông tin cá nhân</span>
+                  </Link>
+                  <Link
+                    to="/"
+                    className="menu-item"
+                    role="menuitem"
+                    onClick={() => setIsUserMenuOpen(false)}
+                  >
+                    <FaHistory />
+                    <span>Lịch sử giao dịch</span>
+                  </Link>
+                  <button
+                    className="menu-item danger"
+                    role="menuitem"
+                    onClick={handleLogout}
+                  >
+                    <FaSignOutAlt />
+                    <span>Đăng xuất</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -201,8 +230,8 @@ const Header = () => {
         menuItems={menuData}
         isOpen={isSidebarOpen}
         onToggle={toggleSidebar}
-        user={user} // truyền user
-        handleLogout={handleLogout} // truyền hàm logout
+        user={user}
+        handleLogout={handleLogout}
       />
     </header>
   );

@@ -8,12 +8,13 @@ import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import ReAuthFlow from "./pages/ReAuthFlow";
 import { ToastProvider } from "./contexts/ToastContext";
+import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
   return (
     <Router>
       <ToastProvider>
-        <div>
+        <AuthProvider>
           <Header />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -22,7 +23,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/re-auth" element={<ReAuthFlow />} />
           </Routes>
-        </div>
+        </AuthProvider>
       </ToastProvider>
     </Router>
   );
