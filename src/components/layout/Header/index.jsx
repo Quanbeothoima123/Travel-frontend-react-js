@@ -165,10 +165,10 @@ const Header = () => {
           <div className="auth-section d-none d-lg-flex">
             {loading ? null : !user ? (
               <>
-                <Link to="/login" className="auth-btn me-2">
+                <Link to="/login" className="auth-btn-header me-2">
                   Đăng nhập
                 </Link>
-                <Link to="/register" className="auth-btn">
+                <Link to="/register" className="auth-btn-header">
                   Đăng ký
                 </Link>
               </>

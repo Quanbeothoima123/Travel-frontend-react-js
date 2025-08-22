@@ -16,9 +16,9 @@
 
 /* ==== Buttons: login / register (nhỏ gọn) ==== */
 /* Style chung cho nút đăng nhập & đăng ký */
-.auth-btn {
+.auth-btn-header {
   padding: 6px 18px;
-  font-size: 14px;
+  font-size: 9px;
   font-weight: 500;
   border-radius: 20px;
   border: none;
@@ -32,8 +32,9 @@
 }
 
 /* Hover hiệu ứng */
-.auth-btn:hover {
-  background: #0056b3; /* xanh đậm hơn khi hover */
+.auth-btn-header:hover {
+  background: #4d8bce; /* xanh đậm hơn khi hover */
+  color: white;
 }
 
 /* ==== User dropdown (thuần CSS + JS toggle) ==== */
@@ -156,10 +157,9 @@
 
 /* ===== Link cấp 1 ===== */
 .navbar-nav .nav-link {
-  font-size: 1rem;
   font-weight: 500;
   color: #333;
-  margin: 0 12px;
+  margin: 0 6px;
   padding: 8px 14px;
   border-radius: 6px;
   transition: all 0.25s ease;
@@ -237,7 +237,7 @@
 }
 
 /* Hover hiển thị submenu (desktop) */
-@media (min-width: 1024px) {
+@media (min-width: 990px) {
   .navbar .dropdown-submenu:hover > .dropdown-menu {
     opacity: 1;
     transform: translateY(0);
@@ -257,7 +257,7 @@
   box-shadow: none;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 990px) {
   .navbar-collapse {
     display: flex !important;
   }
@@ -272,7 +272,7 @@
 .d-lg-none {
   display: none !important;
 }
-@media (max-width: 1023px) {
+@media (max-width: 990px) {
   .d-none.d-lg-flex {
     display: none !important;
   }
@@ -292,7 +292,7 @@
     max-width: 140px;
     font-size: 12px;
   }
-  .auth-btn {
+  .auth-btn-header {
     height: 28px;
     font-size: 11px;
     padding: 0 10px;

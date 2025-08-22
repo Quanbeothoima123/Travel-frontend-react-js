@@ -13,13 +13,16 @@ import {
   FaPaperPlane,
 } from "react-icons/fa";
 import "./TourInfo.css";
+import { useToast } from "../../../contexts/ToastContext"; // chỗ bạn để ToastContext
 
 const TourInfo = ({ tourDetail }) => {
   const [phone, setPhone] = useState("");
+  const { showToast } = useToast();
 
   if (!tourDetail) return null;
 
   const {
+    _id: tourId,
     title,
     travelTimeId,
     vehicleId,
@@ -37,13 +40,49 @@ const TourInfo = ({ tourDetail }) => {
   const stay = `${hotelId.name} ${hotelId.star} sao`;
   const start = frequency.title;
 
-  const handleSend = () => {
+  // ✅ Hàm kiểm tra số điện thoại Việt Nam
+  const isValidVNPhone = (number) => {
+    // Bắt đầu bằng 0 hoặc +84, sau đó có 9-10 số
+    const regex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
+    return regex.test(number);
+  };
+
+  const handleSend = async () => {
     if (!phone) {
-      alert("Vui lòng nhập số điện thoại!");
+      showToast("Vui lòng nhập số điện thoại!", "error");
       return;
     }
-    // TODO: gửi dữ liệu phone tới API hoặc xử lý khác
-    alert(`Số điện thoại của bạn: ${phone}`);
+
+    if (!isValidVNPhone(phone)) {
+      showToast("Số điện thoại không hợp lệ!", "error");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/v1/customer-consolation",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // để gửi cookie authToken
+          body: JSON.stringify({ phoneNumber: phone, tourId }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.code === 200) {
+        showToast("Chúng tôi sẽ sớm liên hệ với bạn sớm nhất!", "success");
+        setPhone("");
+      } else {
+        showToast(data.message || "Có lỗi xảy ra", "error");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Không thể kết nối server!", "error");
+    }
   };
 
   return (
