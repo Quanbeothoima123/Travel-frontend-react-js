@@ -1,0 +1,36 @@
+/* src/components/booking/TourInfoSummary.css */
+.tour-info-summary {
+  width: 350px;
+  padding: 20px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.tour-info-summary h3 {
+  margin-top: 0;
+}
+
+.tour-info-summary img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.tour-info-summary p {
+  margin: 5px 0;
+}
+
+.tour-info-summary p span {
+  color: red;
+}
+
+.tour-info-summary button {
+  background: blue;
+  color: white;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

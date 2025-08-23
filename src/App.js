@@ -6,7 +6,9 @@ import Home from "./pages/Home";
 import DetailTour from "./pages/DetailTour";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
+import BookingPage from "./pages/BookingPage";
 import ReAuthFlow from "./pages/ReAuthFlow";
+
 import { ToastProvider } from "./contexts/ToastContext";
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -22,6 +24,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/re-auth" element={<ReAuthFlow />} />
+            <Route path="/booking-tour/:slug" element={<BookingPage />} />
           </Routes>
         </AuthProvider>
       </ToastProvider>

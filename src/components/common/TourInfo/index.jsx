@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   FaClock,
   FaBus,
@@ -32,6 +33,7 @@ const TourInfo = ({ tourDetail }) => {
     prices,
     discount,
     tags,
+    slug,
   } = tourDetail;
 
   const discountedPrice = prices * (1 - discount / 100);
@@ -66,7 +68,7 @@ const TourInfo = ({ tourDetail }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", // để gửi cookie authToken
+          credentials: "include",
           body: JSON.stringify({ phoneNumber: phone, tourId }),
         }
       );
@@ -120,11 +122,11 @@ const TourInfo = ({ tourDetail }) => {
       )}
 
       <div className="price">
-        Giá từ:{" "}
+        Giá từ:
         {discountedPrice.toLocaleString("vi-VN", {
           style: "currency",
           currency: "VND",
-        })}{" "}
+        })}
         <del>
           {prices.toLocaleString("vi-VN", {
             style: "currency",
@@ -133,7 +135,9 @@ const TourInfo = ({ tourDetail }) => {
         </del>
       </div>
 
-      <button className="btn-main">ĐẶT TOUR</button>
+      <Link to={`/booking-tour/${slug}`} className="btn-main booking-button">
+        ĐẶT TOUR
+      </Link>
 
       <div className="tags">
         {tags.map((tag, i) => (
