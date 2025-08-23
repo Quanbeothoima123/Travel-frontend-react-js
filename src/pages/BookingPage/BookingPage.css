@@ -49,6 +49,7 @@
   gap: 14px;
   margin-bottom: 12px;
 }
+
 .form-item--full {
   grid-column: 1 / -1;
 }
@@ -97,6 +98,7 @@
 .people-section {
   margin-top: 10px;
 }
+
 .people-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -108,11 +110,13 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
 @media (max-width: 992px) {
   .people-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
 @media (max-width: 640px) {
   .people-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -127,11 +131,13 @@
   display: flex;
   flex-direction: column;
 }
+
 .people-tile label {
   margin-bottom: 6px;
   font-size: 13px;
   color: #111827;
 }
+
 .people-tile input {
   width: 100%;
   padding: 9px 10px;
@@ -139,17 +145,44 @@
   border: 1px solid #d1d5db;
   border-radius: 8px;
 }
+
 .people-tile input:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
+
 .surcharge {
   margin-top: 6px;
   font-size: 12px;
   color: #475569;
 }
+
 .surcharge strong {
   color: #0b63f3;
+}
+
+/* Seat tile (hiển thị giống 1 ô trong grid) */
+.seat-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 78px;
+}
+
+.seat-tile .seat-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.seat-tile.ok .seat-line {
+  color: #16a34a;
+}
+
+.seat-tile.exceed .seat-line {
+  color: #dc2626;
 }
 
 .exceed-section {
@@ -159,27 +192,7 @@
 .exceed-section h3 {
   font-size: 1.1em;
   margin-bottom: 10px;
-  color: #ff4500; /* Màu nổi bật cho phụ thu */
-}
-/* Seat tile (hiển thị giống 1 ô trong grid) */
-.seat-tile {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 78px;
-}
-.seat-tile .seat-line {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  font-size: 14px;
-}
-.seat-tile.ok .seat-line {
-  color: #16a34a;
-}
-.seat-tile.exceed .seat-line {
-  color: #dc2626;
+  color: #ff4500;
 }
 
 .error {
@@ -195,6 +208,7 @@
   gap: 16px;
   margin-top: 6px;
 }
+
 @media (max-width: 768px) {
   .payment-grid {
     grid-template-columns: 1fr;
@@ -214,6 +228,7 @@
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
   cursor: pointer;
 }
+
 .payment-card input[type="radio"] {
   appearance: none;
   width: 14px;
@@ -225,9 +240,11 @@
   margin: 0 4px 0 2px;
   position: relative;
 }
+
 .payment-card input[type="radio"]:checked {
   border-color: #2563eb;
 }
+
 .payment-card input[type="radio"]:checked::after {
   content: "";
   position: absolute;
@@ -246,15 +263,19 @@
   line-height: 1;
   color: #fff;
 }
+
 .payment-badge svg {
   font-size: 16px;
 }
+
 .payment-badge--red {
   background: #be123c;
 }
+
 .payment-badge--blue {
   background: #1d4ed8;
 }
+
 .payment-badge--gray {
   background: #9ca3af;
   color: #fff;
@@ -272,6 +293,7 @@
   background: #f5f6f7;
   border-color: #e5e7eb;
 }
+
 .payment-card.is-active {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
   border-color: #2563eb;
@@ -284,6 +306,7 @@
   gap: 12px;
   margin-top: 18px;
 }
+
 @media (max-width: 560px) {
   .action-row {
     grid-template-columns: 1fr;
@@ -301,18 +324,23 @@
   color: #fff;
   transition: background 0.2s, opacity 0.2s;
 }
+
 .company-payment {
   background: #be123c;
 }
+
 .company-payment:hover {
   background: #991b1b;
 }
+
 .online-payment {
   background: #1d4ed8;
 }
+
 .online-payment:hover {
   background: #1e40af;
 }
+
 .company-payment:disabled,
 .online-payment:disabled {
   opacity: 0.55;

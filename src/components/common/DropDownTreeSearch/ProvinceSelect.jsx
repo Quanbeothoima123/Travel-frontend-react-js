@@ -3,8 +3,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./tree-dropdown.css";
 
 export default function ProvinceSelect({
-  value, // { code, name_with_type } | null
-  onChange, // (prov) => void
+  value,
+  onChange,
   placeholder = "Chọn tỉnh/thành phố…",
 }) {
   const [open, setOpen] = useState(false);
