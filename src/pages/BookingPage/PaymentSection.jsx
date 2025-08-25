@@ -1,11 +1,14 @@
 import React from "react";
 import "./BookingPage.css";
 import { FaHome, FaPaypal, FaCreditCard } from "react-icons/fa";
+
 export default function PaymentSection({
   paymentMethod,
   onChangePayment,
-  onSubmit,
+  onSubmitCash,
+  onSubmitMomo,
   canSubmit,
+  isSubmitting,
 }) {
   return (
     <>
@@ -27,9 +30,10 @@ export default function PaymentSection({
             <FaHome /> <span>Thanh toán tại công ty</span>
           </span>
           <span className="payment-desc">
-            nhà số 1, ngõ 30, làng Hương Ngải, xã Tây Phương, thành phố Hà Nội
+            Nhà số 1, ngõ 30, làng Hương Ngải, xã Tây Phương, thành phố Hà Nội
           </span>
         </label>
+
         <label
           className={`payment-card ${
             paymentMethod === "momo" ? "is-active" : ""
@@ -43,12 +47,13 @@ export default function PaymentSection({
             onChange={() => onChangePayment("momo")}
           />
           <span className="payment-badge payment-badge--blue">
-            <FaPaypal /> <span>Thanh toán trực tuyến</span>
+            <FaPaypal /> <span>Thanh toán ví MoMo</span>
           </span>
           <span className="payment-desc">
-            (Sắp hỗ trợ Momo — hiện chọn để giữ chỗ)
+            Thanh toán trực tuyến an toàn qua cổng MoMo.
           </span>
         </label>
+
         <label
           className={`payment-card muted ${
             paymentMethod === "bank-transfer" ? "is-active" : ""
@@ -60,29 +65,38 @@ export default function PaymentSection({
             value="bank-transfer"
             checked={paymentMethod === "bank-transfer"}
             onChange={() => onChangePayment("bank-transfer")}
+            disabled
           />
           <span className="payment-badge payment-badge--gray">
             <FaCreditCard /> <span>Chuyển khoản ngân hàng</span>
           </span>
           <span className="payment-desc">
-            Tạm thời chưa mở — hiển thị dạng muted giống ảnh mẫu
+            Tạm thời chưa mở — hiển thị dạng muted.
           </span>
         </label>
       </div>
+
       <div className="action-row">
         <button
+          type="button"
           className="company-payment"
-          disabled={!canSubmit || paymentMethod !== "cash"}
-          onClick={onSubmit}
+          disabled={!canSubmit || paymentMethod !== "cash" || isSubmitting}
+          onClick={onSubmitCash}
         >
-          Xác nhận
+          {isSubmitting && paymentMethod === "cash"
+            ? "Đang xử lý..."
+            : "Xác nhận"}
         </button>
+
         <button
+          type="button"
           className="online-payment"
-          disabled={!canSubmit || paymentMethod !== "momo"}
-          onClick={onSubmit}
+          disabled={!canSubmit || paymentMethod !== "momo" || isSubmitting}
+          onClick={onSubmitMomo}
         >
-          Thanh toán MOMO
+          {isSubmitting && paymentMethod === "momo"
+            ? "Đang chuyển đến MoMo..."
+            : "Thanh toán MoMo"}
         </button>
       </div>
     </>

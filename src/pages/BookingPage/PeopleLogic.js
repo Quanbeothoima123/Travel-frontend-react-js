@@ -1,120 +1,100 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 export function usePeopleLogic({
   seats,
   discountedBase,
   hasAdditional,
   additionalMapById,
-  getTypeIdByKey,
   showToast,
+  personTypes = [],
 }) {
-  const [adultsBase, setAdultsBase] = useState(0);
-  const [childrenBase, setChildrenBase] = useState(0);
-  const [smallChildrenBase, setSmallChildrenBase] = useState(0);
-  const [infantsBase, setInfantsBase] = useState(0);
-  const [adultsExceed, setAdultsExceed] = useState(0);
-  const [childrenExceed, setChildrenExceed] = useState(0);
-  const [smallChildrenExceed, setSmallChildrenExceed] = useState(0);
-  const [infantsExceed, setInfantsExceed] = useState(0);
+  // Khởi tạo state theo danh sách loại người (key = id)
+  const initialCounts = useMemo(() => {
+    return personTypes.reduce((acc, t) => {
+      acc[t.id] = 0;
+      return acc;
+    }, {});
+  }, [personTypes]);
 
-  const totalBase = adultsBase + childrenBase + smallChildrenBase + infantsBase;
-  const totalExceed =
-    adultsExceed + childrenExceed + smallChildrenExceed + infantsExceed;
+  const [baseCounts, setBaseCounts] = useState(initialCounts);
+  const [exceedCounts, setExceedCounts] = useState(initialCounts);
+
+  // Reset khi personTypes thay đổi
+  useEffect(() => {
+    setBaseCounts(initialCounts);
+    setExceedCounts(initialCounts);
+  }, [initialCounts]);
+
+  const totalBase = useMemo(
+    () => Object.values(baseCounts).reduce((sum, v) => sum + v, 0),
+    [baseCounts]
+  );
+
+  const totalExceed = useMemo(
+    () => Object.values(exceedCounts).reduce((sum, v) => sum + v, 0),
+    [exceedCounts]
+  );
+
   const totalPeople = totalBase + totalExceed;
 
+  // Tổng phụ thu cho phần vượt chỗ
   const surchargeTotal = useMemo(() => {
-    const adultId = getTypeIdByKey("adults");
-    const childId = getTypeIdByKey("children");
-    const smallChildId = getTypeIdByKey("smallChildren");
-    const infantId = getTypeIdByKey("infants");
-    return (
-      adultsExceed * (additionalMapById[adultId] || 0) +
-      childrenExceed * (additionalMapById[childId] || 0) +
-      smallChildrenExceed * (additionalMapById[smallChildId] || 0) +
-      infantsExceed * (additionalMapById[infantId] || 0)
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    adultsExceed,
-    childrenExceed,
-    smallChildrenExceed,
-    infantsExceed,
-    additionalMapById,
-    getTypeIdByKey,
-  ]);
+    return personTypes.reduce((sum, t) => {
+      const count = exceedCounts[t.id] || 0;
+      const surcharge = additionalMapById[t.id] || 0;
+      return sum + count * surcharge;
+    }, 0);
+  }, [exceedCounts, additionalMapById, personTypes]);
 
+  // ✅ Tổng tiền: base (1 lần) + phụ thu (nếu vượt chỗ)
   const totalPrice = useMemo(() => {
-    if (!discountedBase) return 0;
-    if (totalPeople === 0) return 0;
-    if (seats <= 0) return discountedBase;
-    return discountedBase + (totalPeople > seats ? surchargeTotal : 0);
-  }, [discountedBase, totalPeople, seats, surchargeTotal]);
+    if (totalPeople === 0 || !discountedBase) return 0;
 
-  const handleBaseChange = (key, value) => {
-    const safe = clampBase(value, key, seats, totalBase, showToast);
-    switch (key) {
-      case "adults":
-        setAdultsBase(safe);
-        break;
-      case "children":
-        setChildrenBase(safe);
-        break;
-      case "smallChildren":
-        setSmallChildrenBase(safe);
-        break;
-      case "infants":
-        setInfantsBase(safe);
-        break;
-    }
+    // Base luôn tính 1 lần khi có người đặt
+    const baseOnce = discountedBase;
+
+    // Chưa biết seats hoặc tour không cho vượt -> không cộng phụ thu
+    if (seats <= 0 || !hasAdditional) return baseOnce;
+
+    // Không vượt chỗ -> không phụ thu
+    if (totalPeople <= seats) return baseOnce;
+
+    // Vượt chỗ -> cộng tổng phụ thu theo loại người
+    return baseOnce + surchargeTotal;
+  }, [discountedBase, totalPeople, seats, hasAdditional, surchargeTotal]);
+
+  const handleBaseChange = (id, value) => {
+    const currentBase = baseCounts[id] || 0;
+    const othersSum = totalBase - currentBase;
+    const safe = clampBase(value, seats, othersSum, showToast);
+    setBaseCounts((prev) => ({ ...prev, [id]: safe }));
   };
 
-  const handleExceedChange = (key, value) => {
+  const handleExceedChange = (id, value) => {
     const safe = Math.max(0, parseInt(value || "0", 10));
-    switch (key) {
-      case "adults":
-        setAdultsExceed(safe);
-        break;
-      case "children":
-        setChildrenExceed(safe);
-        break;
-      case "smallChildren":
-        setSmallChildrenExceed(safe);
-        break;
-      case "infants":
-        setInfantsExceed(safe);
-        break;
-    }
+    setExceedCounts((prev) => ({ ...prev, [id]: safe }));
   };
 
-  // Hàm formatVND (di chuyển vào đây để tái sử dụng)
   const formatVND = (n) =>
     (n || 0).toLocaleString("vi-VN", { style: "currency", currency: "VND" });
 
   return {
-    adultsBase,
-    childrenBase,
-    smallChildrenBase,
-    infantsBase,
-    adultsExceed,
-    childrenExceed,
-    smallChildrenExceed,
-    infantsExceed,
+    baseCounts,
+    exceedCounts,
+    totalBase,
+    totalExceed,
+    totalPeople,
     totalPrice,
+    surchargeTotal,
     handleBaseChange,
     handleExceedChange,
     formatVND,
   };
 }
 
-function clampBase(value, key, seats, totalBase, showToast) {
+function clampBase(value, seats, othersSum, showToast) {
   const raw = Math.max(0, parseInt(value || "0", 10));
-  const othersSum =
-    (key !== "adults" ? totalBase - (key === "adults" ? 0 : raw) : 0) +
-    (key !== "children" ? totalBase - (key === "children" ? 0 : raw) : 0) +
-    (key !== "smallChildren"
-      ? totalBase - (key === "smallChildren" ? 0 : raw)
-      : 0) +
-    (key !== "infants" ? totalBase - (key === "infants" ? 0 : raw) : 0);
+  if (seats <= 0) return raw; // chưa biết seats thì không clamp
   const maxForThis = Math.max(0, seats - othersSum);
   if (raw > maxForThis) showToast("Số người base vượt quá số chỗ!", "error");
   return Math.min(raw, maxForThis);

@@ -29,9 +29,11 @@ export default function BookingPage() {
   const [note, setNote] = React.useState("");
   const [paymentMethod, setPaymentMethod] = React.useState("cash");
   const [personTypes, setPersonTypes] = React.useState([]);
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false); // State cho modal
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null); // 'cash' | 'momo'
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch tour detail
+  // Load tour detail (by selectedTour.slug or initialSlug)
   useEffect(() => {
     const currentSlug = selectedTour?.slug || initialSlug;
     if (!currentSlug) return;
@@ -44,39 +46,15 @@ export default function BookingPage() {
         const detail = data.tourDetail;
         setTourDetail(detail);
 
+        // Build person types from additionalPrices
         if (
           Array.isArray(detail.additionalPrices) &&
           detail.additionalPrices.length > 0
         ) {
-          const nameToKey = (name) => {
-            const n = name.toLowerCase();
-            if (n.includes("người lớn")) return "adults";
-            if (n.includes("trẻ em") && !n.includes("2-5")) return "children";
-            if (n.includes("2-5")) return "smallChildren";
-            if (n.includes("em bé") || n.includes("em be") || n.includes("bé"))
-              return "infants";
-            return null;
-          };
-          const priorityOf = (name) => {
-            const n = name.toLowerCase();
-            if (n.includes("người lớn")) return 1;
-            if (n.includes("trẻ em") && !n.includes("2-5")) return 2;
-            if (n.includes("2-5")) return 3;
-            if (n.includes("em bé") || n.includes("em be") || n.includes("bé"))
-              return 4;
-            return 99;
-          };
-
-          const arr = detail.additionalPrices
-            .map((p) => ({
-              id: p.typeOfPersonId._id,
-              name: p.typeOfPersonId.name,
-              key: nameToKey(p.typeOfPersonId.name),
-              priority: priorityOf(p.typeOfPersonId.name),
-            }))
-            .filter((x) => x.key);
-
-          arr.sort((a, b) => a.priority - b.priority);
+          const arr = detail.additionalPrices.map((p) => ({
+            id: p.typeOfPersonId._id,
+            name: p.typeOfPersonId.name,
+          }));
           setPersonTypes(arr);
         } else {
           setPersonTypes([]);
@@ -88,7 +66,7 @@ export default function BookingPage() {
           setSelectedTour({ slug: detail.slug, title: detail.title });
       })
       .catch((err) => showToast("Lỗi tải tour: " + err.message, "error"));
-  }, [initialSlug, selectedTour?.slug, showToast]);
+  }, [initialSlug, selectedTour?.slug, showToast]); // giữ nguyên như trước
 
   const seats = tourDetail?.seats || 0;
   const basePriceRaw = tourDetail?.prices || 0;
@@ -97,10 +75,12 @@ export default function BookingPage() {
     0,
     Math.round(basePriceRaw * (1 - discount / 100))
   );
+
   const hasAdditional =
     Array.isArray(tourDetail?.additionalPrices) &&
     tourDetail.additionalPrices.length > 0;
 
+  // Map id -> moneyMore
   const additionalMapById = useMemo(() => {
     const map = {};
     (tourDetail?.additionalPrices || []).forEach((p) => {
@@ -110,28 +90,22 @@ export default function BookingPage() {
     return map;
   }, [tourDetail]);
 
-  const getTypeIdByKey = (key) => personTypes.find((t) => t.key === key)?.id;
-
   const {
-    adultsBase,
-    childrenBase,
-    smallChildrenBase,
-    infantsBase,
-    adultsExceed,
-    childrenExceed,
-    smallChildrenExceed,
-    infantsExceed,
+    baseCounts,
+    exceedCounts,
     totalPrice,
     handleBaseChange,
     handleExceedChange,
     formatVND,
+    totalBase,
+    totalExceed,
   } = usePeopleLogic({
     seats,
     discountedBase,
     hasAdditional,
     additionalMapById,
-    getTypeIdByKey,
     showToast,
+    personTypes,
   });
 
   const minDate = useMemo(() => {
@@ -142,7 +116,34 @@ export default function BookingPage() {
 
   const canSubmit = totalPrice > 0;
 
-  const handleSubmit = async () => {
+  // Tạo payload chung cho cả 2 hình thức
+  const buildPayload = () => ({
+    tourId: tourDetail?._id,
+    departureDate: departDate,
+    seatFor: personTypes.map((t) => ({
+      typeOfPersonId: t.id,
+      quantity: baseCounts[t.id] || 0,
+    })),
+    seatAddFor: personTypes
+      .map((t) => ({
+        typeOfPersonId: t.id,
+        quantity: exceedCounts[t.id] || 0,
+        moneyMoreForOne: additionalMapById[t.id] || 0,
+      }))
+      .filter((s) => s.quantity > 0),
+    nameOfUser: name,
+    phoneNumber: phone,
+    email,
+    address,
+    province: province?._id,
+    ward: ward?._id,
+    note,
+    typeOfPayment: paymentMethod,
+    totalPrice,
+  });
+
+  // Validate form đầu vào (dùng chung)
+  const validateBeforeSubmit = () => {
     const errors = validateForm({
       name,
       phone,
@@ -154,61 +155,22 @@ export default function BookingPage() {
       totalPrice,
       showToast,
     });
-    if (errors.length) return;
+    return errors.length === 0;
+  };
 
-    // Mở modal xác nhận
+  // Mở confirm theo action
+  const openConfirm = (action) => {
+    if (!validateBeforeSubmit()) return;
+    setConfirmAction(action); // 'cash' | 'momo'
     setIsConfirmOpen(true);
   };
 
-  const handleConfirm = async () => {
-    setIsConfirmOpen(false);
-    const payload = {
-      tourId: tourDetail?._id,
-      departureDate: departDate,
-      seatFor: [
-        { typeOfPersonId: getTypeIdByKey("adults"), quantity: adultsBase },
-        { typeOfPersonId: getTypeIdByKey("children"), quantity: childrenBase },
-        {
-          typeOfPersonId: getTypeIdByKey("smallChildren"),
-          quantity: smallChildrenBase,
-        },
-        { typeOfPersonId: getTypeIdByKey("infants"), quantity: infantsBase },
-      ],
-      seatAddFor: [
-        {
-          typeOfPersonId: getTypeIdByKey("adults"),
-          quantity: adultsExceed,
-          moneyMoreForOne: additionalMapById[getTypeIdByKey("adults")] || 0,
-        },
-        {
-          typeOfPersonId: getTypeIdByKey("children"),
-          quantity: childrenExceed,
-          moneyMoreForOne: additionalMapById[getTypeIdByKey("children")] || 0,
-        },
-        {
-          typeOfPersonId: getTypeIdByKey("smallChildren"),
-          quantity: smallChildrenExceed,
-          moneyMoreForOne:
-            additionalMapById[getTypeIdByKey("smallChildren")] || 0,
-        },
-        {
-          typeOfPersonId: getTypeIdByKey("infants"),
-          quantity: infantsExceed,
-          moneyMoreForOne: additionalMapById[getTypeIdByKey("infants")] || 0,
-        },
-      ].filter((s) => s.quantity > 0),
-      nameOfUser: name,
-      phoneNumber: phone,
-      email,
-      address,
-      province: province?._id,
-      ward: ward?._id,
-      note,
-      typeOfPayment: paymentMethod,
-      totalPrice,
-    };
+  // Submit tiền mặt: gọi /invoice
+  const submitCash = async () => {
+    const payload = buildPayload();
 
     try {
+      setIsSubmitting(true);
       const response = await fetch("http://localhost:5000/api/v1/invoice", {
         method: "POST",
         credentials: "include",
@@ -217,19 +179,70 @@ export default function BookingPage() {
       });
       const data = await response.json();
       if (data.code === 200) {
-        showToast("Đặt tour thành công!", "success");
+        showToast(
+          "Đặt tour thành công! Vui lòng đến công ty để thanh toán.",
+          "success"
+        );
       } else {
         showToast(data.message || "Đặt tour thất bại", "error");
       }
     } catch (err) {
       showToast("Lỗi server: " + err.message, "error");
+    } finally {
+      setIsSubmitting(false);
     }
+  };
+
+  // Submit MoMo: gọi /pay-with-momo, nhận payUrl và redirect
+  const submitMomo = async () => {
+    const payload = buildPayload();
+
+    try {
+      setIsSubmitting(true);
+      const response = await fetch(
+        "http://localhost:5000/api/v1/pay-with-momo",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+      const data = await response.json();
+
+      if (response.ok && data?.payUrl) {
+        // Chuyển sang cổng thanh toán MoMo
+        window.location.href = data.payUrl;
+      } else {
+        showToast(
+          data?.message || "Không tạo được giao dịch MoMo. Vui lòng thử lại.",
+          "error"
+        );
+      }
+    } catch (err) {
+      showToast("Lỗi server khi tạo giao dịch MoMo: " + err.message, "error");
+    } finally {
+      // Lưu ý: nếu redirect thành công, người dùng sẽ rời trang trước khi chạy đến đây.
+      setIsSubmitting(false);
+    }
+  };
+
+  // Nhấn "Xác nhận" trong ConfirmModal
+  const handleConfirm = async () => {
+    setIsConfirmOpen(false);
+    if (confirmAction === "cash") {
+      await submitCash();
+    } else if (confirmAction === "momo") {
+      await submitMomo();
+    }
+    setConfirmAction(null);
   };
 
   return (
     <div className="booking-page">
       <div className="booking-form">
         <h2>Đặt tour</h2>
+
         <div className="form-grid">
           <div className="form-item">
             <label>Chọn loại tour</label>
@@ -247,24 +260,20 @@ export default function BookingPage() {
             />
           </div>
         </div>
+
         <PeopleSection
-          adultsBase={adultsBase}
-          childrenBase={childrenBase}
-          smallChildrenBase={smallChildrenBase}
-          infantsBase={infantsBase}
-          adultsExceed={adultsExceed}
-          childrenExceed={childrenExceed}
-          smallChildrenExceed={smallChildrenExceed}
-          infantsExceed={infantsExceed}
+          baseCounts={baseCounts}
+          exceedCounts={exceedCounts}
           hasAdditional={hasAdditional}
           additionalMapById={additionalMapById}
           seats={seats}
-          getTypeIdByKey={getTypeIdByKey}
           formatVND={formatVND}
           showToast={showToast}
           onBaseChange={handleBaseChange}
           onExceedChange={handleExceedChange}
+          personTypes={personTypes}
         />
+
         <div className="form-grid">
           <div className="form-item">
             <label>Ngày khởi hành</label>
@@ -276,6 +285,7 @@ export default function BookingPage() {
             />
           </div>
         </div>
+
         <CustomerInfo
           name={name}
           phone={phone}
@@ -292,21 +302,30 @@ export default function BookingPage() {
           onChangeWard={setWard}
           onChangeNote={setNote}
         />
+
         <PaymentSection
           paymentMethod={paymentMethod}
           onChangePayment={setPaymentMethod}
-          onSubmit={handleSubmit}
+          onSubmitCash={() => openConfirm("cash")}
+          onSubmitMomo={() => openConfirm("momo")}
           canSubmit={canSubmit}
+          isSubmitting={isSubmitting}
         />
       </div>
+
       <div className="tour-summary-wrap">
         <TourInfoSummary tourDetail={tourDetail} totalPrice={totalPrice} />
       </div>
+
       <ConfirmModal
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
         onConfirm={handleConfirm}
-        message="Bạn đồng ý đặt tour này chứ?"
+        message={
+          confirmAction === "momo"
+            ? "Bạn xác nhận thanh toán qua MoMo cho đơn đặt tour này?"
+            : "Bạn đồng ý đặt tour và thanh toán tại công ty chứ?"
+        }
       />
     </div>
   );
