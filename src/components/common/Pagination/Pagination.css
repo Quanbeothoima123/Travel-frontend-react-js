@@ -1,0 +1,63 @@
+/* Pagination.css */
+.custom-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 8px 14px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-btn:hover {
+  background: #f3f4f6;
+  border-color: #bbb;
+}
+
+.page-btn.active {
+  background: #3b82f6; /* xanh dương */
+  color: #fff;
+  border-color: #3b82f6;
+  font-weight: bold;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-ellipsis {
+  padding: 0 6px;
+  color: #888;
+  font-size: 16px;
+  user-select: none;
+}
+
+/* 📱 Responsive: mobile chỉ hiển thị Prev, current, Next */
+@media (max-width: 576px) {
+  .page-list {
+    display: flex;
+    gap: 4px;
+  }
+  .page-list button:not(.active) {
+    display: none;
+  }
+  .page-ellipsis {
+    display: none;
+  }
+}

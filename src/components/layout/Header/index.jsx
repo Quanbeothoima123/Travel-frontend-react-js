@@ -13,19 +13,21 @@ import { useAuth } from "../../../contexts/AuthContext";
 import "./Header.css";
 
 // Render menu đệ quy
-const MenuItem = ({ item, depth = 0 }) => {
+const MenuItem = ({ item, depth = 0, basePath }) => {
   const hasChildren = Array.isArray(item.children) && item.children.length > 0;
+
+  const linkTo = `/${basePath}/${item.slug}`;
 
   if (!hasChildren) {
     return depth === 0 ? (
       <li className="nav-item">
-        <Link className="nav-link" to={`/${item.slug}`}>
+        <Link className="nav-link" to={linkTo}>
           {item.title}
         </Link>
       </li>
     ) : (
       <li>
-        <Link className="dropdown-item" to={`/${item.slug}`}>
+        <Link className="dropdown-item" to={linkTo}>
           {item.title}
         </Link>
       </li>
@@ -34,36 +36,34 @@ const MenuItem = ({ item, depth = 0 }) => {
 
   return depth === 0 ? (
     <li className="nav-item dropdown">
-      <Link
-        className="nav-link dropdown-toggle"
-        to={`/${item.slug}`}
-        role="button"
-        aria-haspopup="true"
-        aria-expanded="false"
-      >
+      <Link className="nav-link dropdown-toggle" to={linkTo}>
         {item.title}
       </Link>
       <ul className="dropdown-menu">
         {item.children.map((child) => (
-          <MenuItem key={child._id} item={child} depth={depth + 1} />
+          <MenuItem
+            key={child._id}
+            item={child}
+            depth={depth + 1}
+            basePath={basePath}
+          />
         ))}
       </ul>
     </li>
   ) : (
     <li className="dropdown-submenu">
-      <Link
-        className="dropdown-item dropdown-toggle"
-        to={`/${item.slug}`}
-        role="button"
-        aria-haspopup="true"
-        aria-expanded="false"
-      >
+      <Link className="dropdown-item dropdown-toggle" to={linkTo}>
         {item.title}
         <span className="submenu-caret">›</span>
       </Link>
       <ul className="dropdown-menu">
         {item.children.map((child) => (
-          <MenuItem key={child._id} item={child} depth={depth + 1} />
+          <MenuItem
+            key={child._id}
+            item={child}
+            depth={depth + 1}
+            basePath={basePath}
+          />
         ))}
       </ul>
     </li>
@@ -84,19 +84,42 @@ const Header = () => {
     const fetchMenus = async () => {
       try {
         const endpoints = {
-          home: "http://localhost:5000/api/v1/homePage",
-          tour: "http://localhost:5000/api/v1/tour",
-          service: "http://localhost:5000/api/v1/service",
-          news: "http://localhost:5000/api/v1/news",
-          library: "http://localhost:5000/api/v1/library",
-          contact: "http://localhost:5000/api/v1/contact",
-          about: "http://localhost:5000/api/v1/info",
+          home: {
+            url: "http://localhost:5000/api/v1/homePage",
+            basePath: "homePage",
+          },
+          tour: {
+            url: "http://localhost:5000/api/v1/tour",
+            basePath: "search/tours",
+          },
+          service: {
+            url: "http://localhost:5000/api/v1/service",
+            basePath: "service",
+          },
+          news: { url: "http://localhost:5000/api/v1/news", basePath: "news" },
+          library: {
+            url: "http://localhost:5000/api/v1/library",
+            basePath: "library",
+          },
+          contact: {
+            url: "http://localhost:5000/api/v1/contact",
+            basePath: "contact",
+          },
+          about: { url: "http://localhost:5000/api/v1/info", basePath: "info" },
         };
+
         const responses = await Promise.all(
-          Object.values(endpoints).map((url) => fetch(url))
+          Object.values(endpoints).map((ep) => fetch(ep.url))
         );
         const data = await Promise.all(responses.map((res) => res.json()));
-        setMenuData(data.map((d) => d[0]));
+
+        // ghép basePath vào data
+        const merged = data.map((d, i) => ({
+          ...d[0],
+          basePath: Object.values(endpoints)[i].basePath,
+        }));
+
+        setMenuData(merged);
       } catch (e) {
         console.error("Error fetching menus:", e);
       }
@@ -156,7 +179,7 @@ const Header = () => {
           <div className="collapse navbar-collapse justify-content-center d-none d-lg-flex">
             <ul className="navbar-nav">
               {menuData.map((item) => (
-                <MenuItem key={item._id} item={item} />
+                <MenuItem key={item._id} item={item} basePath={item.basePath} />
               ))}
             </ul>
           </div>
