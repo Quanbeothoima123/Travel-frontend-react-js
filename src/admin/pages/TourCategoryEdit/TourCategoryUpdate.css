@@ -1,0 +1,149 @@
+.tcat-wrap {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.tcat-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.tcat-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tcat-label {
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #333;
+}
+
+.tcat-input,
+.tcat-input-slug {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.25s;
+}
+
+.tcat-input:focus {
+  border-color: #4a90e2;
+}
+
+/* Slug input style riêng */
+.tcat-input-slug {
+  border: 1px solid #4a90e2;
+  background: #f9fcff;
+}
+
+.tcat-input-slug:focus {
+  border-color: #1e70bf;
+  background: #f0f7ff;
+}
+
+.tcat-row-inline {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tcat-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.tcat-toggle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.tcat-toggle.on {
+  background: #4caf50;
+  color: #fff;
+}
+
+.tcat-toggle.off {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.tcat-flag {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tcat-actions {
+  text-align: right;
+}
+
+.tcat-submit {
+  background: #4a90e2;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+
+.tcat-submit:hover:not(:disabled) {
+  background: #1e70bf;
+}
+
+.tcat-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.tcat-notice {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tcat-notice.ok {
+  background: #e6f8ec;
+  color: #2e7d32;
+}
+
+.tcat-notice.err {
+  background: #fdecea;
+  color: #c62828;
+}

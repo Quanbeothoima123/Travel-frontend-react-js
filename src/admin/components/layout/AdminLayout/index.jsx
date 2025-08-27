@@ -68,10 +68,7 @@ export default function AdminLayout({ children }) {
         onClose={() => setSidebarOpen(false)}
       />
 
-      <main className="admin-main">
-        {/* dùng {children} nếu bạn truyền vào trực tiếp; còn Outlet nếu dùng react-router */}
-        {children ?? <Outlet />}
-      </main>
+      <main className="admin-main">{children ?? <Outlet />}</main>
     </div>
   );
 }

@@ -10,8 +10,12 @@ import BookingPage from "./pages/BookingPage";
 import ReAuthFlow from "./pages/ReAuthFlow";
 import SearchPage from "./pages/SearchPage";
 import AdminLayout from "./admin/components/layout/AdminLayout";
+import TourCategory from "./admin/pages/TourCategory";
 import { ToastProvider } from "./contexts/ToastContext";
 import { AuthProvider } from "./contexts/AuthContext";
+import TourCategoryCreate from "./admin/pages/TourCategoryCreate";
+import TourCategoryDetail from "./admin/pages/TourCategoryDetail";
+import TourCategoryUpdate from "./admin/pages/TourCategoryEdit";
 
 function App() {
   return (
@@ -45,7 +49,21 @@ function App() {
             />
 
             {/* Admin routes */}
-            <Route path="/admin/*" element={<AdminLayout />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route path="tour-categories" element={<TourCategory />} />
+              <Route
+                path="tour-categories/create"
+                element={<TourCategoryCreate />}
+              />
+              <Route
+                path="tour-categories/detail/:id"
+                element={<TourCategoryDetail />}
+              />
+              <Route
+                path="tour-categories/update/:id"
+                element={<TourCategoryUpdate />}
+              />
+            </Route>
           </Routes>
         </AuthProvider>
       </ToastProvider>
