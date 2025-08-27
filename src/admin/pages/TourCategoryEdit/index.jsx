@@ -6,7 +6,7 @@ import CategoryTreeSelect from "../../../components/common/DropDownTreeSearch/Ca
 import "./TourCategoryUpdate.css";
 
 export default function TourCategoryUpdate({
-  apiUrl = "http://localhost:5000/api/v1/tour-categories",
+  apiUrl = "http://localhost:5000/api/v1/tour-categories?tree=true",
   onUpdated = null,
 }) {
   const { id } = useParams(); // ✅ Lấy id từ URL

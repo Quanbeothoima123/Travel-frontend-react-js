@@ -55,7 +55,7 @@ export default function TourCategory() {
   const dropdownRef = useRef(null);
 
   // base API
-  const API_BASE = "http://localhost:5000/api/v1/tour-categories";
+  const API_BASE = "http://localhost:5000/api/v1/tour-categories?tree=true";
 
   useEffect(() => {
     async function load() {

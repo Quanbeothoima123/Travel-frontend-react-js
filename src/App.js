@@ -16,6 +16,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import TourCategoryCreate from "./admin/pages/TourCategoryCreate";
 import TourCategoryDetail from "./admin/pages/TourCategoryDetail";
 import TourCategoryUpdate from "./admin/pages/TourCategoryEdit";
+import TourManager from "./admin/pages/TourManager";
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
                 path="tour-categories/update/:id"
                 element={<TourCategoryUpdate />}
               />
+              <Route path="tours" element={<TourManager />} />
             </Route>
           </Routes>
         </AuthProvider>

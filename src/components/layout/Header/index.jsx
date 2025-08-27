@@ -89,7 +89,7 @@ const Header = () => {
             basePath: "homePage",
           },
           tour: {
-            url: "http://localhost:5000/api/v1/tour",
+            url: "http://localhost:5000/api/v1/tour-categories?tree=true",
             basePath: "search/tours",
           },
           service: {

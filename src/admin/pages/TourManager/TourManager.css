@@ -1,0 +1,273 @@
+/* TourManager.css
+   Giao diện responsive cơ bản — bạn có thể chỉnh màu, kích thước cho khớp design
+*/
+
+.tm-wrap {
+  padding: 16px;
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  color: #0b2545;
+}
+
+/* TOP controls */
+.tm-top-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.tm-left-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tm-search input {
+  border: 2px solid #0d79c3;
+  padding: 8px 10px;
+  border-radius: 6px;
+  outline: none;
+  min-width: 260px;
+}
+.tm-search input:focus {
+  box-shadow: 0 0 0 3px rgba(13, 121, 195, 0.08);
+}
+
+/* sort dropdown */
+.tm-sort select {
+  border: 2px solid #0d79c3;
+  padding: 7px 8px;
+  border-radius: 6px;
+  background: white;
+}
+
+/* Category wrapper (CategoryTreeSelect internal styles show its dropdown) */
+.tm-category {
+  min-width: 220px;
+}
+
+/* status radio group */
+.tm-status-filter {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+}
+
+/* right controls */
+.tm-right-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.tm-add-btn {
+  border: 2px solid #0d79c3;
+  background: white;
+  color: #0d79c3;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* action bar (below top controls) */
+.tm-action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0 18px 0;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tm-action-left {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.tm-action-left select {
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.tm-update-btn {
+  background: #0d79c3;
+  color: white;
+  padding: 7px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+.tm-refresh {
+  background: transparent;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+/* table */
+.tm-table-wrap {
+  overflow-x: auto;
+}
+.tm-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+.tm-table thead th {
+  text-align: left;
+  padding: 12px 10px;
+  font-weight: 700;
+  font-size: 13px;
+}
+.tm-table tbody td {
+  background: white;
+  padding: 12px 10px;
+  vertical-align: middle;
+  border: 1px solid rgba(13, 121, 195, 0.14);
+  border-radius: 8px;
+}
+
+/* visually separate rows */
+.tm-table tbody tr {
+  box-shadow: 0 0 0 2px rgba(13, 121, 195, 0.04) inset;
+}
+
+/* first column (checkbox) */
+.tm-col-check {
+  width: 48px;
+  text-align: center;
+}
+
+/* thumbnail */
+.tm-thumb-cell {
+  width: 120px;
+}
+.tm-thumb {
+  width: 96px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.tm-thumb-placeholder {
+  width: 96px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #ddd;
+  color: #999;
+  border-radius: 6px;
+}
+
+/* position input */
+.tm-pos-input {
+  width: 80px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* switch */
+.tm-switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+.tm-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.tm-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.2s;
+  border-radius: 24px;
+}
+.tm-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  transition: 0.2s;
+  border-radius: 50%;
+}
+.tm-switch input:checked + .tm-slider {
+  background-color: #0d79c3;
+}
+.tm-switch input:checked + .tm-slider:before {
+  transform: translateX(22px);
+}
+
+/* selected row highlight */
+.selected-row td {
+  box-shadow: 0 0 0 2px rgba(13, 121, 195, 0.06) inset;
+}
+
+/* loading */
+.tm-loading {
+  padding: 30px;
+  text-align: center;
+}
+
+/* small subinfo under title */
+.tm-subinfo {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+.tm-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  gap: 10px;
+}
+
+.tm-pagination button {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.tm-pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tm-pagination span {
+  font-weight: bold;
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .tm-left-controls {
+    gap: 6px;
+  }
+  .tm-search input {
+    min-width: 160px;
+  }
+  .tm-category {
+    min-width: 160px;
+  }
+  .tm-table thead th {
+    font-size: 12px;
+  }
+  .tm-thumb {
+    width: 70px;
+    height: 48px;
+  }
+}

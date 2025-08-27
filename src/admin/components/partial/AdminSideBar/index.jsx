@@ -36,7 +36,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
             title: "Tour Categories",
             path: "/admin/tour-categories",
           },
-          { id: "tour-list", title: "Tour List", path: "/admin/tour-list" },
+          { id: "tour-list", title: "Tour List", path: "/admin/tours" },
         ],
       },
       {

@@ -60,8 +60,7 @@ export default function BookingPage() {
           setPersonTypes([]);
         }
 
-        if (!selectedCategory)
-          setSelectedCategory(detail.categoryId?.[0] || null);
+        if (!selectedCategory) setSelectedCategory(detail.categoryId || null);
         if (!selectedTour)
           setSelectedTour({ slug: detail.slug, title: detail.title });
       })
