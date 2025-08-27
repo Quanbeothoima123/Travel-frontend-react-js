@@ -9,6 +9,7 @@ import Register from "./pages/Auth/Register";
 import BookingPage from "./pages/BookingPage";
 import ReAuthFlow from "./pages/ReAuthFlow";
 import SearchPage from "./pages/SearchPage";
+import AdminLayout from "./admin/components/layout/AdminLayout";
 import { ToastProvider } from "./contexts/ToastContext";
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -17,18 +18,34 @@ function App() {
     <Router>
       <ToastProvider>
         <AuthProvider>
-          <Header />
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/tour/:slug" element={<DetailTour />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/re-auth" element={<ReAuthFlow />} />
-            <Route path="/booking-tour/:slug" element={<BookingPage />} />
+            {/* User routes */}
             <Route
-              path="/search/tours/:categorySlug"
-              element={<SearchPage />}
+              path="/*"
+              element={
+                <>
+                  <Header />
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/tour/:slug" element={<DetailTour />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/re-auth" element={<ReAuthFlow />} />
+                    <Route
+                      path="/booking-tour/:slug"
+                      element={<BookingPage />}
+                    />
+                    <Route
+                      path="/search/tours/:categorySlug"
+                      element={<SearchPage />}
+                    />
+                  </Routes>
+                </>
+              }
             />
+
+            {/* Admin routes */}
+            <Route path="/admin/*" element={<AdminLayout />} />
           </Routes>
         </AuthProvider>
       </ToastProvider>

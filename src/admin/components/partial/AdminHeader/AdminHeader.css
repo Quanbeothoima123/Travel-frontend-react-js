@@ -1,0 +1,232 @@
+:root {
+  --brand: #e56f2c;
+  --brand-700: #d46325;
+  --brand-800: #c4571d;
+  --ink: #1b1b1f;
+  --paper: #fff;
+  --muted: #707480;
+  --line: #e7e7ea;
+  --radius: 14px;
+  --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  --header-h: 64px;
+  --sidebar-w: 260px;
+}
+
+.admin-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--header-h);
+  background: var(--brand);
+  color: #fff;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  box-shadow: var(--shadow);
+}
+
+.ah-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ah-brand {
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  font-size: 18px;
+}
+.ah-brand:hover {
+  opacity: 0.95;
+}
+
+.ah-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ah-icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #fff;
+  color: var(--brand-800);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.ah-icon-btn:hover {
+  transform: translateY(-1px);
+}
+.ah-icon-btn.active {
+  background: #ffe9dd;
+}
+
+.ah-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ff4757;
+  color: #fff;
+  font-size: 11px;
+  min-width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  padding: 0 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* Dropdown */
+.ah-dd-wrapper {
+  position: relative;
+}
+.ah-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: min(380px, 86vw);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transform-origin: 90% -10px;
+  transform: scale(0.97) translateY(-6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.ah-dropdown.open {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+.ah-dd-title {
+  padding: 12px 14px;
+  font-weight: 700;
+  background: #fafafb;
+  border-bottom: 1px solid var(--line);
+}
+.ah-dd-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow: auto;
+}
+.ah-dd-item {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.ah-dd-item:last-child {
+  border-bottom: none;
+}
+.ah-dd-item.unread {
+  background: #fff7f1;
+}
+.ah-dd-item-title {
+  font-weight: 600;
+}
+.ah-dd-item-desc {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 2px;
+}
+.ah-dd-item-meta {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
+.ah-dd-footer {
+  display: block;
+  text-align: center;
+  padding: 10px 12px;
+  background: #fafafb;
+  color: var(--brand-800);
+  text-decoration: none;
+  font-weight: 600;
+}
+.ah-dd-footer:hover {
+  background: #f3f3f6;
+}
+
+.ah-user-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: #fff;
+  color: var(--ink);
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.ah-user-btn:hover {
+  transform: translateY(-1px);
+}
+.ah-avatar {
+  font-size: 22px;
+  color: var(--brand-800);
+}
+.ah-avatar.lg {
+  font-size: 42px;
+  color: var(--brand);
+}
+.ah-user-name {
+  font-weight: 600;
+  color: var(--ink);
+}
+.ah-caret {
+  transition: transform 0.2s ease;
+}
+.ah-caret.rotate {
+  transform: rotate(180deg);
+}
+
+.ah-dd-user {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.ah-dd-list.compact {
+  padding: 8px 10px;
+}
+.ah-dd-link {
+  padding: 6px 6px;
+  border-radius: 10px;
+}
+.ah-dd-link a,
+.ah-dd-link button {
+  all: unset;
+  cursor: pointer;
+  color: var(--ink);
+  font-weight: 600;
+  padding: 8px 10px;
+  display: block;
+  border-radius: 10px;
+}
+.ah-dd-link:hover {
+  background: #f6f6f8;
+}
+.ah-dd-link.danger button {
+  color: #d63939;
+}
+@media (max-width: 1024px) {
+  .ah-brand {
+    display: none;
+  }
+}

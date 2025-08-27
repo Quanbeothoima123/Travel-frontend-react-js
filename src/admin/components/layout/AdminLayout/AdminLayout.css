@@ -1,0 +1,49 @@
+:root {
+  --brand: #e56f2c;
+  --paper: #fff;
+  --bg: #f6f7fb;
+  --ink: #1b1b1f;
+  --header-h: 64px;
+  --sidebar-w: 260px;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji";
+}
+.admin-layout {
+  min-height: 100%;
+}
+
+/* content area with space for header + sidebar */
+.admin-main {
+  padding: 16px 18px;
+  padding-top: calc(var(--header-h) + 18px);
+  margin-left: var(--sidebar-w);
+  min-height: 100vh;
+  transition: margin-left 0.25s ease;
+}
+@media (max-width: 1024px) {
+  .admin-main {
+    margin-left: 0;
+  }
+}
+
+/* Demo look for inner content cards (optional) */
+.admin-main > .card {
+  background: var(--paper);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+}
