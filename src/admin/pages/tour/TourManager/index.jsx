@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import CategoryTreeSelect from "../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
+import { Link } from "react-router-dom";
+import { FaPlusCircle } from "react-icons/fa";
+import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
 import "./TourManager.css";
 
 const TOP_CONFIG = {
@@ -287,12 +289,9 @@ export default function TourManager() {
           </div>
         </div>
         <div className="tm-right-controls">
-          <button
-            className="tm-add-btn"
-            onClick={() => (window.location.href = "/admin/tours/new")}
-          >
-            Thêm tour
-          </button>
+          <Link to="/admin/tours/create" className="tm-add-btn">
+            <FaPlusCircle /> Thêm mới tour
+          </Link>
         </div>
       </div>
 

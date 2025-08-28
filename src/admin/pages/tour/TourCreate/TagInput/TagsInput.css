@@ -1,0 +1,39 @@
+.tags-input {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  gap: 6px;
+}
+
+.tags-input input {
+  border: none;
+  outline: none;
+  flex: 1;
+  min-width: 120px;
+  padding: 6px;
+  font-size: 14px;
+  background: transparent;
+}
+
+.tags-input .tag {
+  display: flex;
+  align-items: center;
+  background: #007bff;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.tags-input .tag button {
+  background: transparent;
+  border: none;
+  color: #fff;
+  margin-left: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}

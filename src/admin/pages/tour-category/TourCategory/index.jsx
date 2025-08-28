@@ -13,19 +13,6 @@ import {
   FaPlusCircle,
 } from "react-icons/fa";
 import "./TourCategory.css";
-
-function buildTree(flat) {
-  const map = {};
-  const roots = [];
-  flat.forEach((c) => (map[c._id] = { ...c, children: [] }));
-  flat.forEach((c) => {
-    if (c.parentId && map[c.parentId])
-      map[c.parentId].children.push(map[c._id]);
-    else roots.push(map[c._id]);
-  });
-  return roots;
-}
-
 export default function TourCategory() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -152,7 +139,7 @@ export default function TourCategory() {
     return byStatus.filter((c) => include.has(c._id));
   }, [categories, q, statusFilter, mapById]);
 
-  const tree = useMemo(() => buildTree(filteredFlat), [filteredFlat]);
+  const tree = useMemo(() => filteredFlat, [filteredFlat]);
 
   // delete logic (collect descendants and remove from state)
   const collectDescendants = (targetId) => {
@@ -221,7 +208,7 @@ export default function TourCategory() {
       const res = await fetch(`${API_BASE}?deleted=true`);
       if (!res.ok) throw new Error("Deleted API error");
       const json = await res.json();
-      setDeletedItems(buildTree(json));
+      setDeletedItems(json);
     } catch (err) {
       console.error("Fetch deleted error:", err);
       setDeletedItems([]);

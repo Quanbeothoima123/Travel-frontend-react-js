@@ -10,13 +10,14 @@ import BookingPage from "./pages/BookingPage";
 import ReAuthFlow from "./pages/ReAuthFlow";
 import SearchPage from "./pages/SearchPage";
 import AdminLayout from "./admin/components/layout/AdminLayout";
-import TourCategory from "./admin/pages/TourCategory";
+import TourCategory from "./admin/pages/tour-category/TourCategory";
 import { ToastProvider } from "./contexts/ToastContext";
 import { AuthProvider } from "./contexts/AuthContext";
-import TourCategoryCreate from "./admin/pages/TourCategoryCreate";
-import TourCategoryDetail from "./admin/pages/TourCategoryDetail";
-import TourCategoryUpdate from "./admin/pages/TourCategoryEdit";
-import TourManager from "./admin/pages/TourManager";
+import TourCategoryCreate from "./admin/pages/tour-category/TourCategoryCreate";
+import TourCategoryDetail from "./admin/pages/tour-category/TourCategoryDetail";
+import TourCategoryUpdate from "./admin/pages/tour-category/TourCategoryEdit";
+import TourManager from "./admin/pages/tour/TourManager";
+import TourCreatePage from "./admin/pages/tour/TourCreate";
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
                 element={<TourCategoryUpdate />}
               />
               <Route path="tours" element={<TourManager />} />
+              <Route path="tours/create" element={<TourCreatePage />} />
             </Route>
           </Routes>
         </AuthProvider>

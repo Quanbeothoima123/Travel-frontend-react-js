@@ -1,0 +1,31 @@
+.image-uploader {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.image-uploader:hover {
+  border-color: #007bff;
+  background: #f0f8ff;
+}
+
+.image-uploader input {
+  display: none;
+}
+
+.image-uploader p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.image-uploader img {
+  margin-top: 12px;
+  max-width: 150px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}

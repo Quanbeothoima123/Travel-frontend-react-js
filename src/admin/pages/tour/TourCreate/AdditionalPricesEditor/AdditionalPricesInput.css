@@ -1,0 +1,56 @@
+.additional-prices {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.additional-price {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.additional-price select,
+.additional-price input {
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.additional-price select:focus,
+.additional-price input:focus {
+  border-color: #007bff;
+}
+
+.additional-price button {
+  background: #dc3545;
+  border: none;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.additional-price button:hover {
+  background: #c82333;
+}
+
+.additional-prices .add-btn {
+  align-self: flex-start;
+  background: #28a745;
+  border: none;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.additional-prices .add-btn:hover {
+  background: #218838;
+}

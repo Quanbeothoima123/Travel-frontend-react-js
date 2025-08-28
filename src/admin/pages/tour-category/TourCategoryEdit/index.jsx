@@ -2,14 +2,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { FaSpinner, FaCheck, FaTimes, FaTags, FaLink } from "react-icons/fa";
-import CategoryTreeSelect from "../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
+import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
 import "./TourCategoryUpdate.css";
 
 export default function TourCategoryUpdate({
   apiUrl = "http://localhost:5000/api/v1/tour-categories?tree=true",
   onUpdated = null,
 }) {
-  const { id } = useParams(); // ✅ Lấy id từ URL
+  const { id } = useParams();
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [parentNode, setParentNode] = useState(null);

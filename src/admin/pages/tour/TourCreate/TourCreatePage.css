@@ -1,0 +1,43 @@
+.tour-create {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.tour-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.form-submit {
+  text-align: right;
+}
+
+.form-submit button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.form-submit button:hover {
+  background: #0056b3;
+}

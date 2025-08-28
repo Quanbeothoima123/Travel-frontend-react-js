@@ -1,0 +1,48 @@
+.depart-places {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 600px;
+}
+
+.depart-places label {
+  font-weight: 500;
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: #333;
+}
+
+.depart-place {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.depart-place input {
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.depart-place input:focus {
+  border-color: #007bff;
+}
+
+.depart-preview {
+  font-size: 14px;
+  color: #555;
+}
+
+.depart-preview a {
+  color: #007bff;
+  text-decoration: none;
+  margin-left: 6px;
+}
+
+.depart-preview a:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,28 @@
+.special-experience {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.special-experience label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.special-experience .editor-container {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.special-experience .tox-tinymce {
+  border: none !important;
+  border-radius: 8px;
+}
+
+.special-experience .tox-editor-header {
+  border-bottom: 1px solid #eee !important;
+}

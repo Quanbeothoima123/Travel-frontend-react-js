@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaSpinner, FaCheck, FaTimes, FaTags } from "react-icons/fa";
-import CategoryTreeSelect from "../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
+import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
 import "./TourCategoryCreate.css";
 
 export default function TourCategoryCreate({

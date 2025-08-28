@@ -1,0 +1,64 @@
+.basic-info {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+
+.basic-info h4 {
+  grid-column: 1 / -1;
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #333;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 6px;
+}
+
+.basic-info label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #555;
+}
+
+.basic-info input,
+.basic-info select,
+.basic-info textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  background: #fafafa;
+}
+
+.basic-info input:focus,
+.basic-info select:focus,
+.basic-info textarea:focus {
+  border-color: #007bff;
+  background: #fff;
+}
+
+.basic-info select[multiple] {
+  height: 100px;
+}
+
+.basic-info input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+}
+
+.basic-info label input[type="checkbox"] {
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.basic-info button {
+  grid-column: 1 / -1;
+}

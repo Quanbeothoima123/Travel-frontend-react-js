@@ -1,0 +1,68 @@
+.term-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.term-item {
+  border: 1px solid #eee;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fafafa;
+  position: relative;
+}
+
+.term-item h5 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  color: #333;
+}
+
+.term-item select,
+.term-item textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.term-item select:focus,
+.term-item textarea:focus {
+  border-color: #007bff;
+}
+
+.term-item .remove-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.term-item .remove-btn:hover {
+  background: #c82333;
+}
+
+.term-editor .add-btn {
+  align-self: flex-start;
+  background: #28a745;
+  border: none;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.term-editor .add-btn:hover {
+  background: #218838;
+}
