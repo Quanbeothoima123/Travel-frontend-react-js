@@ -158,7 +158,6 @@ const TourCreatePage = () => {
 
           {/* Description per day */}
           <DescriptionEditor
-            travelTimes={travelTimes}
             descriptions={form.description}
             setDescriptions={(val) => setForm({ ...form, description: val })}
           />

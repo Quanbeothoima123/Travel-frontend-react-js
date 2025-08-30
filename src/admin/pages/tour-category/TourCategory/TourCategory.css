@@ -51,8 +51,18 @@
   background: var(--card);
   cursor: pointer;
 }
-.tc-dropdown-placeholder .tc-btn,
-.tc-filter .tc-btn,
+
+/* Quick buttons */
+.tc-quick {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tc-btn-small {
+  padding: 6px 10px;
+  font-size: 16px;
+}
+
 .tc-expand-toggle .tc-btn {
   background: var(--card);
   border-radius: 10px;
@@ -65,7 +75,7 @@
   gap: 8px;
 }
 .tc-add .tc-add-btn {
-  margin-left: auto; /* push to right */
+  margin-left: auto;
   background: var(--card);
   color: var(--brand);
   font-weight: 700;
@@ -78,119 +88,30 @@
   box-shadow: var(--shadow);
 }
 
-/* NEW: dropdown wrapper + panel */
-.tc-dropdown-wrapper {
-  position: relative;
-  display: inline-block;
-}
-.tc-dropdown-panel {
-  position: absolute;
-  top: 48px;
-  left: 0;
-  min-width: 340px;
-  max-width: 560px;
-  background: var(--card);
-  border-radius: 12px;
-  box-shadow: 0 14px 40px rgba(16, 22, 34, 0.12);
-  padding: 12px;
-  z-index: 120;
-}
-.tc-dropdown-tabs {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 8px;
-}
-.tc-tab {
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid #eee;
-  background: #fafafa;
-  cursor: pointer;
-  font-weight: 700;
-}
-.tc-tab.active {
-  background: linear-gradient(90deg, #fff3e6, #fff);
-  color: var(--brand);
-  border-color: rgba(229, 111, 44, 0.18);
-  box-shadow: inset 0 -2px 0 rgba(229, 111, 44, 0.06);
-}
-
-.tc-dropdown-body {
-  max-height: 360px;
-  overflow: auto;
-  padding-right: 6px;
-}
-
-/* recent list styles (orange highlight for items) */
-.tc-recent-list .tc-recent-root {
-  margin-bottom: 8px;
-}
-.tc-recent-item {
-  padding: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  background: linear-gradient(180deg, #fff6ef, #fff);
-  border: 1px solid rgba(229, 111, 44, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  transition: transform 0.12s ease;
-}
-.tc-recent-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 24px rgba(229, 111, 44, 0.06);
-}
-.tc-dropdown-item-title {
-  font-weight: 700;
-  color: var(--brand);
-}
-.tc-recent-children {
-  margin-top: 6px;
-  padding-left: 10px;
-}
-
-/* deleted block */
-.tc-deleted-block {
-  padding: 6px 4px;
-}
-.tc-deleted-title {
-  font-weight: 800;
-  margin-bottom: 6px;
-}
-.tc-deleted-item {
-  margin-bottom: 8px;
-  padding: 8px;
-  border-radius: 8px;
-  background: #fff;
-  border: 1px dashed rgba(0, 0, 0, 0.04);
-}
-.tc-deleted-title-line a {
-  color: #d05a2a;
-  font-weight: 700;
-  text-decoration: none;
-}
-.tc-deleted-child a {
-  color: #6b6b6b;
-  text-decoration: none;
-  margin-left: 8px;
-  display: block;
-}
-
-/* Panel */
+/* Panel - FIX: Thêm max-height và overflow để có scroll */
 .tc-panel {
   background: linear-gradient(180deg, #fff, #ffffff);
   border-radius: 16px;
   padding: 14px;
   box-shadow: var(--shadow);
   margin-top: 12px;
+  /* FIX: Thêm max-height để panel không vượt quá viewport */
+  max-height: calc(100vh - 200px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 .tc-panel-inner {
   padding: 6px;
+  /* FIX: Cho phép nội dung scroll */
+  overflow: auto;
+  flex: 1;
 }
 .tc-panel-title {
   font-weight: 700;
   margin-bottom: 8px;
+  /* FIX: Giữ title cố định */
+  flex-shrink: 0;
 }
 
 /* Empty / loading */
@@ -200,12 +121,14 @@
   color: var(--muted);
 }
 
-/* Tree / Node */
+/* Tree / Node - FIX: Bỏ giới hạn height */
 .tc-tree {
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding: 8px;
+  /* FIX: Bỏ max-height để cho phép hiển thị tất cả */
+  /* max-height: none; */
 }
 
 .tc-node {
@@ -224,7 +147,7 @@
 }
 
 .tc-item:hover {
-  background: var(--brand);
+  background: #e0d428;
   transition: background 0.3s ease;
 }
 .tc-left {
@@ -276,6 +199,19 @@
   margin-top: 4px;
 }
 
+/* FIX: Thêm style cho level indicator */
+.tc-level-badge {
+  background: linear-gradient(135deg, var(--brand), #ff8a50);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 45px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(229, 111, 44, 0.3);
+}
+
 .tc-badge-inactive {
   background: #fff6e9;
   color: #d46a1a;
@@ -320,25 +256,27 @@
 /* highlight (when user clicked from recent) */
 .tc-highlight .tc-item {
   border-left: 4px solid var(--brand);
-  background: linear-gradient(90deg, rgba(229, 111, 44, 0.06), #fff);
+  background: linear-gradient(90deg, rgba(236, 240, 12, 0.6), #fff);
   transition: background 0.18s ease, transform 0.12s ease;
 }
 .tc-highlight .tc-item:hover {
   transform: none;
 }
 
-/* children collapse */
+/* children collapse - FIX: Bỏ giới hạn max-height */
 .tc-children {
-  overflow: hidden;
+  overflow: visible;
   max-height: 0;
-  transition: max-height 0.28s ease, opacity 0.22s ease;
+  transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
   opacity: 0;
   margin-left: 6px;
 }
 .tc-children.open {
   opacity: 1;
-  max-height: 2000px;
+  /* FIX: Không giới hạn max-height */
+  max-height: none;
   margin-top: 8px;
+  overflow: visible;
 }
 
 /* modal */
@@ -387,6 +325,23 @@
   border-color: rgba(181, 43, 43, 0.12);
 }
 
+/* FIX: Custom scrollbar cho panel-inner */
+.tc-panel-inner::-webkit-scrollbar {
+  width: 8px;
+}
+.tc-panel-inner::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+.tc-panel-inner::-webkit-scrollbar-thumb {
+  background: var(--brand);
+  border-radius: 10px;
+  opacity: 0.7;
+}
+.tc-panel-inner::-webkit-scrollbar-thumb:hover {
+  opacity: 1;
+}
+
 /* responsive */
 @media (max-width: 880px) {
   .tc-controls {
@@ -405,8 +360,9 @@
     width: 34px;
     height: 34px;
   }
-  .tc-dropdown-panel {
-    left: -20px;
-    min-width: 280px;
+
+  /* FIX: Mobile scroll */
+  .tc-panel {
+    max-height: calc(100vh - 160px);
   }
 }

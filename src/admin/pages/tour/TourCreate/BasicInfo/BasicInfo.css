@@ -1,64 +1,200 @@
+:root {
+  --brand: #e56f2c;
+  --paper: #fff;
+  --bg: #f6f7fb;
+  --ink: #1b1b1f;
+  --header-h: 64px;
+  --sidebar-w: 260px;
+}
+
+/* ===== CSS chung cho BasicInfo ===== */
 .basic-info {
-  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   margin-bottom: 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px 24px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .basic-info h4 {
-  grid-column: 1 / -1;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   font-size: 18px;
   color: #333;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 6px;
+  font-weight: 600;
 }
 
+/* Label chung cho form */
 .basic-info label {
   display: block;
-  font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
+  font-size: 14px;
   color: #555;
+  font-weight: 500;
 }
 
-.basic-info input,
-.basic-info select,
-.basic-info textarea {
+/* Input và select */
+.basic-info input[type="text"],
+.basic-info input[type="number"],
+.basic-info select {
   width: 100%;
   padding: 8px 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.basic-info input[type="text"]:focus,
+.basic-info input[type="number"]:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 8px rgba(235, 145, 11, 0.15);
+  outline: none;
+}
+
+/* Checkbox */
+.basic-info input[type="checkbox"] {
+  margin-right: 6px;
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+/* Select nhiều lựa chọn */
+.basic-info select[multiple] {
+  height: 120px;
+}
+
+/* Khoảng cách giữa các field */
+.basic-info > label + input,
+.basic-info > label + select,
+.basic-info > label + div {
+  margin-bottom: 15px;
+}
+
+/* ===== React Select Travel Time & Hotel ===== */
+.basic-info .react-select.scrollable {
+  border: none !important; /* bỏ border */
+  box-shadow: none !important; /* bỏ shadow */
+  min-height: 38px;
+  font-size: 14px;
+}
+
+.basic-info .react-select.scrollable .react-select__control {
+  border: none !important;
+  box-shadow: none !important;
+  background-color: transparent;
+  min-height: 38px;
+}
+
+.basic-info .react-select.scrollable .react-select__control--is-focused {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.basic-info .react-select.scrollable .react-select__menu {
+  border-radius: 6px;
+  overflow: hidden;
+  z-index: 999;
+}
+
+.basic-info .react-select.scrollable .react-select__menu-list {
+  max-height: 200px; /* show khoảng 5 items */
+  overflow-y: auto;
+}
+
+.basic-info .react-select.scrollable .react-select__option {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.basic-info .react-select.scrollable .react-select__option--is-focused {
+  background-color: #f0f0f0;
+}
+
+.basic-info .react-select.scrollable .react-select__option--is-selected {
+  background-color: var(--brand);
+  color: white;
+}
+
+/* Vehicle Select */
+.vehicle-select {
+  margin-bottom: 15px;
+}
+
+.selected-vehicles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.vehicle-tag {
+  background: #f0f0f0;
   border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.vehicle-tag button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  line-height: 1;
+}
+
+.vehicle-tag button:hover {
+  color: red;
+}
+/* Phương tiện đã chọn */
+.selected-vehicles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.vehicle-tag {
+  background: #f1f1f1;
+  padding: 6px 10px;
   border-radius: 6px;
   font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s ease;
-  background: #fafafa;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.basic-info input:focus,
-.basic-info select:focus,
-.basic-info textarea:focus {
-  border-color: #007bff;
-  background: #fff;
+.vehicle-tag .remove-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #888;
+  line-height: 1;
 }
 
-.basic-info select[multiple] {
-  height: 100px;
+.vehicle-tag .remove-btn:hover {
+  color: red;
 }
 
-.basic-info input[type="checkbox"] {
-  width: auto;
-  margin-right: 8px;
-}
+/* Responsive nhỏ hơn 600px */
+@media (max-width: 600px) {
+  .basic-info input[type="text"],
+  .basic-info input[type="number"],
+  .basic-info select {
+    font-size: 13px;
+    padding: 6px 8px;
+  }
 
-.basic-info label input[type="checkbox"] {
-  display: inline-block;
-  margin-right: 6px;
-}
-
-.basic-info button {
-  grid-column: 1 / -1;
+  .basic-info h4 {
+    font-size: 16px;
+  }
 }

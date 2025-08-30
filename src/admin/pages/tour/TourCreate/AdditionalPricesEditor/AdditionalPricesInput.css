@@ -1,56 +1,93 @@
-.additional-prices {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+:root {
+  --brand: #e56f2c;
+  --paper: #fff;
+  --bg: #f6f7fb;
+  --ink: #1b1b1f;
+  --header-h: 64px;
+  --sidebar-w: 260px;
 }
 
-.additional-price {
-  display: grid;
-  grid-template-columns: 1fr 1fr auto;
-  gap: 12px;
+/* CSS cho AdditionalPricesEditor */
+.additional-prices-editor {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #fafafa;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.additional-prices-editor h4 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #333;
+}
+
+.additional-prices-editor ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 15px;
+}
+
+.additional-prices-editor ul li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background-color: #fff;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.additional-prices-editor ul li span {
+  font-size: 14px;
+  color: #555;
+}
+
+.additional-prices-editor ul li button {
+  background-color: #ff4d4f;
+  border: none;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.additional-prices-editor ul li button:hover {
+  background-color: #e33b3b;
+}
+
+.price-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
   align-items: center;
 }
 
-.additional-price select,
-.additional-price input {
-  padding: 8px 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s ease;
-}
-
-.additional-price select:focus,
-.additional-price input:focus {
-  border-color: #007bff;
-}
-
-.additional-price button {
-  background: #dc3545;
-  border: none;
-  color: #fff;
+.price-form select,
+.price-form input {
   padding: 6px 10px;
   border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s ease;
+  border: 1px solid #ccc;
+  font-size: 14px;
 }
 
-.additional-price button:hover {
-  background: #c82333;
+.price-form input {
+  width: 150px;
 }
 
-.additional-prices .add-btn {
-  align-self: flex-start;
-  background: #28a745;
+.price-form button {
+  background-color: var(--brand);
   border: none;
   color: #fff;
-  padding: 8px 14px;
+  padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s;
 }
 
-.additional-prices .add-btn:hover {
-  background: #218838;
+.price-form button:hover {
+  background-color: var(--brand);
 }

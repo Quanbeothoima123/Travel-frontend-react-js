@@ -1,8 +1,8 @@
+// src/admin/pages/tour/TourCategory.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   FaSearch,
-  FaFilter,
   FaPlus,
   FaTrash,
   FaEdit,
@@ -13,6 +13,7 @@ import {
   FaPlusCircle,
 } from "react-icons/fa";
 import "./TourCategory.css";
+
 export default function TourCategory() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,33 +28,31 @@ export default function TourCategory() {
     title: "",
   });
 
-  // dropdown states
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [dropdownMode, setDropdownMode] = useState(null); // 'recentCreated' | 'recentUpdated' | 'deleted' | null
-  const [recentItems, setRecentItems] = useState([]);
-  const [deletedItems, setDeletedItems] = useState([]);
+  // highlight & scrolling
   const [highlightedId, setHighlightedId] = useState(null);
 
   // expand/collapse all toggle
   const [allExpanded, setAllExpanded] = useState(false);
 
-  // refs for nodes and dropdown
+  // refs for nodes
   const nodeRefs = useRef({});
-  const dropdownRef = useRef(null);
 
-  // base API
-  const API_BASE = "http://localhost:5000/api/v1/tour-categories?tree=true";
+  // API config
+  const API_ROOT = "http://localhost:5000/api/v1/tour-categories";
+  const API_TREE = `${API_ROOT}?tree=true`;
 
+  // load tree
   useEffect(() => {
     async function load() {
       setLoading(true);
       try {
-        const res = await fetch(API_BASE);
+        const res = await fetch(API_TREE);
         if (!res.ok) throw new Error("API error");
         const json = await res.json();
         setCategories(json);
       } catch (err) {
         console.error("Fetch categories error:", err);
+        setCategories([]);
       } finally {
         setLoading(false);
       }
@@ -61,22 +60,17 @@ export default function TourCategory() {
     load();
   }, []);
 
-  // click outside to close dropdown
-  useEffect(() => {
-    function onDoc(e) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false);
-        setDropdownMode(null);
-      }
-    }
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, []);
-
-  // Derived: map by id
+  // flatten mapById (duyệt đệ quy) — hỗ trợ tree nested
   const mapById = useMemo(() => {
     const m = {};
-    categories.forEach((c) => (m[c._id] = c));
+    const traverse = (nodes, parent = null) => {
+      (nodes || []).forEach((n) => {
+        // keep original object reference, but ensure parentId exists
+        m[n._id] = { ...n, parentId: n.parentId ?? parent?._id ?? null };
+        if (n.children && n.children.length) traverse(n.children, n);
+      });
+    };
+    traverse(categories || []);
     return m;
   }, [categories]);
 
@@ -90,24 +84,32 @@ export default function TourCategory() {
     });
   };
 
-  // Expand all nodes that have children
+  // Expand all nodes that have children (walk the tree)
   const expandAll = () => {
     const ids = new Set();
-    categories.forEach((c) => {
-      if (categories.some((x) => x.parentId === c._id)) ids.add(c._id);
-    });
+    const traverse = (nodes) => {
+      (nodes || []).forEach((n) => {
+        if (n.children && n.children.length) {
+          ids.add(n._id);
+          traverse(n.children);
+        }
+      });
+    };
+    traverse(categories || []);
     setExpandedIds(ids);
     setAllExpanded(true);
   };
+
   const collapseAll = () => {
     setExpandedIds(new Set());
     setAllExpanded(false);
   };
 
-  // Filter logic:
+  // Filter logic (flattened search that still returns tree roots handled later)
   const filteredFlat = useMemo(() => {
     // first apply status filter
-    const byStatus = categories.filter((c) =>
+    const allNodes = Object.values(mapById);
+    const byStatus = allNodes.filter((c) =>
       statusFilter === "all"
         ? true
         : statusFilter === "active"
@@ -116,7 +118,8 @@ export default function TourCategory() {
     );
 
     if (!q.trim()) {
-      return byStatus;
+      // return top-level roots from categories (still in tree shape)
+      return categories || [];
     }
     const text = q.trim().toLowerCase();
     // find matches
@@ -126,39 +129,69 @@ export default function TourCategory() {
         .map((c) => c._id)
     );
 
-    // include ancestors (only if they exist in byStatus)
+    // include ancestors
     const include = new Set(matchIds);
     matchIds.forEach((id) => {
       let cur = mapById[id]?.parentId;
       while (cur) {
-        if (byStatus.find((b) => b._id === cur)) include.add(cur);
+        include.add(cur);
         cur = mapById[cur]?.parentId;
       }
     });
 
-    return byStatus.filter((c) => include.has(c._id));
+    // Build a new tree only containing included nodes (helper)
+    const buildTree = (nodes) =>
+      (nodes || [])
+        .map((n) => {
+          if (!include.has(n._id)) return null;
+          return {
+            ...n,
+            children: buildTree(n.children),
+          };
+        })
+        .filter(Boolean);
+
+    return buildTree(categories || []);
   }, [categories, q, statusFilter, mapById]);
 
-  const tree = useMemo(() => filteredFlat, [filteredFlat]);
+  // For rendering tree we use `tree`
+  const tree = filteredFlat;
 
-  // delete logic (collect descendants and remove from state)
+  // collect descendants robustly (use children if present; fallback to flat parentId scan)
   const collectDescendants = (targetId) => {
-    const toRemove = new Set([targetId]);
+    const res = new Set();
+    const node = mapById[targetId];
+    if (!node) return [];
+
+    // If node has children property (tree), use it
+    if (node.children && node.children.length) {
+      const stack = [node];
+      while (stack.length) {
+        const cur = stack.pop();
+        res.add(cur._id);
+        if (cur.children && cur.children.length) {
+          cur.children.forEach((c) => stack.push(c));
+        }
+      }
+      return Array.from(res);
+    }
+
+    // fallback: scan all nodes by parentId
     const stack = [targetId];
     while (stack.length) {
-      const cur = stack.pop();
-      categories.forEach((c) => {
-        if (c.parentId === cur && !toRemove.has(c._id)) {
-          toRemove.add(c._id);
-          stack.push(c._id);
+      const curId = stack.pop();
+      res.add(curId);
+      Object.values(mapById).forEach((n) => {
+        if (n.parentId === curId && !res.has(n._id)) {
+          stack.push(n._id);
         }
       });
     }
-    return Array.from(toRemove);
+    return Array.from(res);
   };
 
+  // handle delete (open confirm)
   const handleDelete = (node) => {
-    // open confirm modal
     const descendants = collectDescendants(node._id);
     setConfirmDelete({
       show: true,
@@ -168,57 +201,35 @@ export default function TourCategory() {
     });
   };
 
-  // Confirm xóa (gọi API DELETE /delete/:id)
+  // Confirm delete and refresh tree
   const handleDeleteConfirm = async () => {
     const id = confirmDelete.id;
     if (!id) return setConfirmDelete({ show: false, id: null, title: "" });
 
     try {
-      const res = await fetch(`${API_BASE}/delete/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_ROOT}/delete/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
       if (!res.ok) throw new Error("Delete failed");
 
-      // gọi lại API sau khi xóa
-      const refreshed = await fetch(API_BASE);
+      // refetch tree
+      const refreshed = await fetch(API_TREE);
       const json = await refreshed.json();
       setCategories(json);
     } catch (err) {
       console.error("Delete error:", err);
     } finally {
       setConfirmDelete({ show: false, id: null, title: "" });
-      setExpandedIds(new Set()); // reset expand để tránh orphan
+      setExpandedIds(new Set());
+      setAllExpanded(false);
     }
   };
 
-  // fetch recent items (created or updated)
-  const fetchRecent = async (type = "created") => {
-    try {
-      const res = await fetch(`${API_BASE}/recent?type=${type}&limit=20`);
-      if (!res.ok) throw new Error("Recent API error");
-      const json = await res.json();
-      setRecentItems(json);
-    } catch (err) {
-      console.error("Fetch recent error:", err);
-      setRecentItems([]);
-    }
-  };
-
-  // fetch deleted items
-  const fetchDeleted = async () => {
-    try {
-      const res = await fetch(`${API_BASE}?deleted=true`);
-      if (!res.ok) throw new Error("Deleted API error");
-      const json = await res.json();
-      setDeletedItems(json);
-    } catch (err) {
-      console.error("Fetch deleted error:", err);
-      setDeletedItems([]);
-    }
-  };
-
-  // expand to node and scroll into view
+  // expand to node and scroll into view + highlight
   const expandToNode = (id) => {
     if (!mapById[id]) {
-      // not in current active list (e.g. deleted) -> cannot expand in tree
+      // not present in current tree
       return;
     }
     const ancestors = [];
@@ -234,55 +245,78 @@ export default function TourCategory() {
       return s;
     });
 
+    // ensure allExpanded flag
+    setAllExpanded(true);
+
+    // scroll into view after layout
     setTimeout(() => {
       const el = nodeRefs.current[id];
       if (el && el.scrollIntoView) {
         el.scrollIntoView({ behavior: "smooth", block: "center" });
       }
+      // set highlight
+      setHighlightedId(id);
+      // remove highlight after 4s
+      setTimeout(() => setHighlightedId(null), 4000);
     }, 160);
   };
 
-  // handle dropdown mode change
-  const openDropdownWithMode = async (mode) => {
-    setDropdownOpen(true);
-    setDropdownMode(mode);
-    if (mode === "recentCreated") await fetchRecent("created");
-    if (mode === "recentUpdated") await fetchRecent("updated");
-    if (mode === "deleted") await fetchDeleted();
+  // fetch the latest item (created or updated) and navigate to it
+  const fetchLatestAndOpen = async (type = "updated") => {
+    try {
+      const res = await fetch(`${API_ROOT}/recent?type=${type}&limit=1`);
+      if (!res.ok) throw new Error("Recent API error");
+      const json = await res.json();
+
+      // Expect json is array or single object - normalize
+      const item = Array.isArray(json) ? json[0] : json;
+      if (!item) {
+        console.warn("No recent item found");
+        return;
+      }
+
+      // ensure active and not deleted if possible
+      if (item.deleted || item.active === false) {
+        console.warn("Found item is deleted or inactive, skipping.");
+        return;
+      }
+
+      // if the item is not present in current map, refetch tree and then expand
+      if (!mapById[item._id]) {
+        const refreshed = await fetch(API_TREE);
+        const all = await refreshed.json();
+        setCategories(all);
+        // slight delay to let categories state update then expand
+        setTimeout(() => expandToNode(item._id), 200);
+      } else {
+        // ensure tree opened and expand to node
+        if (!allExpanded) expandAll();
+        expandToNode(item._id);
+      }
+    } catch (err) {
+      console.error("Fetch latest error:", err);
+    }
   };
 
-  // small helper to render each node recursively inside the dropdown lists
-  const DropNode = ({ node, depth = 0, onClick }) => {
-    return (
-      <div style={{ marginLeft: depth * 10 }}>
-        <div
-          className="tc-dropdown-item"
-          onClick={() => onClick(node)}
-          role="button"
-        >
-          <div className="tc-dropdown-item-title">{node.title}</div>
-          {node.children && node.children.length > 0 && (
-            <div className="tc-dropdown-children">
-              {node.children.map((c) => (
-                <DropNode
-                  key={c._id}
-                  node={c}
-                  depth={depth + 1}
-                  onClick={onClick}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    );
+  // NEW: Function to calculate level depth
+  const calculateLevel = (nodeId) => {
+    let level = 0;
+    let currentId = mapById[nodeId]?.parentId;
+    while (currentId) {
+      level++;
+      currentId = mapById[currentId]?.parentId;
+    }
+    return level;
   };
 
-  // small helper to render each node recursively in the main tree (with refs)
+  // Node renderer (recursive) - UPDATED with level display
   const Node = ({ node, depth = 0 }) => {
     const hasChildren = node.children && node.children.length > 0;
     const isOpen = expandedIds.has(node._id);
     const isHighlighted = highlightedId === node._id;
+
+    // Calculate actual level in tree structure
+    const level = calculateLevel(node._id);
 
     return (
       <div
@@ -306,12 +340,17 @@ export default function TourCategory() {
 
             <div className="tc-title-block">
               <div className="tc-title">
+                {/* NEW: Level badge */}
+                <span className="tc-level-badge">L{level}</span>
                 {node.title}
                 {!node.active && (
                   <span className="tc-badge-inactive">Inactive</span>
                 )}
               </div>
-              <div className="tc-sub">slug: {node.slug}</div>
+              <div className="tc-sub">
+                slug: {node.slug} | Cấp độ: {level} | Có{" "}
+                {hasChildren ? node.children.length : 0} danh mục con
+              </div>
             </div>
           </div>
 
@@ -377,142 +416,22 @@ export default function TourCategory() {
             </select>
           </div>
 
-          <div className="tc-dropdown-wrapper" ref={dropdownRef}>
+          {/* NEW: quick buttons for latest updated / latest created */}
+          <div className="tc-quick">
             <button
-              className="tc-btn"
-              onClick={() =>
-                dropdownOpen
-                  ? setDropdownOpen(false)
-                  : openDropdownWithMode("recentCreated")
-              }
+              className="tc-btn tc-btn-small"
+              title="Danh mục cập nhật mới nhất"
+              onClick={() => fetchLatestAndOpen("updated")}
             >
-              Dropdown
+              Danh mục cập nhật mới nhất
             </button>
 
-            {dropdownOpen && (
-              <div className="tc-dropdown-panel">
-                <div className="tc-dropdown-tabs">
-                  <button
-                    className={`tc-tab ${
-                      dropdownMode === "recentCreated" ? "active" : ""
-                    }`}
-                    onClick={() => openDropdownWithMode("recentCreated")}
-                  >
-                    Mới thêm
-                  </button>
-                  <button
-                    className={`tc-tab ${
-                      dropdownMode === "recentUpdated" ? "active" : ""
-                    }`}
-                    onClick={() => openDropdownWithMode("recentUpdated")}
-                  >
-                    Cập nhật mới
-                  </button>
-                  <button
-                    className={`tc-tab ${
-                      dropdownMode === "deleted" ? "active" : ""
-                    }`}
-                    onClick={() => openDropdownWithMode("deleted")}
-                  >
-                    Đã xóa
-                  </button>
-                </div>
-
-                <div className="tc-dropdown-body">
-                  {/* RECENT created/updated */}
-                  {(dropdownMode === "recentCreated" ||
-                    dropdownMode === "recentUpdated") && (
-                    <div className="tc-recent-list">
-                      {recentItems.length === 0 ? (
-                        <div className="tc-empty">Không có mục nào</div>
-                      ) : (
-                        recentItems.map((root) => (
-                          <div key={root._id} className="tc-recent-root">
-                            <div
-                              className="tc-recent-item"
-                              onClick={() => {
-                                // highlight + expand and close dropdown
-                                setHighlightedId(root._id);
-                                expandToNode(root._id);
-                                setDropdownOpen(false);
-                                setDropdownMode(null);
-                                // clear highlight after a while
-                                setTimeout(() => setHighlightedId(null), 4000);
-                              }}
-                            >
-                              <div className="tc-dropdown-item-title">
-                                {root.title}
-                              </div>
-                            </div>
-
-                            {/* children (if any) */}
-                            {root.children && root.children.length > 0 && (
-                              <div className="tc-recent-children">
-                                {root.children.map((c) => (
-                                  <DropNode
-                                    key={c._id}
-                                    node={c}
-                                    onClick={(n) => {
-                                      setHighlightedId(n._id);
-                                      expandToNode(n._id);
-                                      setDropdownOpen(false);
-                                      setDropdownMode(null);
-                                      setTimeout(
-                                        () => setHighlightedId(null),
-                                        4000
-                                      );
-                                    }}
-                                  />
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  )}
-
-                  {/* DELETED */}
-                  {dropdownMode === "deleted" && (
-                    <div className="tc-deleted-block">
-                      <div className="tc-deleted-title">Danh sách đã xóa</div>
-                      {deletedItems.length === 0 ? (
-                        <div className="tc-empty">Không có mục đã xóa</div>
-                      ) : (
-                        deletedItems.map((root) => (
-                          <div key={root._id} className="tc-deleted-item">
-                            <div className="tc-deleted-title-line">
-                              <Link to={`/admin/tour-categories/${root._id}`}>
-                                {root.title}
-                              </Link>
-                            </div>
-                            {root.children && root.children.length > 0 && (
-                              <div className="tc-deleted-children">
-                                {root.children.map((c) => (
-                                  <div key={c._id} className="tc-deleted-child">
-                                    <Link
-                                      to={`/admin/tour-categories/${c._id}`}
-                                    >
-                                      {c.title}
-                                    </Link>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="tc-filter">
-            <button className="tc-btn">
-              <FaFilter style={{ marginRight: 8 }} />
-              Lọc
+            <button
+              className="tc-btn tc-btn-small"
+              title="Danh mục thêm mới nhất"
+              onClick={() => fetchLatestAndOpen("created")}
+            >
+              Danh mục thêm mới nhất
             </button>
           </div>
 
@@ -537,9 +456,8 @@ export default function TourCategory() {
       </div>
 
       <div className="tc-panel">
+        <div className="tc-panel-title">Danh sách danh mục dạng cây</div>
         <div className="tc-panel-inner">
-          <div className="tc-panel-title">Danh sách danh mục dạng cây</div>
-
           {loading ? (
             <div className="tc-empty">Đang tải...</div>
           ) : tree.length === 0 ? (

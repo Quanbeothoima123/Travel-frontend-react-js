@@ -6,7 +6,7 @@ import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch
 import "./TourCategoryUpdate.css";
 
 export default function TourCategoryUpdate({
-  apiUrl = "http://localhost:5000/api/v1/tour-categories?tree=true",
+  apiBase = "http://localhost:5000/api/v1/tour-categories",
   onUpdated = null,
 }) {
   const { id } = useParams();
@@ -18,12 +18,13 @@ export default function TourCategoryUpdate({
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
 
-  // Fetch dữ liệu cũ
+  // Fetch dữ liệu chi tiết danh mục
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`${apiUrl}/detail/${id}`);
+        const res = await fetch(`${apiBase}/detail/${id}`);
         const data = await res.json();
+        if (!res.ok) throw new Error(data?.message || "Không thể tải dữ liệu");
         setTitle(data.title || "");
         setSlug(data.slug || "");
         setParentNode(data.parent || null);
@@ -33,7 +34,7 @@ export default function TourCategoryUpdate({
       }
     };
     fetchData();
-  }, [id, apiUrl]);
+  }, [id, apiBase]);
 
   // Reset message/error sau vài giây
   useEffect(() => {
@@ -66,8 +67,8 @@ export default function TourCategoryUpdate({
 
     try {
       setSubmitting(true);
-      const res = await fetch(`${apiUrl}/update/${id}`, {
-        method: "PATCH", // ✅ patch
+      const res = await fetch(`${apiBase}/update/${id}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(body),
@@ -124,7 +125,7 @@ export default function TourCategoryUpdate({
                 : null
             }
             onChange={(node) => setParentNode(node)}
-            fetchUrl="http://localhost:5000/api/v1/tour-categories?tree=true"
+            fetchUrl={`${apiBase}?tree=true`}
             placeholder="Chọn danh mục cha (nếu có)…"
             noDataText="Chưa có danh mục"
           />

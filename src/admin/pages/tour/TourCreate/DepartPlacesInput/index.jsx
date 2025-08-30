@@ -1,5 +1,5 @@
 import React from "react";
-
+import "./DepartPlacesInput.css";
 const DepartPlacesInput = ({ departPlace, setDepartPlace }) => {
   return (
     <div className="depart-places-input">

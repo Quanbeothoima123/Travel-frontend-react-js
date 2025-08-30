@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import "./AdditionalPricesInput.css";
 const AdditionalPricesEditor = ({
   additionalPrices,
   setAdditionalPrices,

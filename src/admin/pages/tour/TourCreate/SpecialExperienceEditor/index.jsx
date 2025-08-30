@@ -1,6 +1,6 @@
 import React from "react";
 import TinyEditor from "../../TinyEditor";
-
+import "./SpecialExperienceEditor.css";
 const SpecialExperienceEditor = ({ value, setValue }) => {
   return (
     <div className="special-experience-editor">

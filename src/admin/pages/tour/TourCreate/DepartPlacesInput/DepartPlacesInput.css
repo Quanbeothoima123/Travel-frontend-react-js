@@ -1,48 +1,55 @@
-.depart-places {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 600px;
+/* CSS cho DepartPlacesInput */
+.depart-places-input {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.depart-places label {
-  font-weight: 500;
-  margin-bottom: 4px;
-  font-size: 14px;
+.depart-places-input h4 {
+  margin-bottom: 15px;
+  font-size: 18px;
   color: #333;
+  font-weight: 600;
 }
 
-.depart-place {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  align-items: center;
+/* Form chứa input */
+.depart-places-input .depart-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
-.depart-place input {
+.depart-places-input .depart-form input[type="text"] {
+  flex: 1 1 200px;
   padding: 8px 10px;
-  border: 1px solid #ddd;
   border-radius: 6px;
+  border: 1px solid #ccc;
   font-size: 14px;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.depart-places-input .depart-form input[type="text"]:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.15);
   outline: none;
-  transition: border-color 0.2s ease;
 }
 
-.depart-place input:focus {
-  border-color: #007bff;
-}
-
-.depart-preview {
+/* Preview link */
+.depart-places-input p {
   font-size: 14px;
   color: #555;
 }
 
-.depart-preview a {
-  color: #007bff;
-  text-decoration: none;
-  margin-left: 6px;
+.depart-places-input p a {
+  color: #1890ff;
+  text-decoration: underline;
+  margin-left: 4px;
 }
 
-.depart-preview a:hover {
-  text-decoration: underline;
+.depart-places-input p a:hover {
+  color: #0f75d1;
 }

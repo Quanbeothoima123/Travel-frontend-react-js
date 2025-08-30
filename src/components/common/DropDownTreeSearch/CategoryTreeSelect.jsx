@@ -5,7 +5,7 @@ export default function CategoryTreeSelect({
   value, // { slug, title } | null
   onChange,
   fetchUrl = "http://localhost:5000/api/v1/tour-categories?tree=true",
-  placeholder = "Chọn loại tour…",
+  placeholder = "Chọn danh mục tour",
   noDataText = "Không có danh mục",
 }) {
   const [open, setOpen] = useState(false);

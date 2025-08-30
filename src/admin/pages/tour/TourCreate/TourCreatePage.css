@@ -1,3 +1,11 @@
+:root {
+  --brand: #e56f2c;
+  --paper: #fff;
+  --bg: #f6f7fb;
+  --ink: #1b1b1f;
+  --header-h: 64px;
+  --sidebar-w: 260px;
+}
 .tour-create {
   max-width: 900px;
   margin: 0 auto;
@@ -32,7 +40,7 @@
   padding: 10px 16px;
   border: none;
   border-radius: 6px;
-  background: #007bff;
+  background: var(--brand);
   color: #fff;
   cursor: pointer;
   transition: background 0.2s;

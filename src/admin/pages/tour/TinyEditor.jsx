@@ -33,12 +33,13 @@ const TinyEditor = ({ value, onChange, label }) => {
             "advlist autolink lists link image charmap preview anchor",
             "searchreplace visualblocks code fullscreen",
             "insertdatetime media table code help wordcount",
-            "image", // 👉 thêm plugin image
+            "image",
           ],
-          toolbar:
-            "undo redo | formatselect | bold italic backcolor | \
-             alignleft aligncenter alignright alignjustify | \
-             bullist numlist outdent indent | removeformat | help | image",
+          toolbar: [
+            "undo redo | formatselect | bold italic backcolor",
+            "alignleft aligncenter alignright alignjustify",
+            "bullist numlist outdent indent | removeformat | help | image",
+          ].join(" | "),
           images_upload_handler: handleImageUpload,
           automatic_uploads: true,
           file_picker_types: "image",

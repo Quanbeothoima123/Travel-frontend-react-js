@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import "./TagsInput.css";
 const TagsInput = ({ tags, setTags }) => {
   const [input, setInput] = useState("");
 

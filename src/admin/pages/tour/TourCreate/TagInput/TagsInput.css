@@ -1,39 +1,85 @@
+/* CSS cho TagsInput */
 .tags-input {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.tags-input h4 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Danh sách tag */
+.tags-input .tag-list {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #fafafa;
-  gap: 6px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
-.tags-input input {
-  border: none;
-  outline: none;
-  flex: 1;
-  min-width: 120px;
-  padding: 6px;
-  font-size: 14px;
-  background: transparent;
-}
-
-.tags-input .tag {
+.tags-input .tag-item {
   display: flex;
   align-items: center;
-  background: #007bff;
-  color: #fff;
+  gap: 4px;
+  background-color: #f0f0f0;
   padding: 4px 8px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 14px;
 }
 
-.tags-input .tag button {
-  background: transparent;
+.tags-input .tag-item button {
   border: none;
+  background-color: #ff4d4f;
   color: #fff;
-  margin-left: 6px;
+  padding: 0 4px;
+  border-radius: 4px;
   cursor: pointer;
-  font-weight: bold;
+  font-size: 12px;
+  transition: background 0.2s;
+}
+
+.tags-input .tag-item button:hover {
+  background-color: #e33b3b;
+}
+
+/* Form thêm tag */
+.tags-input .tag-add {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tags-input .tag-add input[type="text"] {
+  flex: 1 1 200px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.tags-input .tag-add input[type="text"]:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.15);
+  outline: none;
+}
+
+.tags-input .tag-add button {
+  background-color: #e56f2c;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.tags-input .tag-add button:hover {
+  background-color: #0f75d1;
 }
