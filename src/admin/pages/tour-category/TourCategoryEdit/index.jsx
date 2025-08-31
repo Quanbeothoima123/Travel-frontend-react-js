@@ -1,5 +1,6 @@
 // src/pages/admin/tour-categories/TourCategoryUpdate.jsx
 import React, { useState, useEffect } from "react";
+import { createSlug } from "../../../../utils/slugify";
 import { useParams } from "react-router-dom";
 import { FaSpinner, FaCheck, FaTimes, FaTags, FaLink } from "react-icons/fa";
 import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
@@ -106,14 +107,23 @@ export default function TourCategoryUpdate({
           <label className="tcat-label">
             <FaLink /> Slug
           </label>
-          <input
-            className="tcat-input-slug"
-            placeholder="Ví dụ: du-lich-da-lat"
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-            maxLength={160}
-            required
-          />
+          <div className="tcat-slug-wrap">
+            <input
+              className="tcat-input-slug"
+              placeholder="Ví dụ: du-lich-da-lat"
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
+              maxLength={160}
+              required
+            />
+            <button
+              type="button"
+              className="tcat-auto-btn"
+              onClick={() => setSlug(createSlug(title))}
+            >
+              Lấy tự động
+            </button>
+          </div>
         </div>
 
         <div className="tcat-row">
