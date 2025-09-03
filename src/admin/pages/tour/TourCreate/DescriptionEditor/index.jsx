@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TinyEditor from "../../TinyEditor";
 import ImageUploader from "../ImageUploader";
+import ImageLoadingModal from "../../../../../admin/components/common/ImageLoadingModal";
 import "./DescriptionEditor.css";
 
 const DescriptionEditor = ({ descriptions, setDescriptions }) => {
   const [activeDay, setActiveDay] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  // trạng thái nhập link cho ngày đang active
+  const [linkMode, setLinkMode] = useState(false);
+  const [linkInput, setLinkInput] = useState("");
 
   const safeDescriptions =
     descriptions && descriptions.length > 0
@@ -39,6 +45,27 @@ const DescriptionEditor = ({ descriptions, setDescriptions }) => {
     setDescriptions(updated);
     setActiveDay(index === 0 ? 0 : index - 1);
   };
+
+  const handleAddLink = () => {
+    if (!linkInput.trim()) return;
+    updateDay(activeDay, "image", linkInput.trim());
+    setLinkMode(false);
+    setLinkInput("");
+  };
+
+  const handleRemoveImage = () => {
+    updateDay(activeDay, "image", "");
+    setLinkMode(false);
+    setLinkInput("");
+  };
+
+  // reset form nhập link khi đổi tab ngày
+  useEffect(() => {
+    setLinkMode(false);
+    setLinkInput("");
+  }, [activeDay]);
+
+  const hasImage = Boolean(safeDescriptions[activeDay]?.image);
 
   return (
     <div className="description-editor">
@@ -84,15 +111,77 @@ const DescriptionEditor = ({ descriptions, setDescriptions }) => {
 
         <div className="thumbnail-section">
           <p>Ảnh</p>
-          <ImageUploader
-            onUpload={(url) => updateDay(activeDay, "image", url)}
-          />
-          {safeDescriptions[activeDay]?.image && (
-            <img
-              src={safeDescriptions[activeDay].image}
-              alt="day"
-              className="thumbnail-preview"
-            />
+
+          {/* Nếu CHƯA có ảnh: hiển thị 2 lựa chọn Upload | Link */}
+          {!hasImage && (
+            <div className="thumbnail-options">
+              <div className="upload-option">
+                <ImageUploader
+                  onUpload={(url) => updateDay(activeDay, "image", url)}
+                  onUploadStart={() => setLoading(true)}
+                  onUploadEnd={() => setLoading(false)}
+                  disabled={Boolean(linkMode)}
+                />
+              </div>
+
+              <div className="link-option">
+                {!linkMode ? (
+                  <button
+                    type="button"
+                    className="link-btn"
+                    onClick={() => setLinkMode(true)}
+                  >
+                    Dùng link ảnh
+                  </button>
+                ) : (
+                  <div className="link-input-wrapper">
+                    <input
+                      type="text"
+                      placeholder="Dán link ảnh vào đây..."
+                      value={linkInput}
+                      onChange={(e) => setLinkInput(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="add-link-btn"
+                      onClick={handleAddLink}
+                    >
+                      Thêm
+                    </button>
+                    <button
+                      type="button"
+                      className="cancel-link-btn"
+                      onClick={() => {
+                        setLinkMode(false);
+                        setLinkInput("");
+                      }}
+                    >
+                      Hủy
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {loading && <ImageLoadingModal />}
+
+          {/* Nếu ĐÃ có ảnh: hiển thị preview + nút xóa */}
+          {hasImage && (
+            <div className="preview">
+              <img
+                src={safeDescriptions[activeDay].image}
+                alt={`day-${activeDay + 1}`}
+                className="thumbnail-preview"
+              />
+              <button
+                type="button"
+                className="remove-btn"
+                onClick={handleRemoveImage}
+              >
+                ✕
+              </button>
+            </div>
           )}
         </div>
 

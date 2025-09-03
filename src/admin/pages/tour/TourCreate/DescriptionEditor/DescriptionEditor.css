@@ -86,7 +86,7 @@
 
 .thumbnail-section .thumbnail-preview {
   margin-top: 10px;
-  max-width: 200px;
+  max-width: 240px;
   border-radius: 6px;
   border: 1px solid #ccc;
 }
@@ -104,4 +104,111 @@
 
 .image-uploader button:hover {
   background-color: #d65a1f;
+}
+
+/* ====== BỔ SUNG: Upload | Link cho ảnh ngày ====== */
+
+.thumbnail-section .thumbnail-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.thumbnail-section .link-btn {
+  background: #1976d2;
+  color: #fff;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: fit-content;
+}
+
+.thumbnail-section .link-btn:hover {
+  background: #145a9e;
+}
+
+.thumbnail-section .link-input-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.thumbnail-section .link-input-wrapper input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.thumbnail-section .add-link-btn {
+  background: #2e7d32;
+  color: #fff;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.thumbnail-section .add-link-btn:hover {
+  background: #1b5e20;
+}
+
+.thumbnail-section .cancel-link-btn {
+  background: #9e9e9e;
+  color: #fff;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.thumbnail-section .cancel-link-btn:hover {
+  background: #616161;
+}
+
+/* Preview ảnh ngày (có nút xóa nổi) */
+.thumbnail-section .preview {
+  margin-top: 10px;
+  max-width: 240px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.thumbnail-section .preview img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.thumbnail-section .remove-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #f50004;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 26px;
+  text-align: center;
+  padding: 0;
+  transition: background 0.2s;
+}
+
+.thumbnail-section .remove-btn:hover {
+  background: #e33b3b;
 }
