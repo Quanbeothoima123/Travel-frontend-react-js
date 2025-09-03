@@ -8,6 +8,8 @@ import TermEditor from "./TermsEditor";
 import DescriptionEditor from "./DescriptionEditor";
 import SpecialExperienceEditor from "./SpecialExperienceEditor";
 import BasicInfo from "./BasicInfo";
+import "./TourCreatePage.css";
+import { useToast } from "../../../../contexts/ToastContext";
 
 const TourCreatePage = () => {
   const [form, setForm] = useState({
@@ -43,6 +45,9 @@ const TourCreatePage = () => {
   const [personTypes, setPersonTypes] = useState([]);
   const [termOptions, setTermOptions] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // useToast
+  const { showToast } = useToast();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,13 +87,39 @@ const TourCreatePage = () => {
         setTermOptions(termData || []);
       } catch (err) {
         console.error("Fetch data error:", err);
+        showToast("Lỗi khi tải dữ liệu danh mục", "error");
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, []); // eslint-disable-line
+  // ✅ Nút Kiểm tra thông tin
+  const handleCheck = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/v1/tours/check-info-tour-create",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(form),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        showToast(data.message || "Thông tin không hợp lệ", "error");
+      } else {
+        showToast("Dữ liệu tour hợp lệ", "success");
+      }
+    } catch (err) {
+      console.error("Check tour error:", err);
+      showToast("Lỗi khi kiểm tra tour", "error");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -99,18 +130,26 @@ const TourCreatePage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // ✅ Cho phép gửi cookie
+        credentials: "include",
         body: JSON.stringify(form),
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Lỗi khi tạo tour");
+      if (!res.ok) {
+        // nếu backend trả errors (mảng) thì hiện từng lỗi
+        if (data.errors && Array.isArray(data.errors)) {
+          data.errors.forEach((err) => showToast(err, "error"));
+        } else {
+          showToast(data.message || "Lỗi khi tạo tour", "error");
+        }
+        return;
+      }
 
       console.log("Tour created:", data);
-      alert("Tạo tour thành công!");
+      showToast("Tạo tour thành công!", "success");
     } catch (err) {
       console.error("Submit tour error:", err);
-      alert("Không thể tạo tour!");
+      showToast("Không thể tạo tour!", "error");
     }
   };
 
@@ -144,7 +183,7 @@ const TourCreatePage = () => {
             setImages={(imgs) => setForm({ ...form, images: imgs })}
           />
 
-          {/* Depart places */}
+          {/* ... các phần khác ... */}
           <DepartPlacesInput
             departPlace={form.departPlaces}
             setDepartPlace={(place) =>
@@ -152,13 +191,11 @@ const TourCreatePage = () => {
             }
           />
 
-          {/* Tags */}
           <TagsInput
             tags={form.tags}
             setTags={(tags) => setForm({ ...form, tags })}
           />
 
-          {/* Additional prices */}
           <AdditionalPricesInput
             additionalPrices={form.additionalPrices}
             setAdditionalPrices={(val) =>
@@ -167,28 +204,34 @@ const TourCreatePage = () => {
             personTypes={personTypes}
           />
 
-          {/* Terms */}
           <TermEditor
             terms={form.term}
             setTerms={(val) => setForm({ ...form, term: val })}
-            termOptions={termOptions} // ✅ truyền termOptions
+            termOptions={termOptions}
           />
 
-          {/* Description per day */}
           <DescriptionEditor
             descriptions={form.description}
             setDescriptions={(val) => setForm({ ...form, description: val })}
           />
 
-          {/* Special experience */}
           <SpecialExperienceEditor
             value={form.specialExperience}
             setValue={(val) => setForm({ ...form, specialExperience: val })}
           />
 
-          {/* Submit */}
+          {/* Submit + Validate */}
           <div className="form-submit">
-            <button type="submit">Lưu tour</button>
+            <button
+              type="button"
+              className="btn-validate"
+              onClick={handleCheck}
+            >
+              Kiểm tra thông tin
+            </button>
+            <button type="submit" className="btn-save">
+              Lưu tour
+            </button>
           </div>
         </form>
       )}
