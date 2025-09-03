@@ -24,7 +24,7 @@ const ThumbnailUploader = ({ value, onChange }) => {
 
   return (
     <div className="thumbnail-uploader">
-      <h4>Ảnh bìa</h4>
+      <h4>Ảnh bìa(Dùng ảnh upload thiết bị hoặc dán link ảnh)</h4>
 
       {/* Nếu chưa có ảnh thì hiển thị 2 lựa chọn */}
       {!value && (

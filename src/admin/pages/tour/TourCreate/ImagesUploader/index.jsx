@@ -44,6 +44,7 @@ const SortableItem = ({ id, url, onRemove }) => {
 
 const ImagesUploader = ({ images, setImages }) => {
   const [loading, setLoading] = useState(false);
+  const [linkInput, setLinkInput] = useState("");
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -53,6 +54,13 @@ const ImagesUploader = ({ images, setImages }) => {
     if (!urls || urls.length === 0) return;
     const uploaded = urls.map((url, idx) => ({ id: Date.now() + idx, url }));
     setImages([...images, ...uploaded]);
+  };
+
+  const handleAddLink = () => {
+    if (!linkInput.trim()) return;
+    const newImg = { id: Date.now(), url: linkInput.trim() };
+    setImages([...images, newImg]);
+    setLinkInput("");
   };
 
   const handleRemove = (id) => {
@@ -71,14 +79,32 @@ const ImagesUploader = ({ images, setImages }) => {
 
   return (
     <div className="images-uploader">
-      <h4>Thư viện ảnh</h4>
+      <h4>
+        Thư viện ảnh(Có thể dùng ảnh từ máy tính hoặc link trên mạng xã hội)
+      </h4>
 
-      <ImageUploader
-        multiple
-        onUpload={handleUpload}
-        onUploadStart={() => setLoading(true)}
-        onUploadEnd={() => setLoading(false)}
-      />
+      <div className="uploader-actions">
+        {/* Upload ảnh */}
+        <ImageUploader
+          multiple
+          onUpload={handleUpload}
+          onUploadStart={() => setLoading(true)}
+          onUploadEnd={() => setLoading(false)}
+        />
+
+        {/* Thêm ảnh bằng link */}
+        <div className="link-input-wrapper">
+          <input
+            type="text"
+            placeholder="Dán link ảnh..."
+            value={linkInput}
+            onChange={(e) => setLinkInput(e.target.value)}
+          />
+          <button className="add-link-btn" onClick={handleAddLink}>
+            Thêm
+          </button>
+        </div>
+      </div>
 
       {loading && <ImageLoadingModal />}
 
