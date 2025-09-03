@@ -65,6 +65,17 @@ export default function CategoryTreeSelect({
     setOpen(false);
   };
 
+  function findTitleById(nodes, id) {
+    for (const n of nodes) {
+      if (n._id === id) return n.title;
+      if (n.children) {
+        const found = findTitleById(n.children, id);
+        if (found) return found;
+      }
+    }
+    return "";
+  }
+
   return (
     <div className="tdp-field" ref={wrapRef}>
       <div
@@ -72,8 +83,11 @@ export default function CategoryTreeSelect({
         onClick={() => setOpen((o) => !o)}
       >
         <span className={`tdp-placeholder ${value ? "has-value" : ""}`}>
-          {value ? value.title : placeholder}
+          {value
+            ? value.title || findTitleById(tree, value._id) || placeholder
+            : placeholder}
         </span>
+
         <span className="tdp-caret">▾</span>
       </div>
 

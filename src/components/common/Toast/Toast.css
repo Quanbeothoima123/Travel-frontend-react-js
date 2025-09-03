@@ -9,6 +9,7 @@
 }
 
 .toast {
+  position: relative; /* cần để chứa progress bar */
   display: flex;
   align-items: center;
   gap: 8px;
@@ -42,6 +43,21 @@
   font-size: 16px;
 }
 
+/* Progress bar */
+.toast-progress {
+  position: absolute;
+  bottom: 4px; /* nằm sát dưới trong toast */
+  left: 10px;
+  right: 10px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.7);
+  transform: scaleX(1);
+  transform-origin: left;
+  animation: progressBar 5s linear forwards;
+}
+
+/* Animations */
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -61,5 +77,14 @@
   to {
     opacity: 0;
     transform: translateX(120%);
+  }
+}
+
+@keyframes progressBar {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
   }
 }

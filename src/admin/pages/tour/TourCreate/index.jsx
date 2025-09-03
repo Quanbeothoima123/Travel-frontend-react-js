@@ -90,10 +90,28 @@ const TourCreatePage = () => {
     fetchData();
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting tour:", form);
-    // TODO: call API POST /tours
+
+    try {
+      const res = await fetch("http://localhost:5000/api/v1/tours/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // ✅ Cho phép gửi cookie
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Lỗi khi tạo tour");
+
+      console.log("Tour created:", data);
+      alert("Tạo tour thành công!");
+    } catch (err) {
+      console.error("Submit tour error:", err);
+      alert("Không thể tạo tour!");
+    }
   };
 
   return (

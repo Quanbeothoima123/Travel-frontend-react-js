@@ -128,7 +128,7 @@ const BasicInfo = ({
       </div>
 
       {/* Frequency */}
-      <label>Tần suất</label>
+      <label>Tần suất chuyến đi</label>
       <select
         value={form.frequency}
         onChange={(e) => setForm({ ...form, frequency: e.target.value })}

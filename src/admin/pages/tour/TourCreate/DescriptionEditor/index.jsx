@@ -49,19 +49,24 @@ const DescriptionEditor = ({ descriptions, setDescriptions }) => {
         {safeDescriptions.map((_, i) => (
           <div key={i} className="day-tab-wrapper">
             <button
+              type="button"
               className={`day-tab ${activeDay === i ? "active" : ""}`}
               onClick={() => setActiveDay(i)}
             >
               Ngày {i + 1}
             </button>
             {safeDescriptions.length > 1 && (
-              <button className="remove-day-btn" onClick={() => removeDay(i)}>
+              <button
+                type="button"
+                className="remove-day-btn"
+                onClick={() => removeDay(i)}
+              >
                 ✕
               </button>
             )}
           </div>
         ))}
-        <button className="add-day-btn" onClick={addDay}>
+        <button type="button" className="add-day-btn" onClick={addDay}>
           + Thêm ngày
         </button>
       </div>
