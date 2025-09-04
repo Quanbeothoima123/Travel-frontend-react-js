@@ -10,7 +10,8 @@ import SpecialExperienceEditor from "./SpecialExperienceEditor";
 import BasicInfo from "./BasicInfo";
 import "./TourCreatePage.css";
 import { useToast } from "../../../../contexts/ToastContext";
-
+import ConfirmModal from "../../../components/common/ConfirmModal";
+import LoadingModal from "../../../components/common/LoadingModal";
 const TourCreatePage = () => {
   const [form, setForm] = useState({
     categoryId: "",
@@ -36,7 +37,37 @@ const TourCreatePage = () => {
     specialExperience: "",
     additionalPrices: [],
   });
-
+  // ✅ lưu trạng thái modal
+  const [showClearModal, setShowClearModal] = useState(false);
+  // ✅ reset form
+  const resetForm = () => {
+    setForm({
+      categoryId: "",
+      title: "",
+      thumbnail: "",
+      images: [],
+      travelTimeId: "",
+      hotelId: "",
+      departPlaces: { place: "", googleMap: "" },
+      position: 0,
+      prices: 0,
+      discount: 0,
+      tags: [],
+      seats: 0,
+      description: [],
+      term: [],
+      vehicleId: [],
+      slug: "",
+      type: "domestic",
+      active: true,
+      filter: "",
+      frequency: "",
+      specialExperience: "",
+      additionalPrices: [],
+    });
+    setShowClearModal(false);
+    showToast("Dữ liệu đã được làm mới", "success");
+  };
   // Dữ liệu từ API
   const [travelTimes, setTravelTimes] = useState([]);
   const [hotels, setHotels] = useState([]);
@@ -45,7 +76,10 @@ const TourCreatePage = () => {
   const [personTypes, setPersonTypes] = useState([]);
   const [termOptions, setTermOptions] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [loadingModal, setLoadingModal] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("");
+  // ✅ Hàm tiện ích delay
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   // useToast
   const { showToast } = useToast();
 
@@ -95,10 +129,16 @@ const TourCreatePage = () => {
 
     fetchData();
   }, []); // eslint-disable-line
-  // ✅ Nút Kiểm tra thông tin
+
+  // ✅ Hàm handleCheck
   const handleCheck = async () => {
+    setLoadingModal(true);
+    setLoadingMessage("Đang kiểm tra tour...");
+
+    const MIN_LOADING = 2500;
+
     try {
-      const res = await fetch(
+      const fetchPromise = fetch(
         "http://localhost:5000/api/v1/tours/check-info-tour-create",
         {
           method: "POST",
@@ -106,56 +146,62 @@ const TourCreatePage = () => {
           credentials: "include",
           body: JSON.stringify(form),
         }
-      );
+      ).then((res) => res.json());
 
-      const data = await res.json();
+      const [data] = await Promise.all([fetchPromise, delay(MIN_LOADING)]);
 
-      if (!res.ok || !data.success) {
+      if (!data.success) {
         showToast(data.message || "Thông tin không hợp lệ", "error");
       } else {
         showToast("Dữ liệu tour hợp lệ", "success");
       }
     } catch (err) {
-      console.error("Check tour error:", err);
       showToast("Lỗi khi kiểm tra tour", "error");
+    } finally {
+      setLoadingModal(false);
     }
   };
 
+  // ✅ Hàm handleSubmit
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoadingModal(true);
+    setLoadingMessage("Đang lưu tour...");
+
+    const MIN_LOADING = 2500;
 
     try {
-      const res = await fetch("http://localhost:5000/api/v1/tours/create", {
+      const fetchPromise = fetch("http://localhost:5000/api/v1/tours/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
         body: JSON.stringify(form),
-      });
+      }).then((res) => res.json());
 
-      const data = await res.json();
-      if (!res.ok) {
-        // nếu backend trả errors (mảng) thì hiện từng lỗi
+      const [data] = await Promise.all([fetchPromise, delay(MIN_LOADING)]);
+
+      if (!data.success) {
         if (data.errors && Array.isArray(data.errors)) {
           data.errors.forEach((err) => showToast(err, "error"));
         } else {
           showToast(data.message || "Lỗi khi tạo tour", "error");
         }
-        return;
+      } else {
+        showToast("Tạo tour thành công!", "success");
       }
-
-      console.log("Tour created:", data);
-      showToast("Tạo tour thành công!", "success");
     } catch (err) {
-      console.error("Submit tour error:", err);
       showToast("Không thể tạo tour!", "error");
+    } finally {
+      setLoadingModal(false);
     }
   };
 
   return (
     <div className="tour-create">
       <h2>Tạo tour mới</h2>
+      <LoadingModal open={loadingModal} message={loadingMessage} />
 
       {loading ? (
         <p>Đang tải dữ liệu…</p>
@@ -224,6 +270,13 @@ const TourCreatePage = () => {
           <div className="form-submit">
             <button
               type="button"
+              className="btn-clear"
+              onClick={() => setShowClearModal(true)}
+            >
+              Clear
+            </button>
+            <button
+              type="button"
               className="btn-validate"
               onClick={handleCheck}
             >
@@ -235,6 +288,14 @@ const TourCreatePage = () => {
           </div>
         </form>
       )}
+      {/* Confirm Clear Modal */}
+      <ConfirmModal
+        open={showClearModal}
+        onClose={() => setShowClearModal(false)}
+        onConfirm={resetForm}
+        title="Xóa toàn bộ nội dung?"
+        message="Bạn có chắc chắn muốn xóa toàn bộ thông tin đã nhập không? Hành động này không thể hoàn tác."
+      />
     </div>
   );
 };

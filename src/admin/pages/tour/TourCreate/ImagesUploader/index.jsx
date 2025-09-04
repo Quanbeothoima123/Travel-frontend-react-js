@@ -100,7 +100,11 @@ const ImagesUploader = ({ images, setImages }) => {
             value={linkInput}
             onChange={(e) => setLinkInput(e.target.value)}
           />
-          <button className="add-link-btn" onClick={handleAddLink}>
+          <button
+            type="button"
+            className="add-link-btn"
+            onClick={handleAddLink}
+          >
             Thêm
           </button>
         </div>
