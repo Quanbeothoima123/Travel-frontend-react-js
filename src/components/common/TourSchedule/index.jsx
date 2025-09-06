@@ -18,6 +18,14 @@ const TourSchedule = ({ tour }) => {
           onClick={(e) => {
             toggleAll();
           }}
+          style={{
+            backgroundColor: "#e56f2c",
+            color: "white",
+            border: "none",
+            padding: "5px 10px",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
         >
           {allOpen ? "Rút gọn" : "Xem tất cả"}
         </button>

@@ -32,7 +32,7 @@ const TourCreatePage = () => {
     slug: "",
     type: "domestic",
     active: true,
-    filter: "",
+    filterId: [],
     frequency: "",
     specialExperience: "",
     additionalPrices: [],
@@ -60,7 +60,7 @@ const TourCreatePage = () => {
       slug: "",
       type: "domestic",
       active: true,
-      filter: "",
+      filterId: [],
       frequency: "",
       specialExperience: "",
       additionalPrices: [],
@@ -75,6 +75,7 @@ const TourCreatePage = () => {
   const [frequencies, setFrequencies] = useState([]);
   const [personTypes, setPersonTypes] = useState([]);
   const [termOptions, setTermOptions] = useState([]);
+  const [filterOptions, setFilterOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingModal, setLoadingModal] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
@@ -87,15 +88,23 @@ const TourCreatePage = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [travelRes, hotelRes, vehicleRes, freqRes, personRes, termRes] =
-          await Promise.all([
-            fetch("http://localhost:5000/api/v1/travel-time/getAll"),
-            fetch("http://localhost:5000/api/v1/hotel/getAll"),
-            fetch("http://localhost:5000/api/v1/vehicle/getAll"),
-            fetch("http://localhost:5000/api/v1/frequency/getAll"),
-            fetch("http://localhost:5000/api/v1/type-of-person/getAll"),
-            fetch("http://localhost:5000/api/v1/term/getAll"),
-          ]);
+        const [
+          travelRes,
+          hotelRes,
+          vehicleRes,
+          freqRes,
+          personRes,
+          termRes,
+          filterRes,
+        ] = await Promise.all([
+          fetch("http://localhost:5000/api/v1/travel-time/getAll"),
+          fetch("http://localhost:5000/api/v1/hotel/getAll"),
+          fetch("http://localhost:5000/api/v1/vehicle/getAll"),
+          fetch("http://localhost:5000/api/v1/frequency/getAll"),
+          fetch("http://localhost:5000/api/v1/type-of-person/getAll"),
+          fetch("http://localhost:5000/api/v1/term/getAll"),
+          fetch("http://localhost:5000/api/v1/filter/getAll"),
+        ]);
 
         const [
           travelData,
@@ -104,6 +113,7 @@ const TourCreatePage = () => {
           freqData,
           personData,
           termData,
+          filterData,
         ] = await Promise.all([
           travelRes.json(),
           hotelRes.json(),
@@ -111,6 +121,7 @@ const TourCreatePage = () => {
           freqRes.json(),
           personRes.json(),
           termRes.json(),
+          filterRes.json(),
         ]);
 
         setTravelTimes(travelData || []);
@@ -119,6 +130,7 @@ const TourCreatePage = () => {
         setFrequencies(freqData || []);
         setPersonTypes(personData || []);
         setTermOptions(termData || []);
+        setFilterOptions(filterData || []);
       } catch (err) {
         console.error("Fetch data error:", err);
         showToast("Lỗi khi tải dữ liệu danh mục", "error");
@@ -215,6 +227,7 @@ const TourCreatePage = () => {
             hotels={hotels}
             vehicles={vehicles}
             frequencies={frequencies}
+            filters={filterOptions}
           />
 
           {/* Thumbnail */}
@@ -236,10 +249,11 @@ const TourCreatePage = () => {
               setForm({ ...form, departPlaces: place })
             }
           />
-
+          {/* Tag */}
           <TagsInput
             tags={form.tags}
             setTags={(tags) => setForm({ ...form, tags })}
+            title={form.title}
           />
 
           <AdditionalPricesInput

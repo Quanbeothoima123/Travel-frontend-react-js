@@ -36,7 +36,8 @@
 }
 
 .toast.error {
-  background: #dde02b;
+  background: #dc2626; /* đỏ */
+  color: #fff; /* chữ trắng */
 }
 
 .toast-icon {

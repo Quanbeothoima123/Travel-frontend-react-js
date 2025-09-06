@@ -83,3 +83,31 @@
 .tags-input .tag-add button:hover {
   background-color: #0f75d1;
 }
+
+.tags-input .tag-add .btn-auto {
+  background-color: #1890ff;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.tags-input .tag-add .btn-auto:hover {
+  background-color: #0f75d1;
+}
+
+.tags-input .tag-add .btn-clear {
+  background-color: #ff4d4f;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.tags-input .tag-add .btn-clear:hover {
+  background-color: #d9363e;
+}

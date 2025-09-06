@@ -1,0 +1,62 @@
+{
+  "cities": [
+    "Hà Nội",
+    "Hồ Chí Minh",
+    "Đà Nẵng",
+    "Huế",
+    "Hội An",
+    "Đà Lạt",
+    "Nha Trang",
+    "Phú Quốc",
+    "Cần Thơ",
+    "Hạ Long",
+    "Sapa",
+    "Quy Nhơn",
+    "Pleiku",
+    "Buôn Ma Thuột",
+    "Vũng Tàu",
+    "Phan Thiết",
+    "Mũi Né",
+    "Hà Giang",
+    "Quảng Bình"
+  ],
+  "beaches": [
+    "Mỹ Khê",
+    "An Bàng",
+    "Cửa Đại",
+    "Nha Trang",
+    "Mũi Né",
+    "Phú Quốc",
+    "Hồ Cốc",
+    "Côn Đảo",
+    "Vũng Tàu"
+  ],
+  "national_parks": [
+    "Phong Nha-Kẻ Bàng",
+    "Cát Tiên",
+    "Côn Đảo",
+    "Ba Vì",
+    "Yok Đôn",
+    "Tam Đảo",
+    "Cúc Phương",
+    "Ba Bể",
+    "Bái Tử Long"
+  ],
+  "landmarks": [
+    "Vịnh Hạ Long",
+    "Chùa Một Cột",
+    "Văn Miếu Quốc Tử Giám",
+    "Lăng Chủ tịch Hồ Chí Minh",
+    "Cố đô Huế",
+    "Thánh địa Mỹ Sơn",
+    "Phố cổ Hội An",
+    "Nhà thờ Đức Bà",
+    "Địa đạo Củ Chi",
+    "Nhà thờ đá Sapa",
+    "Tháp Chàm Po Nagar",
+    "Cầu Rồng Đà Nẵng",
+    "Fansipan",
+    "Hồ Hoàn Kiếm",
+    "Nhà hát Lớn Hà Nội"
+  ]
+}

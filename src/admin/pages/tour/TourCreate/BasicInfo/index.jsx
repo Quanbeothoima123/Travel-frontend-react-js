@@ -1,6 +1,10 @@
 import React from "react";
 import Select from "react-select";
+import { useState } from "react";
 import CategoryTreeSelect from "../../../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
+import LoadingModal from "../../../../components/common/LoadingModal";
+import { generateSlugLocal } from "../../../../../utils/slugGenerator";
+import { useToast } from "../../../../../contexts/ToastContext";
 import "./BasicInfo.css";
 
 const BasicInfo = ({
@@ -10,13 +14,56 @@ const BasicInfo = ({
   hotels,
   vehicles,
   frequencies,
+  filters,
 }) => {
+  const [slugLoading, setSlugLoading] = useState(false);
+  const [slugMessage, setSlugMessage] = useState("");
+  const { showToast } = useToast();
+
+  const handleGenerateSlug = async () => {
+    if (!form.title || !form.title.trim()) {
+      showToast("Bạn cần nhập tiêu đề trước khi tạo slug", "error");
+      return;
+    }
+    setSlugMessage("Đang tạo slug...");
+    setSlugLoading(true);
+
+    try {
+      // --- Thử gọi AI trước ---
+      const res = await fetch(
+        "http://localhost:5000/api/v1/tours/generate-slug-ai",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title: form.title }),
+        }
+      );
+
+      const data = await res.json();
+      if (data.success && data.slug) {
+        setForm({ ...form, slug: data.slug });
+        showToast("Tạo slug bằng AI thành công", "success");
+      } else {
+        // --- fallback sang local ---
+        const slug = generateSlugLocal(form.title);
+        setForm({ ...form, slug });
+      }
+    } catch (err) {
+      console.error("generate slug ai error", err);
+      const slug = generateSlugLocal(form.title);
+      setForm({ ...form, slug });
+    } finally {
+      setSlugLoading(false);
+      setSlugMessage("");
+    }
+  };
+
   return (
     <div className="basic-info">
       <h4>Thông tin cơ bản</h4>
 
       {/* Tên tour */}
-      <label>Tiêu đề Tour</label>
+      <label>Tên Tour</label>
       <input
         type="text"
         value={form.title}
@@ -25,11 +72,20 @@ const BasicInfo = ({
 
       {/* Slug */}
       <label>Slug</label>
-      <input
-        type="text"
-        value={form.slug}
-        onChange={(e) => setForm({ ...form, slug: e.target.value })}
-      />
+      <div className="slug-input">
+        <input
+          type="text"
+          value={form.slug}
+          onChange={(e) => setForm({ ...form, slug: e.target.value })}
+        />
+        <button
+          type="button"
+          onClick={handleGenerateSlug}
+          disabled={slugLoading}
+        >
+          {slugLoading ? "Đang tạo..." : "Tạo Slug Tự Động"}
+        </button>
+      </div>
 
       {/* Danh mục */}
       <label>Danh mục Tour</label>
@@ -99,7 +155,7 @@ const BasicInfo = ({
         menuPlacement="auto"
         maxMenuHeight={200}
         placeholder="Chọn phương tiện..."
-        isClearable={false} // 👉 bỏ nút x trong select
+        isClearable={false}
         isMulti={false}
       />
 
@@ -175,15 +231,50 @@ const BasicInfo = ({
       </select>
 
       {/* Filter */}
-      <label>Filter</label>
-      <select
-        value={form.filter}
-        onChange={(e) => setForm({ ...form, filter: e.target.value })}
-      >
-        <option value="">-- Không chọn --</option>
-        <option value="hot">Hot</option>
-        <option value="deep_discount">Giảm giá sâu</option>
-      </select>
+      <label>Filter (Có thể chọn nhiều)</label>
+      <Select
+        options={filters.map((f) => ({ value: f._id, label: f.label }))}
+        value={null} // 👉 luôn để trống, không hiển thị trong select
+        onChange={(selected) => {
+          if (selected) {
+            if (!form.filterId.includes(selected.value)) {
+              setForm({
+                ...form,
+                filterId: [...form.filterId, selected.value],
+              });
+            }
+          }
+        }}
+        menuPlacement="auto"
+        maxMenuHeight={200}
+        placeholder="Chọn filter..."
+        isClearable={false}
+        isMulti={false}
+      />
+
+      {/* Hiển thị danh sách filter đã chọn */}
+      <div className="selected-filters">
+        {form.filterId.map((fid) => {
+          const f = filters.find((fl) => fl._id === fid);
+          return (
+            <div key={fid} className="filter-tag">
+              {f?.label}
+              <button
+                type="button"
+                className="remove-btn"
+                onClick={() =>
+                  setForm({
+                    ...form,
+                    filter: form.filter.filter((id) => id !== fid),
+                  })
+                }
+              >
+                ×
+              </button>
+            </div>
+          );
+        })}
+      </div>
 
       {/* Active */}
       <label>
@@ -192,16 +283,38 @@ const BasicInfo = ({
           checked={form.active}
           onChange={(e) => setForm({ ...form, active: e.target.checked })}
         />
-        Kích hoạt
+        Hoạt động
       </label>
 
-      {/* Position */}
       <label>Thứ tự</label>
-      <input
-        type="number"
-        value={form.position}
-        onChange={(e) => setForm({ ...form, position: Number(e.target.value) })}
-      />
+      <div className="position-input">
+        <input
+          type="number"
+          value={form.position}
+          onChange={(e) =>
+            setForm({ ...form, position: Number(e.target.value) })
+          }
+        />
+        <button
+          type="button"
+          onClick={async () => {
+            try {
+              const res = await fetch(
+                "http://localhost:5000/api/v1/tours/countTours"
+              );
+              const data = await res.json();
+              if (data.success) {
+                setForm({ ...form, position: data.count + 1 });
+              }
+            } catch (error) {
+              console.error("Error fetching count:", error);
+            }
+          }}
+        >
+          Lấy tự động
+        </button>
+      </div>
+      <LoadingModal open={slugLoading} message={slugMessage} />
     </div>
   );
 };

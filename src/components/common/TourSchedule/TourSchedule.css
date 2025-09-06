@@ -1,4 +1,3 @@
-/* TourSchedule.css */
 .tour-schedule {
   width: 690px;
   max-width: 100%;
@@ -22,13 +21,17 @@
 
 .schedule-header button {
   font-size: 14px;
-  color: #007bff;
-  text-decoration: none;
+  background-color: #e56f2c;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .schedule-header button:hover {
-  text-decoration: underline;
+  background-color: #d65a1a;
 }
 
 @media (max-width: 768px) {
