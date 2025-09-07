@@ -7,6 +7,8 @@ export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
 
   const showToast = (message, type = "success") => {
+    console.log("🔥 showToast called with:", { message, type }); // debug log
+
     const id = Date.now();
     setToasts((prev) => [...prev, { id, message, type }]);
 

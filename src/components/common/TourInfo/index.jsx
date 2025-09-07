@@ -104,21 +104,20 @@ const TourInfo = ({ tourDetail }) => {
         <FaCalendarAlt className="icon" /> Khởi hành: {start}
       </p>
 
-      {departPlaces?.length > 0 && (
-        <div className="depart">
-          <FaPlane className="icon" /> Điểm khởi hành:{" "}
-          <span>{departPlaces[0].place}</span>
-          {departPlaces[0].googleMap && (
+      {departPlaces && (
+        <p className="depart">
+          <FaPlane className="icon" /> Điểm khởi hành: {departPlaces.place}
+          {departPlaces.googleMap && (
             <a
-              href={departPlaces[0].googleMap}
+              href={departPlaces.googleMap}
               target="_blank"
               rel="noopener noreferrer"
               className="map-link"
             >
-              <FaMapMarkerAlt /> Chỉ đường
+              <FaMapMarkerAlt /> Xem bản đồ
             </a>
           )}
-        </div>
+        </p>
       )}
 
       <div className="price">

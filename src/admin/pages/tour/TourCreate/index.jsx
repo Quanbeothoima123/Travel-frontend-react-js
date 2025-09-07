@@ -25,7 +25,7 @@ const TourCreatePage = () => {
     prices: 0,
     discount: 0,
     tags: [],
-    seats: 0,
+    seats: 1,
     description: [],
     term: [],
     vehicleId: [],
@@ -193,7 +193,7 @@ const TourCreatePage = () => {
       }).then((res) => res.json());
 
       const [data] = await Promise.all([fetchPromise, delay(MIN_LOADING)]);
-
+      console.log("📦 API response:", data);
       if (!data.success) {
         if (data.errors && Array.isArray(data.errors)) {
           data.errors.forEach((err) => showToast(err, "error"));
@@ -201,7 +201,7 @@ const TourCreatePage = () => {
           showToast(data.message || "Lỗi khi tạo tour", "error");
         }
       } else {
-        showToast("Tạo tour thành công!", "success");
+        showToast("Tạo tour mới thành công", "success");
       }
     } catch (err) {
       showToast("Không thể tạo tour!", "error");

@@ -22,7 +22,6 @@ const DetailTour = () => {
         );
         if (!response.ok) throw new Error("Failed to fetch tour details");
         const data = await response.json();
-        console.log(data);
         setTourDetail(data.tourDetail);
       } catch (err) {
         setError(err.message);

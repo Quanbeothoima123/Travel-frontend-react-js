@@ -5,6 +5,7 @@ import CategoryTreeSelect from "../../../../../components/common/DropDownTreeSea
 import LoadingModal from "../../../../components/common/LoadingModal";
 import { generateSlugLocal } from "../../../../../utils/slugGenerator";
 import { useToast } from "../../../../../contexts/ToastContext";
+import { formatCurrencyVND } from "../../../../../admin/helpers/formatCurrencyVND";
 import "./BasicInfo.css";
 
 const BasicInfo = ({
@@ -19,7 +20,9 @@ const BasicInfo = ({
   const [slugLoading, setSlugLoading] = useState(false);
   const [slugMessage, setSlugMessage] = useState("");
   const { showToast } = useToast();
-
+  const [priceDisplay, setPriceDisplay] = useState(
+    form.prices ? formatCurrencyVND(form.prices) : ""
+  );
   const handleGenerateSlug = async () => {
     if (!form.title || !form.title.trim()) {
       showToast("Bạn cần nhập tiêu đề trước khi tạo slug", "error");
@@ -200,14 +203,22 @@ const BasicInfo = ({
       {/* Giá & Giảm giá */}
       <label>Giá (VNĐ)</label>
       <input
-        type="number"
-        value={form.prices}
-        onChange={(e) => setForm({ ...form, prices: e.target.value })}
+        type="text"
+        value={priceDisplay}
+        onChange={(e) => {
+          const raw = e.target.value.replace(/[^\d]/g, ""); // bỏ ký tự ngoài số
+          const num = raw ? parseInt(raw, 10) : 0;
+
+          setForm({ ...form, prices: num });
+          setPriceDisplay(raw ? formatCurrencyVND(num) : "");
+        }}
       />
 
       <label>Giảm giá (%)</label>
       <input
         type="number"
+        min="0"
+        max="100"
         value={form.discount}
         onChange={(e) => setForm({ ...form, discount: e.target.value })}
       />
@@ -224,6 +235,7 @@ const BasicInfo = ({
       <label>Loại Tour</label>
       <select
         value={form.type}
+        min="1"
         onChange={(e) => setForm({ ...form, type: e.target.value })}
       >
         <option value="domestic">Trong nước</option>

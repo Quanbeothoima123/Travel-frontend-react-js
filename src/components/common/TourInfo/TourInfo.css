@@ -39,14 +39,16 @@ p,
 .depart .map-link {
   margin-left: 10px;
   font-size: 13px;
-  color: #4a90e2;
+  color: #e63946; /* đỏ để nổi bật */
   text-decoration: none;
-  border-bottom: 1px dashed #4a90e2;
-  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .depart .map-link:hover {
-  color: #2c6698;
+  color: #b92d38;
+  text-decoration: underline;
 }
 
 .price {
