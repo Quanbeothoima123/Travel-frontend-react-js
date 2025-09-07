@@ -216,6 +216,28 @@ export default function TourManager() {
 
   const allSelected = selectedIds.size > 0 && selectedIds.size === tours.length;
 
+  async function handleDelete(id) {
+    if (!window.confirm("Bạn có chắc chắn muốn xóa tour này?")) return;
+
+    try {
+      const res = await fetch(`${TOP_CONFIG.TOUR_SINGLE_UPDATE}/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        alert("Xóa tour thành công.");
+        await fetchTours();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.message || "Xóa thất bại.");
+      }
+    } catch (e) {
+      console.error("delete error", e);
+      alert("Lỗi khi xóa tour.");
+    }
+  }
+
   return (
     <div className="tm-wrap">
       {/* Bộ lọc trên cùng */}
@@ -342,9 +364,11 @@ export default function TourManager() {
                   <th>Trạng thái</th>
                   <th>Giá tour</th>
                   <th>Giảm giá</th>
+                  <th>Giá sau giảm</th>
                   <th>Danh mục</th>
                   <th>Vị trí</th>
                   <th>Loại tour</th>
+                  <th>Hành động</th>
                 </tr>
               </thead>
               <tbody>
@@ -365,6 +389,16 @@ export default function TourManager() {
                         (t.categoryId.title || t.categoryId.name)) ||
                       t.categoryTitle ||
                       "—";
+                    // --- TÍNH GIÁ SAU KHI GIẢM ---
+                    const pricesNum =
+                      typeof t.prices === "number"
+                        ? t.prices
+                        : Number(t.prices) || 0;
+                    const discountPct = Number(t.discount) || 0;
+                    const discountedPrice =
+                      pricesNum > 0
+                        ? pricesNum * (1 - discountPct / 100)
+                        : null;
                     return (
                       <tr
                         key={t._id}
@@ -409,6 +443,11 @@ export default function TourManager() {
                         </td>
                         <td>{formatVND(t.prices)}</td>
                         <td>{t.discount ? `${t.discount}%` : "—"}</td>
+                        <td>
+                          {discountedPrice
+                            ? formatVND(Math.round(discountedPrice))
+                            : "—"}
+                        </td>
                         <td>{catTitle}</td>
                         <td>
                           <input
@@ -426,6 +465,26 @@ export default function TourManager() {
                             : t.type === "aboard"
                             ? "Nước ngoài"
                             : "—"}
+                        </td>
+                        <td className="tm-actions">
+                          <Link
+                            to={`/tours/${t.id}`}
+                            className="tm-action-link"
+                          >
+                            Chi tiết
+                          </Link>
+                          <Link
+                            to={`/tours/edit/${t.id}`}
+                            className="tm-action-link"
+                          >
+                            Sửa
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(t.id)}
+                            className="tm-action-delete"
+                          >
+                            Xóa
+                          </button>
                         </td>
                       </tr>
                     );

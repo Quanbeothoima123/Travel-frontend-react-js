@@ -271,3 +271,54 @@
     height: 48px;
   }
 }
+
+/* --- Giới hạn độ rộng tên tour + ellipsis --- */
+.tm-title-col {
+  max-width: 280px;
+}
+
+.tm-title-text {
+  max-width: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+
+/* --- Hành động (buttons/links) --- */
+.tm-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.tm-action-link {
+  padding: 6px 10px;
+  border: 1px solid #0d79c3;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #0d79c3;
+  background: #fff;
+  text-decoration: none;
+}
+
+.tm-action-link:hover {
+  background: #0d79c3;
+  color: #fff;
+}
+
+.tm-action-delete {
+  padding: 6px 10px;
+  border: 1px solid #dc2626;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #dc2626;
+  background: #fff;
+  cursor: pointer;
+}
+
+.tm-action-delete:hover {
+  background: #dc2626;
+  color: #fff;
+}
