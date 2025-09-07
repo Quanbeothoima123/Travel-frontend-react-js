@@ -18,6 +18,7 @@ import TourCategoryDetail from "./admin/pages/tour-category/TourCategoryDetail";
 import TourCategoryUpdate from "./admin/pages/tour-category/TourCategoryEdit";
 import TourManager from "./admin/pages/tour/TourManager";
 import TourCreatePage from "./admin/pages/tour/TourCreate";
+import AdminTourDetail from "./admin/pages/tour/AdminTourDetail";
 import AdminLogin from "./admin/pages/Login";
 import AdminPrivateRoute from "./admin/components/routes/AdminPrivateRoute";
 
@@ -77,6 +78,10 @@ function App() {
               />
               <Route path="tours" element={<TourManager />} />
               <Route path="tours/create" element={<TourCreatePage />} />
+              <Route
+                path="tours/detail/:tourId"
+                element={<AdminTourDetail />}
+              />
             </Route>
           </Routes>
         </AuthProvider>

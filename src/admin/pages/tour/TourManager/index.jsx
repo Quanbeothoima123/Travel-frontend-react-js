@@ -468,19 +468,19 @@ export default function TourManager() {
                         </td>
                         <td className="tm-actions">
                           <Link
-                            to={`/tours/${t.id}`}
+                            to={`/admin/tours/detail/${t._id}`}
                             className="tm-action-link"
                           >
                             Chi tiết
                           </Link>
                           <Link
-                            to={`/tours/edit/${t.id}`}
+                            to={`/tours/edit/${t._id}`}
                             className="tm-action-link"
                           >
                             Sửa
                           </Link>
                           <button
-                            onClick={() => handleDelete(t.id)}
+                            onClick={() => handleDelete(t._id)}
                             className="tm-action-delete"
                           >
                             Xóa
