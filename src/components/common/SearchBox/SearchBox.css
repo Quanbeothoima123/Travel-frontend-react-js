@@ -1,11 +1,12 @@
 .search-box {
   position: relative;
   width: 100%;
+  padding-bottom: 4px; /* thêm khoảng đệm an toàn */
 }
 
 .search-input {
   width: 100%;
-  padding: 10px 14px;
+  padding: 12px 16px; /* padding thoải mái hơn */
   font-size: 15px;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -20,15 +21,15 @@
 
 .search-dropdown {
   position: absolute;
-  top: 110%;
+  top: calc(100% + 6px); /* cách input 6px */
   left: 0;
   right: 0;
   background: #fff;
   border: 1px solid #eee;
   border-radius: 8px;
-  margin: 6px 0 0;
+  margin: 0;
   padding: 6px 0;
-  max-height: 250px;
+  max-height: 260px;
   overflow-y: auto;
   opacity: 0;
   transform: translateY(-5px);

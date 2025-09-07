@@ -24,7 +24,7 @@ export default function SearchBox({ setQuery }) {
         const data = await res.json();
         setResults(data.data || []);
         setQuery(input);
-        setShowDropdown(true); // chỉ bật dropdown khi có kết quả
+        setShowDropdown(true);
       } catch (err) {
         console.error(err);
       } finally {
@@ -33,21 +33,18 @@ export default function SearchBox({ setQuery }) {
     }, 500);
 
     return () => clearTimeout(delay);
-  }, [input]);
+  }, [input, setQuery]);
 
   return (
-    <div
-      className="search-box"
-      onMouseEnter={() => setShowDropdown(true)}
-      onMouseLeave={() => setShowDropdown(false)} // hover ra ngoài -> ẩn
-    >
+    <div className="search-box">
       <input
         type="text"
         className="search-input"
         placeholder="Tìm tour..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        onFocus={() => results.length > 0 && setShowDropdown(true)} // focus vào -> hiện
+        onFocus={() => results.length > 0 && setShowDropdown(true)}
+        onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // delay nhỏ để kịp click
       />
 
       <ul
