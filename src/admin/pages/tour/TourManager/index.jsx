@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { FaPlusCircle } from "react-icons/fa";
 import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
+import ConfirmModal from "../../../../components/common/ConfirmModal";
 import "./TourManager.css";
 import { useToast } from "../../../../contexts/ToastContext";
 
@@ -242,14 +243,26 @@ export default function TourManager() {
 
   const allSelected = selectedIds.size > 0 && selectedIds.size === tours.length;
 
-  async function handleDelete(id) {
-    if (!window.confirm("Bạn có chắc chắn muốn xóa tour này?")) return;
+  // --- Confirm delete state ---
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+
+  function handleDelete(id) {
+    setSelectedId(id);
+    setIsModalOpen(true);
+  }
+
+  async function confirmDelete() {
+    if (!selectedId) return;
 
     try {
-      const res = await fetch(`${TOP_CONFIG.TOUR_SINGLE_UPDATE}/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const res = await fetch(
+        `http://localhost:5000/api/v1/admin/tours/delete/${selectedId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
 
       if (res.ok) {
         showToast("Xóa tour thành công.", "success");
@@ -261,6 +274,9 @@ export default function TourManager() {
     } catch (e) {
       console.error("delete error", e);
       showToast("Lỗi khi xóa tour.", "error");
+    } finally {
+      setIsModalOpen(false);
+      setSelectedId(null);
     }
   }
 
@@ -540,6 +556,13 @@ export default function TourManager() {
           </>
         )}
       </div>
+      {/* Confirm Modal */}
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={confirmDelete}
+        message="Bạn có chắc chắn muốn xóa tour này?"
+      />
     </div>
   );
 }

@@ -3,6 +3,18 @@ import React from "react";
 import PeopleInput from "./PeopleInput";
 import { FaInfoCircle } from "react-icons/fa";
 
+/**
+ * Props:
+ * - baseCounts, exceedCounts, hasAdditional, additionalMapById, seats, formatVND,
+ *   showToast, onBaseChange, onExceedChange
+ * - allowedTypes: [{ id, name }] (from allowTypePeople)
+ * - surchargeTypes: [{ id, name }] (from additionalPrices)
+ *
+ * Behavior:
+ * - Base inputs are rendered for allowedTypes (if any). If allowedTypes is empty,
+ *   we fall back to rendering surchargeTypes as base inputs (so booking remains possible).
+ * - Exceed (vượt chỗ) inputs are rendered only for surchargeTypes.
+ */
 export default function PeopleSection({
   baseCounts,
   exceedCounts,
@@ -13,8 +25,10 @@ export default function PeopleSection({
   showToast,
   onBaseChange,
   onExceedChange,
-  personTypes = [],
+  allowedTypes = [],
+  surchargeTypes = [],
 }) {
+  // totals (guard to treat missing values as 0)
   const totalBase = Object.values(baseCounts || {}).reduce(
     (sum, v) => sum + (Number(v) || 0),
     0
@@ -24,13 +38,18 @@ export default function PeopleSection({
     0
   );
   const totalPeople = totalBase + totalExceed;
-  const showExceed = hasAdditional && seats > 0 && totalBase >= seats;
+
+  // base types to render: prefer allowedTypes, otherwise fallback to surchargeTypes
+  const baseRenderTypes = allowedTypes.length ? allowedTypes : surchargeTypes;
+
+  // only show exceed section when there is surcharge config AND seats known and base reached seats
+  const showExceedSection = hasAdditional && seats > 0 && totalBase >= seats;
 
   return (
     <div className="people-section">
       <div className="people-grid">
-        {personTypes.length > 0 ? (
-          personTypes.map((type) => (
+        {baseRenderTypes.length > 0 ? (
+          baseRenderTypes.map((type) => (
             <PeopleInput
               key={type.id}
               label={type.name}
@@ -44,13 +63,8 @@ export default function PeopleSection({
           ))
         ) : (
           <div className="people-tile no-types">
-            <p>
-              Chưa có loại người để đặt cho tour này.
-              {hasAdditional
-                ? " (Dữ liệu phụ thu có nhưng loại người không có)"
-                : ""}
-            </p>
-            <p>Vui lòng liên hệ admin nếu bạn nghĩ đây là lỗi.</p>
+            <p>Chưa có loại người để đặt cho tour này.</p>
+            <p>Nếu bạn nghĩ đây là lỗi, vui lòng liên hệ admin.</p>
           </div>
         )}
 
@@ -76,11 +90,11 @@ export default function PeopleSection({
         <p className="error">Tour này không cho vượt quá số chỗ.</p>
       )}
 
-      {showExceed && (
+      {showExceedSection && (
         <div className="exceed-section">
           <h3>Số lượng vượt chỗ (có phụ thu)</h3>
           <div className="people-grid">
-            {personTypes.map((type) => (
+            {surchargeTypes.map((type) => (
               <PeopleInput
                 key={type.id + "-exceed"}
                 label={type.name}

@@ -15,6 +15,9 @@ import ConfirmModal from "../../../components/common/ConfirmModal";
 import LoadingModal from "../../../components/common/LoadingModal";
 
 const TourCreatePage = () => {
+  const { showToast } = useToast();
+
+  // === Form state ===
   const [form, setForm] = useState({
     categoryId: "",
     title: "",
@@ -40,9 +43,23 @@ const TourCreatePage = () => {
     additionalPrices: [],
     allowTypePeople: [],
   });
-  // ✅ lưu trạng thái modal
+
+  // === UI state ===
   const [showClearModal, setShowClearModal] = useState(false);
-  // ✅ reset form
+  const [loading, setLoading] = useState(true);
+  const [loadingModal, setLoadingModal] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("");
+
+  // === Options from API ===
+  const [travelTimes, setTravelTimes] = useState([]);
+  const [hotels, setHotels] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
+  const [frequencies, setFrequencies] = useState([]);
+  const [personTypes, setPersonTypes] = useState([]);
+  const [termOptions, setTermOptions] = useState([]);
+  const [filterOptions, setFilterOptions] = useState([]);
+
+  // === Reset form ===
   const resetForm = () => {
     setForm({
       categoryId: "",
@@ -56,7 +73,7 @@ const TourCreatePage = () => {
       prices: 0,
       discount: 0,
       tags: [],
-      seats: 0,
+      seats: 1,
       description: [],
       term: [],
       vehicleId: [],
@@ -72,22 +89,8 @@ const TourCreatePage = () => {
     setShowClearModal(false);
     showToast("Dữ liệu đã được làm mới", "success");
   };
-  // Dữ liệu từ API
-  const [travelTimes, setTravelTimes] = useState([]);
-  const [hotels, setHotels] = useState([]);
-  const [vehicles, setVehicles] = useState([]);
-  const [frequencies, setFrequencies] = useState([]);
-  const [personTypes, setPersonTypes] = useState([]);
-  const [termOptions, setTermOptions] = useState([]);
-  const [filterOptions, setFilterOptions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingModal, setLoadingModal] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState("");
-  // ✅ Hàm tiện ích delay
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  // useToast
-  const { showToast } = useToast();
 
+  // === Fetch initial data ===
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -144,78 +147,74 @@ const TourCreatePage = () => {
     };
 
     fetchData();
-  }, []); // eslint-disable-line
+  }, [showToast]);
 
-  // ✅ Hàm handleCheck
-  const handleCheck = async () => {
+  // === Utility ===
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  // === Unified postForm for check + submit ===
+  const postForm = async (url, successMsg, failMsg) => {
     setLoadingModal(true);
-    setLoadingMessage("Đang kiểm tra tour...");
+    setLoadingMessage("Đang xử lý...");
 
     const MIN_LOADING = 2500;
 
     try {
-      const fetchPromise = fetch(
-        "http://localhost:5000/api/v1/admin/tours/check-info-tour-create",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(form),
-        }
-      ).then((res) => res.json());
+      const fetchPromise = fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(form),
+      }).then((res) => res.json());
 
       const [data] = await Promise.all([fetchPromise, delay(MIN_LOADING)]);
 
-      if (!data.success) {
-        showToast(data.message || "Thông tin không hợp lệ", "error");
-      } else {
-        showToast("Dữ liệu tour hợp lệ", "success");
-      }
-    } catch (err) {
-      showToast("Lỗi khi kiểm tra tour", "error");
-    } finally {
-      setLoadingModal(false);
-    }
-  };
-
-  // ✅ Hàm handleSubmit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoadingModal(true);
-    setLoadingMessage("Đang lưu tour...");
-
-    const MIN_LOADING = 2500;
-
-    try {
-      const fetchPromise = fetch(
-        "http://localhost:5000/api/v1/admin/tours/create",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(form),
-        }
-      ).then((res) => res.json());
-
-      const [data] = await Promise.all([fetchPromise, delay(MIN_LOADING)]);
-      console.log("📦 API response:", data);
       if (!data.success) {
         if (data.errors && Array.isArray(data.errors)) {
           data.errors.forEach((err) => showToast(err, "error"));
         } else {
-          showToast(data.message || "Lỗi khi tạo tour", "error");
+          showToast(data.message || failMsg, "error");
         }
       } else {
-        showToast("Tạo tour mới thành công", "success");
+        showToast(successMsg, "success");
       }
     } catch (err) {
-      showToast("Không thể tạo tour!", "error");
+      showToast(failMsg, "error");
     } finally {
       setLoadingModal(false);
     }
   };
+
+  const handleCheck = () =>
+    postForm(
+      "http://localhost:5000/api/v1/admin/tours/check-info-tour-create",
+      "Dữ liệu tour hợp lệ",
+      "Thông tin không hợp lệ"
+    );
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    postForm(
+      "http://localhost:5000/api/v1/admin/tours/create",
+      "Tạo tour mới thành công",
+      "Không thể tạo tour!"
+    );
+  };
+
+  // === Derived data ===
+  const allowedPersonTypes = personTypes.filter((p) =>
+    form.allowTypePeople.includes(p._id)
+  );
+
+  // Nếu thay đổi allowTypePeople, tự động lọc lại additionalPrices
+  useEffect(() => {
+    setForm((prev) => ({
+      ...prev,
+      additionalPrices: prev.additionalPrices.filter((ap) =>
+        prev.allowTypePeople.includes(ap.typeOfPersonId)
+      ),
+    }));
+  }, [form.allowTypePeople]);
 
   return (
     <div className="tour-create">
@@ -226,7 +225,6 @@ const TourCreatePage = () => {
         <p>Đang tải dữ liệu…</p>
       ) : (
         <form onSubmit={handleSubmit} className="tour-form">
-          {/* Basic info */}
           <BasicInfo
             form={form}
             setForm={setForm}
@@ -237,36 +235,32 @@ const TourCreatePage = () => {
             filters={filterOptions}
           />
 
-          {/* Thumbnail */}
           <ThumbnailUploader
             value={form.thumbnail}
             onChange={(url) => setForm({ ...form, thumbnail: url })}
           />
 
-          {/* Images */}
           <ImagesUploader
             images={form.images}
             setImages={(imgs) => setForm({ ...form, images: imgs })}
           />
 
-          {/* ... các phần khác ... */}
           <DepartPlacesInput
             departPlace={form.departPlaces}
             setDepartPlace={(place) =>
               setForm({ ...form, departPlaces: place })
             }
           />
-          {/* Tag */}
+
           <TagsInput
             tags={form.tags}
             setTags={(tags) => setForm({ ...form, tags })}
             title={form.title}
           />
 
-          {/* Allow Type People */}
           <AllowTypePeopleSelect
-            personTypes={personTypes} // danh sách lấy từ API (mảng {_id,name})
-            value={form.allowTypePeople || []} // mảng id
+            personTypes={personTypes}
+            value={form.allowTypePeople}
             onChange={(ids) => setForm({ ...form, allowTypePeople: ids })}
           />
 
@@ -275,7 +269,7 @@ const TourCreatePage = () => {
             setAdditionalPrices={(val) =>
               setForm({ ...form, additionalPrices: val })
             }
-            personTypes={personTypes}
+            personTypes={allowedPersonTypes} // ✅ chỉ hiển thị loại được phép
           />
 
           <TermEditor
@@ -294,7 +288,6 @@ const TourCreatePage = () => {
             setValue={(val) => setForm({ ...form, specialExperience: val })}
           />
 
-          {/* Submit + Validate */}
           <div className="form-submit">
             <button
               type="button"
@@ -316,7 +309,7 @@ const TourCreatePage = () => {
           </div>
         </form>
       )}
-      {/* Confirm Clear Modal */}
+
       <ConfirmModal
         open={showClearModal}
         onClose={() => setShowClearModal(false)}

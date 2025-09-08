@@ -20,6 +20,7 @@ export default function BookingPage() {
   const [tourDetail, setTourDetail] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedTour, setSelectedTour] = useState(null);
+
   const [departDate, setDepartDate] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -29,81 +30,146 @@ export default function BookingPage() {
   const [ward, setWard] = useState(null);
   const [note, setNote] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cash");
-  const [personTypes, setPersonTypes] = useState([]); // [{ id, name }]
+
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null); // 'cash' | 'momo'
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Load tour detail (by selectedTour.slug or initialSlug)
+  // Fetch tour detail
   useEffect(() => {
     const currentSlug = selectedTour?.slug || initialSlug;
     if (!currentSlug) return;
 
+    let cancelled = false;
     fetch(`http://localhost:5000/api/v1/tours/tour-detail/${currentSlug}`, {
       credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
-        const detail = data.tourDetail;
+        if (cancelled) return;
+        const detail = data?.tourDetail || null;
         if (!detail) {
           showToast("Không tìm thấy chi tiết tour", "error");
+          setTourDetail(null);
           return;
         }
         setTourDetail(detail);
-
-        // 1) Primary source: allowTypePeople (populated objects: {_id, name})
-        const fromAllow =
-          Array.isArray(detail.allowTypePeople) &&
-          detail.allowTypePeople.length > 0
-            ? detail.allowTypePeople
-                .map((p) => {
-                  if (!p) return null;
-                  const id = p._id ? p._id.toString() : null;
-                  return id ? { id, name: p.name || "Khách" } : null;
-                })
-                .filter(Boolean)
-            : null;
-
-        // 2) Fallback: additionalPrices (populated additionalPrices.typeOfPersonId)
-        const fromAdditional =
-          Array.isArray(detail.additionalPrices) &&
-          detail.additionalPrices.length > 0
-            ? detail.additionalPrices
-                .map((p) => {
-                  const tp = p?.typeOfPersonId;
-                  if (!tp) return null;
-                  const id = tp._id ? tp._id.toString() : null;
-                  return id ? { id, name: tp.name || "Khách" } : null;
-                })
-                .filter(Boolean)
-            : [];
-
-        // Choose priority: allowTypePeople > additionalPrices > empty
-        if (fromAllow && fromAllow.length > 0) {
-          setPersonTypes(fromAllow);
-        } else if (fromAdditional.length > 0) {
-          // ensure unique ids
-          const unique = [];
-          const seen = new Set();
-          fromAdditional.forEach((t) => {
-            if (!seen.has(t.id)) {
-              seen.add(t.id);
-              unique.push(t);
-            }
-          });
-          setPersonTypes(unique);
-        } else {
-          setPersonTypes([]); // no types known — render message in UI
-        }
-
-        if (!selectedCategory) setSelectedCategory(detail.categoryId || null);
-        if (!selectedTour)
-          setSelectedTour({ slug: detail.slug, title: detail.title });
       })
-      .catch((err) => showToast("Lỗi tải tour: " + err.message, "error"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      .catch((err) => {
+        if (!cancelled) showToast("Lỗi tải tour: " + err.message, "error");
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [initialSlug, selectedTour?.slug, showToast]);
 
+  // --- Derive surchargePersonTypes from additionalPrices (types that have extra money) ---
+  const surchargePersonTypes = useMemo(() => {
+    if (!tourDetail || !Array.isArray(tourDetail.additionalPrices)) return [];
+    const arr = tourDetail.additionalPrices
+      .map((p) => {
+        const tp = p?.typeOfPersonId;
+        if (!tp) return null;
+        // typeOfPersonId might be populated object or plain id
+        let id = null;
+        if (typeof tp === "string") id = tp;
+        else if (tp._id) id = String(tp._id);
+        else if (tp.id) id = String(tp.id);
+        if (!id) return null;
+        const name =
+          typeof tp === "object" ? tp.name || tp.title || "Khách" : "Khách";
+        return { id, name };
+      })
+      .filter(Boolean);
+
+    // unique by id
+    const unique = [];
+    const seen = new Set();
+    for (const t of arr) {
+      if (!seen.has(t.id)) {
+        seen.add(t.id);
+        unique.push(t);
+      }
+    }
+    return unique;
+  }, [tourDetail]);
+
+  // --- Derive allowPersonTypes from allowTypePeople (admin-configured allowed participants) ---
+  const allowPersonTypes = useMemo(() => {
+    if (!tourDetail || !Array.isArray(tourDetail.allowTypePeople)) return [];
+
+    // build nameLookup from surchargePersonTypes (if additionalPrices populated names exist)
+    const nameLookup = {};
+    surchargePersonTypes.forEach((p) => {
+      nameLookup[p.id] = p.name;
+    });
+
+    return tourDetail.allowTypePeople
+      .map((p) => {
+        // allowTypePeople item can be string id or populated object
+        let id = null;
+        let name = null;
+        if (typeof p === "string") {
+          id = p;
+          name = nameLookup[id] || "Khách"; // fallback to name from surcharge if available
+        } else if (p && (p._id || p.id)) {
+          id = p._id ? String(p._id) : String(p.id);
+          name = p.name || p.title || nameLookup[id] || "Khách";
+        }
+        if (!id) return null;
+        return { id, name };
+      })
+      .filter(Boolean);
+  }, [tourDetail, surchargePersonTypes]);
+
+  // --- additionalMapById: id -> moneyMore (surcharge). Robust to shapes. ---
+  const additionalMapById = useMemo(() => {
+    const map = {};
+    if (!tourDetail || !Array.isArray(tourDetail.additionalPrices)) return map;
+    for (const p of tourDetail.additionalPrices) {
+      const tp = p?.typeOfPersonId;
+      if (!tp) continue;
+      let id = null;
+      if (typeof tp === "string") id = tp;
+      else if (tp._id) id = String(tp._id);
+      else if (tp.id) id = String(tp.id);
+      if (!id) continue;
+      map[id] = typeof p.moneyMore === "number" ? p.moneyMore : 0;
+    }
+    return map;
+  }, [tourDetail]);
+
+  // Which types to show as base inputs?
+  // - If admin configured allowTypePeople, use that (explicit)
+  // - Otherwise fallback to surchargePersonTypes so user can still book if no explicit allow list
+  const baseRenderTypes = allowPersonTypes.length
+    ? allowPersonTypes
+    : surchargePersonTypes;
+
+  // union of all types that hook should know about (so it can keep baseCounts & exceedCounts)
+  const unionForHook = useMemo(() => {
+    const map = new Map();
+    // add baseRenderTypes first then surcharge to preserve names
+    for (const t of baseRenderTypes) map.set(t.id, t);
+    for (const t of surchargePersonTypes) {
+      if (!map.has(t.id)) map.set(t.id, t);
+    }
+    return Array.from(map.values());
+  }, [baseRenderTypes, surchargePersonTypes]);
+
+  const hasAdditional = Object.keys(additionalMapById).length > 0;
+
+  // Sync selectedCategory / selectedTour when tourDetail loads (only when empty)
+  useEffect(() => {
+    if (!tourDetail) return;
+    if (!selectedCategory) setSelectedCategory(tourDetail.categoryId || null);
+    if (!selectedTour)
+      setSelectedTour({ slug: tourDetail.slug, title: tourDetail.title });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tourDetail]);
+
+  // price/seats
   const seats = tourDetail?.seats || 0;
   const basePriceRaw = tourDetail?.prices || 0;
   const discount = tourDetail?.discount || 0;
@@ -112,26 +178,7 @@ export default function BookingPage() {
     Math.round(basePriceRaw * (1 - (discount || 0) / 100))
   );
 
-  // Map id -> moneyMore (robust to null)
-  const additionalMapById = useMemo(() => {
-    const map = {};
-    const arr = Array.isArray(tourDetail?.additionalPrices)
-      ? tourDetail.additionalPrices
-      : [];
-    arr.forEach((p) => {
-      const id = p?.typeOfPersonId?._id
-        ? p.typeOfPersonId._id.toString()
-        : null;
-      if (id) {
-        map[id] = typeof p.moneyMore === "number" ? p.moneyMore : 0;
-      }
-    });
-    return map;
-  }, [tourDetail]);
-
-  const hasAdditional = Object.keys(additionalMapById).length > 0;
-
-  // usePeopleLogic hook (you already have this)
+  // People logic hook: pass unionForHook so hook maintains counts for both groups
   const {
     baseCounts,
     exceedCounts,
@@ -145,7 +192,7 @@ export default function BookingPage() {
     hasAdditional,
     additionalMapById,
     showToast,
-    personTypes,
+    personTypes: unionForHook, // union includes both base types and surcharge-only types
   });
 
   const minDate = useMemo(() => {
@@ -156,15 +203,15 @@ export default function BookingPage() {
 
   const canSubmit = totalPrice > 0;
 
-  // Tạo payload chung cho cả 2 hình thức
+  // build payload: seatFor uses baseRenderTypes; seatAddFor uses surchargePersonTypes
   const buildPayload = () => ({
     tourId: tourDetail?._id,
     departureDate: departDate,
-    seatFor: personTypes.map((t) => ({
+    seatFor: baseRenderTypes.map((t) => ({
       typeOfPersonId: t.id,
       quantity: baseCounts[t.id] || 0,
     })),
-    seatAddFor: personTypes
+    seatAddFor: surchargePersonTypes
       .map((t) => ({
         typeOfPersonId: t.id,
         quantity: exceedCounts[t.id] || 0,
@@ -182,7 +229,6 @@ export default function BookingPage() {
     totalPrice,
   });
 
-  // Validate form đầu vào (dùng chung)
   const validateBeforeSubmit = () => {
     const errors = validateForm({
       name,
@@ -198,17 +244,15 @@ export default function BookingPage() {
     return errors.length === 0;
   };
 
-  // Mở confirm theo action
   const openConfirm = (action) => {
     if (!validateBeforeSubmit()) return;
-    setConfirmAction(action); // 'cash' | 'momo'
+    setConfirmAction(action);
     setIsConfirmOpen(true);
   };
 
-  // Submit tiền mặt: gọi /invoice
+  // submit handlers unchanged
   const submitCash = async () => {
     const payload = buildPayload();
-
     try {
       setIsSubmitting(true);
       const response = await fetch("http://localhost:5000/api/v1/invoice", {
@@ -218,7 +262,7 @@ export default function BookingPage() {
         body: JSON.stringify(payload),
       });
       const data = await response.json();
-      if (data.code === 200) {
+      if (data.success) {
         showToast(
           "Đặt tour thành công! Vui lòng đến công ty để thanh toán.",
           "success"
@@ -233,10 +277,8 @@ export default function BookingPage() {
     }
   };
 
-  // Submit MoMo: gọi /pay-with-momo, nhận payUrl và redirect
   const submitMomo = async () => {
     const payload = buildPayload();
-
     try {
       setIsSubmitting(true);
       const response = await fetch(
@@ -249,9 +291,7 @@ export default function BookingPage() {
         }
       );
       const data = await response.json();
-
       if (response.ok && data?.payUrl) {
-        // Chuyển sang cổng thanh toán MoMo
         window.location.href = data.payUrl;
       } else {
         showToast(
@@ -262,19 +302,14 @@ export default function BookingPage() {
     } catch (err) {
       showToast("Lỗi server khi tạo giao dịch MoMo: " + err.message, "error");
     } finally {
-      // Lưu ý: nếu redirect thành công, người dùng sẽ rời trang trước khi chạy đến đây.
       setIsSubmitting(false);
     }
   };
 
-  // Nhấn "Xác nhận" trong ConfirmModal
   const handleConfirm = async () => {
     setIsConfirmOpen(false);
-    if (confirmAction === "cash") {
-      await submitCash();
-    } else if (confirmAction === "momo") {
-      await submitMomo();
-    }
+    if (confirmAction === "cash") await submitCash();
+    else if (confirmAction === "momo") await submitMomo();
     setConfirmAction(null);
   };
 
@@ -311,7 +346,8 @@ export default function BookingPage() {
           showToast={showToast}
           onBaseChange={handleBaseChange}
           onExceedChange={handleExceedChange}
-          personTypes={personTypes}
+          allowedTypes={allowPersonTypes} // use allowTypePeople for base inputs (if present)
+          surchargeTypes={surchargePersonTypes} // use additionalPrices for exceed inputs
         />
 
         <div className="form-grid">

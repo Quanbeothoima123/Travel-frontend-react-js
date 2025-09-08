@@ -18,7 +18,7 @@ const DetailTour = () => {
     const fetchTourDetail = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/v1/tour-detail/${slug}`
+          `http://localhost:5000/api/v1/tours/tour-detail/${slug}`
         );
         if (!response.ok) throw new Error("Failed to fetch tour details");
         const data = await response.json();
