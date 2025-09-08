@@ -1,40 +1,60 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { FaPlusCircle } from "react-icons/fa";
 import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
 import "./TourManager.css";
+import { useToast } from "../../../../contexts/ToastContext";
 
 const TOP_CONFIG = {
   TOUR_LIST: "http://localhost:5000/api/v1/admin/tours/tour",
   TOUR_BULK_UPDATE: "http://localhost:5000/api/v1/admin/tour/bulk-update",
   TOUR_SINGLE_UPDATE: "http://localhost:5000/api/v1/admin/tours/tour",
-  CATEGORY_TREE_FETCH: "http://localhost:5000/api/v1/admin/tour-categories",
+  CATEGORY_TREE_FETCH:
+    "http://localhost:5000/api/v1/admin/tour-categories?tree=true",
 };
 
 export default function TourManager() {
   const [tours, setTours] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
-  // filters & ui state
-  const [searchInput, setSearchInput] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sort, setSort] = useState("");
+  // --- URL Search Params ---
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [searchInput, setSearchInput] = useState(
+    searchParams.get("search") || ""
+  );
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get("search") || ""
+  );
+  const [sort, setSort] = useState(searchParams.get("sort") || "");
   const [category, setCategory] = useState(null);
-  const [statusFilter, setStatusFilter] = useState(null);
+  const [statusFilter, setStatusFilter] = useState(
+    searchParams.get("active") === "true"
+      ? true
+      : searchParams.get("active") === "false"
+      ? false
+      : null
+  );
+  const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
+  const [limit] = useState(10);
 
-  // selection & edits
-  const [selectedIds, setSelectedIds] = useState(new Set());
-  const [positions, setPositions] = useState({});
-  const [setStatusForUpdate, setSetStatusForUpdate] = useState("no_change");
-
-  // pagination
-  const [page, setPage] = useState(1);
-  const [limit] = useState(10); // bạn có thể cho user chọn limit
   const [pagination, setPagination] = useState({
     total: 0,
     totalPages: 1,
     currentPage: 1,
   });
+
+  // --- đồng bộ state -> URL ---
+  useEffect(() => {
+    const params = {};
+    if (searchQuery) params.search = searchQuery;
+    if (category && category._id) params.categoryId = category._id;
+    if (sort) params.sort = sort;
+    if (statusFilter !== null) params.active = statusFilter;
+    if (page > 1) params.page = page;
+    setSearchParams(params);
+  }, [searchQuery, sort, statusFilter, page, setSearchParams, category]);
 
   useEffect(() => {
     fetchTours();
@@ -68,8 +88,9 @@ export default function TourManager() {
         data.data.forEach((t) => {
           posMap[t._id] = typeof t.position === "number" ? t.position : 0;
         });
-        setPositions(posMap);
+        // reset positions + selected
         setSelectedIds(new Set());
+        setPositions(posMap);
       } else {
         console.warn("fetchTours: unexpected response", data);
         setTours([]);
@@ -77,11 +98,16 @@ export default function TourManager() {
       }
     } catch (e) {
       console.error("fetchTours error", e);
-      alert("Lỗi khi lấy danh sách tour");
+      showToast("Lỗi khi lấy danh sách tour", "error");
     } finally {
       setLoading(false);
     }
   }
+
+  // selection & edits
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [positions, setPositions] = useState({});
+  const [setStatusForUpdate, setSetStatusForUpdate] = useState("no_change");
 
   const onSearchKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -140,7 +166,7 @@ export default function TourManager() {
 
   async function handleBulkUpdate() {
     if (selectedIds.size === 0) {
-      alert("Hãy chọn ít nhất 1 tour bằng checkbox.");
+      showToast("Hãy chọn ít nhất 1 tour bằng checkbox.", "error");
       return;
     }
 
@@ -155,7 +181,7 @@ export default function TourManager() {
     }));
 
     if (Object.keys(setObj).length === 0 && positionsPayload.length === 0) {
-      alert("Không có gì để cập nhật.");
+      showToast("Không có gì để cập nhật.", "error");
       return;
     }
 
@@ -168,7 +194,7 @@ export default function TourManager() {
       });
 
       if (bulkRes.ok) {
-        alert("Cập nhật thành công (bulk).");
+        showToast("Cập nhật thành công (bulk).", "success");
         await fetchTours();
         return;
       }
@@ -188,10 +214,10 @@ export default function TourManager() {
     );
 
     if (results.every(Boolean)) {
-      alert("Cập nhật thành công (single requests).");
+      showToast("Cập nhật thành công.", "success");
       await fetchTours();
     } else {
-      alert("Có lỗi khi cập nhật một số tour.");
+      showToast("Có lỗi khi cập nhật một số tour.", "error");
     }
   }
 
@@ -201,7 +227,7 @@ export default function TourManager() {
     );
     const ok = await patchSingle(id, { active: newActive });
     if (!ok) {
-      alert("Không thể cập nhật trạng thái. Thử refresh.");
+      showToast("Không thể cập nhật trạng thái. Thử load lại trang.", "error");
       await fetchTours();
     }
   }
@@ -226,15 +252,15 @@ export default function TourManager() {
       });
 
       if (res.ok) {
-        alert("Xóa tour thành công.");
+        showToast("Xóa tour thành công.", "success");
         await fetchTours();
       } else {
         const data = await res.json().catch(() => ({}));
-        alert(data.message || "Xóa thất bại.");
+        showToast(data.message || "Xóa thất bại.", "error");
       }
     } catch (e) {
       console.error("delete error", e);
-      alert("Lỗi khi xóa tour.");
+      showToast("Lỗi khi xóa tour.", "error");
     }
   }
 
@@ -293,7 +319,7 @@ export default function TourManager() {
                   setPage(1);
                   setStatusFilter(true);
                 }}
-              />{" "}
+              />
               Hoạt động
             </label>
             <label>
@@ -358,17 +384,17 @@ export default function TourManager() {
                       onChange={toggleSelectAll}
                     />
                   </th>
-                  <th>stt</th>
-                  <th>Ảnh</th>
-                  <th>Tên tour</th>
-                  <th>Trạng thái</th>
-                  <th>Giá tour</th>
-                  <th>Giảm giá</th>
-                  <th>Giá sau giảm</th>
-                  <th>Danh mục</th>
-                  <th>Vị trí</th>
-                  <th>Loại tour</th>
-                  <th>Hành động</th>
+                  <th>STT</th>
+                  <th>ẢNH</th>
+                  <th>TÊN TOUR</th>
+                  <th>TRẠNG THÁI</th>
+                  <th>GIÁ TOUR</th>
+                  <th>GIẢM GIÁ</th>
+                  <th>GIÁ SAU GIẢM</th>
+                  <th>DANH MỤC</th>
+                  <th>VỊ TRÍ</th>
+                  <th>LOẠI TOUR</th>
+                  <th>HÀNH ĐỘNG</th>
                 </tr>
               </thead>
               <tbody>
