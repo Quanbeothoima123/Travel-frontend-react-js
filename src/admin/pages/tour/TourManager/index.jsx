@@ -516,7 +516,7 @@ export default function TourManager() {
                             Chi tiết
                           </Link>
                           <Link
-                            to={`/tours/edit/${t._id}`}
+                            to={`/admin/tours/edit/${t._id}`}
                             className="tm-action-link"
                           >
                             Sửa

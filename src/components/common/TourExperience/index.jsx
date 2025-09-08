@@ -2,7 +2,7 @@ import React from "react";
 import "./TourExperience.css";
 
 const TourExperience = ({ tour }) => {
-  const specialExperience = tour?.specialExperience || ""; // Fallback thành chuỗi rỗng nếu undefined/null
+  const specialExperience = tour?.specialExperience || "";
 
   return (
     <div className="tour-experience">
@@ -10,7 +10,6 @@ const TourExperience = ({ tour }) => {
       <div
         className="experience-content"
         dangerouslySetInnerHTML={{ __html: specialExperience }}
-        style={{ marginTop: "20px" }} // Thêm khoảng cách trên
       />
     </div>
   );

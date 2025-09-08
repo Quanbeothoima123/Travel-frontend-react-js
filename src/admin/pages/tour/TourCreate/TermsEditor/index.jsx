@@ -15,8 +15,12 @@ const TermsEditor = ({ terms, setTerms, termOptions }) => {
     }
   }, [termOptions, activeId]);
 
+  // 👉 Tìm index trong terms (dù là object hay id string)
   const findTermIndex = (termId) =>
-    terms?.findIndex((t) => String(t.termId) === String(termId)) ?? -1;
+    terms?.findIndex((t) => {
+      const currentId = t.termId?._id || t.termId;
+      return String(currentId) === String(termId);
+    }) ?? -1;
 
   const getDescription = (termId) => {
     const idx = findTermIndex(termId);
@@ -30,7 +34,10 @@ const TermsEditor = ({ terms, setTerms, termOptions }) => {
       next[idx] = { ...next[idx], description };
       setTerms(next);
     } else {
-      setTerms([...(terms || []), { termId, description }]);
+      const termObj = termOptions.find((t) => String(t._id) === String(termId));
+      if (termObj) {
+        setTerms([...(terms || []), { termId: termObj, description }]);
+      }
     }
     setLastSaved(new Date()); // cập nhật giờ lưu
   };
@@ -53,10 +60,8 @@ const TermsEditor = ({ terms, setTerms, termOptions }) => {
   // 👉 Hàm đếm từ (loại HTML + space thừa)
   const countWords = (html) => {
     if (!html) return 0;
-    // 1. Lấy text thuần từ HTML
     const text =
       new DOMParser().parseFromString(html, "text/html").body.textContent || "";
-    // 2. Tách theo khoảng trắng
     const words = text.trim().split(/\s+/).filter(Boolean);
     return words.length;
   };
