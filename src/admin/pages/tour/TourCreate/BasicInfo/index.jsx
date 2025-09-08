@@ -34,7 +34,7 @@ const BasicInfo = ({
     try {
       // --- Thử gọi AI trước ---
       const res = await fetch(
-        "http://localhost:5000/api/v1/tours/generate-slug-ai",
+        "http://localhost:5000/api/v1/admin/tours/generate-slug-ai",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -312,7 +312,7 @@ const BasicInfo = ({
           onClick={async () => {
             try {
               const res = await fetch(
-                "http://localhost:5000/api/v1/tours/countTours"
+                "http://localhost:5000/api/v1/admin/tours/countTours"
               );
               const data = await res.json();
               if (data.success) {

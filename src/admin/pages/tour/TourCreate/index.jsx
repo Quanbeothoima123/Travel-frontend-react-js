@@ -97,13 +97,13 @@ const TourCreatePage = () => {
           termRes,
           filterRes,
         ] = await Promise.all([
-          fetch("http://localhost:5000/api/v1/travel-time/getAll"),
-          fetch("http://localhost:5000/api/v1/hotel/getAll"),
-          fetch("http://localhost:5000/api/v1/vehicle/getAll"),
-          fetch("http://localhost:5000/api/v1/frequency/getAll"),
-          fetch("http://localhost:5000/api/v1/type-of-person/getAll"),
-          fetch("http://localhost:5000/api/v1/term/getAll"),
-          fetch("http://localhost:5000/api/v1/filter/getAll"),
+          fetch("http://localhost:5000/api/v1/admin/travel-time/getAll"),
+          fetch("http://localhost:5000/api/v1/admin/hotel/getAll"),
+          fetch("http://localhost:5000/api/v1/admin/vehicle/getAll"),
+          fetch("http://localhost:5000/api/v1/admin/frequency/getAll"),
+          fetch("http://localhost:5000/api/v1/admin/type-of-person/getAll"),
+          fetch("http://localhost:5000/api/v1/admin/term/getAll"),
+          fetch("http://localhost:5000/api/v1/admin/filter/getAll"),
         ]);
 
         const [
@@ -151,7 +151,7 @@ const TourCreatePage = () => {
 
     try {
       const fetchPromise = fetch(
-        "http://localhost:5000/api/v1/tours/check-info-tour-create",
+        "http://localhost:5000/api/v1/admin/tours/check-info-tour-create",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -183,14 +183,17 @@ const TourCreatePage = () => {
     const MIN_LOADING = 2500;
 
     try {
-      const fetchPromise = fetch("http://localhost:5000/api/v1/tours/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(form),
-      }).then((res) => res.json());
+      const fetchPromise = fetch(
+        "http://localhost:5000/api/v1/admin/tours/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(form),
+        }
+      ).then((res) => res.json());
 
       const [data] = await Promise.all([fetchPromise, delay(MIN_LOADING)]);
       console.log("📦 API response:", data);

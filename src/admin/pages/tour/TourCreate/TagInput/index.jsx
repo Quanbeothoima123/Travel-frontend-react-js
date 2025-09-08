@@ -30,7 +30,7 @@ const TagsInput = ({ tags, setTags, title }) => {
     setLoading(true);
     try {
       const res = await fetch(
-        "http://localhost:5000/api/v1/tours/generate-tags-ai",
+        "http://localhost:5000/api/v1/admin/tours/generate-tags-ai",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

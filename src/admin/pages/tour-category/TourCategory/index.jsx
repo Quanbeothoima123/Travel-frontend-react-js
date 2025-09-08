@@ -38,7 +38,7 @@ export default function TourCategory() {
   const nodeRefs = useRef({});
 
   // API config
-  const API_ROOT = "http://localhost:5000/api/v1/tour-categories";
+  const API_ROOT = "http://localhost:5000/api/v1/admin/tour-categories";
   const API_TREE = `${API_ROOT}?tree=true`;
 
   // load tree

@@ -12,7 +12,7 @@ const TourCategoryDetail = () => {
     const fetchCategory = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/v1/tour-categories/detail/${id}`
+          `http://localhost:5000/api/v1/admin/tour-categories/detail/${id}`
         );
         const data = await res.json();
         setCategory(data);

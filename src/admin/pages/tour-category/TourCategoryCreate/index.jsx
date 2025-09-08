@@ -4,7 +4,7 @@ import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch
 import "./TourCategoryCreate.css";
 
 export default function TourCategoryCreate({
-  apiUrl = "http://localhost:5000/api/v1/tour-categories/create",
+  apiUrl = "http://localhost:5000/api/v1/admin/tour-categories/create",
   onCreated = null,
 }) {
   const [title, setTitle] = useState("");
@@ -81,7 +81,7 @@ export default function TourCategoryCreate({
           <CategoryTreeSelect
             value={parentNode ? { title: parentNode.title } : null}
             onChange={(node) => setParentNode(node)}
-            fetchUrl="http://localhost:5000/api/v1/tour-categories?tree=true"
+            fetchUrl="http://localhost:5000/api/v1/admin/tour-categories?tree=true"
             placeholder="Chọn danh mục cha (nếu có)…"
             noDataText="Chưa có danh mục"
           />

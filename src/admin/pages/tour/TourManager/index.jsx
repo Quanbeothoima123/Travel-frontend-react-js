@@ -5,10 +5,10 @@ import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch
 import "./TourManager.css";
 
 const TOP_CONFIG = {
-  TOUR_LIST: "http://localhost:5000/api/v1/tours/tour",
-  TOUR_BULK_UPDATE: "http://localhost:5000/api/v1/tour/bulk-update",
-  TOUR_SINGLE_UPDATE: "http://localhost:5000/api/v1/tours/tour",
-  CATEGORY_TREE_FETCH: "http://localhost:5000/api/v1/tour-categories",
+  TOUR_LIST: "http://localhost:5000/api/v1/admin/tours/tour",
+  TOUR_BULK_UPDATE: "http://localhost:5000/api/v1/admin/tour/bulk-update",
+  TOUR_SINGLE_UPDATE: "http://localhost:5000/api/v1/admin/tours/tour",
+  CATEGORY_TREE_FETCH: "http://localhost:5000/api/v1/admin/tour-categories",
 };
 
 export default function TourManager() {

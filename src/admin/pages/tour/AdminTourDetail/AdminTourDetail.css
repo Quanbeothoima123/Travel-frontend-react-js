@@ -84,17 +84,18 @@
 
 .tag,
 .filter {
-  background: #3498db;
-  color: white;
+  background: #e56f2c;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.95em;
   transition: background 0.3s ease;
+  color: white;
 }
 
 .tag:hover,
 .filter:hover {
-  background: #2980b9;
+  background: white;
+  color: #e56f2c;
 }
 
 .thumbnail {
