@@ -1,3 +1,4 @@
+// PeopleSection.jsx
 import React from "react";
 import PeopleInput from "./PeopleInput";
 import { FaInfoCircle } from "react-icons/fa";
@@ -14,29 +15,44 @@ export default function PeopleSection({
   onExceedChange,
   personTypes = [],
 }) {
-  const totalBase = Object.values(baseCounts).reduce((sum, v) => sum + v, 0);
-  const totalExceed = Object.values(exceedCounts).reduce(
-    (sum, v) => sum + v,
+  const totalBase = Object.values(baseCounts || {}).reduce(
+    (sum, v) => sum + (Number(v) || 0),
+    0
+  );
+  const totalExceed = Object.values(exceedCounts || {}).reduce(
+    (sum, v) => sum + (Number(v) || 0),
     0
   );
   const totalPeople = totalBase + totalExceed;
-  const showExceed = hasAdditional && totalBase >= seats;
+  const showExceed = hasAdditional && seats > 0 && totalBase >= seats;
 
   return (
     <div className="people-section">
       <div className="people-grid">
-        {personTypes.map((type) => (
-          <PeopleInput
-            key={type.id}
-            label={type.name}
-            value={baseCounts[type.id] || 0}
-            onChange={(v) => onBaseChange(type.id, v)}
-            exceedCount={0}
-            moneyMore={0}
-            showSurcharge={false}
-            formatVND={formatVND}
-          />
-        ))}
+        {personTypes.length > 0 ? (
+          personTypes.map((type) => (
+            <PeopleInput
+              key={type.id}
+              label={type.name}
+              value={Number(baseCounts?.[type.id] || 0)}
+              onChange={(v) => onBaseChange(type.id, v)}
+              exceedCount={Number(exceedCounts?.[type.id] || 0)}
+              moneyMore={Number(additionalMapById?.[type.id] || 0)}
+              showSurcharge={Boolean(additionalMapById?.[type.id])}
+              formatVND={formatVND}
+            />
+          ))
+        ) : (
+          <div className="people-tile no-types">
+            <p>
+              Chưa có loại người để đặt cho tour này.
+              {hasAdditional
+                ? " (Dữ liệu phụ thu có nhưng loại người không có)"
+                : ""}
+            </p>
+            <p>Vui lòng liên hệ admin nếu bạn nghĩ đây là lỗi.</p>
+          </div>
+        )}
 
         <div
           className={`people-tile seat-tile ${
@@ -66,13 +82,13 @@ export default function PeopleSection({
           <div className="people-grid">
             {personTypes.map((type) => (
               <PeopleInput
-                key={type.id}
+                key={type.id + "-exceed"}
                 label={type.name}
-                value={exceedCounts[type.id] || 0}
+                value={Number(exceedCounts?.[type.id] || 0)}
                 onChange={(v) => onExceedChange(type.id, v)}
-                exceedCount={exceedCounts[type.id] || 0}
-                moneyMore={additionalMapById[type.id] || 0}
-                showSurcharge={true}
+                exceedCount={Number(exceedCounts?.[type.id] || 0)}
+                moneyMore={Number(additionalMapById?.[type.id] || 0)}
+                showSurcharge={Boolean(additionalMapById?.[type.id])}
                 formatVND={formatVND}
               />
             ))}

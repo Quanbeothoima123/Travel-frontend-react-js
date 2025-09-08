@@ -1,3 +1,4 @@
+// BookingPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useToast } from "../../contexts/ToastContext";
@@ -16,19 +17,19 @@ export default function BookingPage() {
   const { slug: initialSlug } = useParams();
   const { showToast } = useToast();
 
-  const [tourDetail, setTourDetail] = React.useState(null);
-  const [selectedCategory, setSelectedCategory] = React.useState(null);
-  const [selectedTour, setSelectedTour] = React.useState(null);
-  const [departDate, setDepartDate] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [address, setAddress] = React.useState("");
-  const [province, setProvince] = React.useState(null);
-  const [ward, setWard] = React.useState(null);
-  const [note, setNote] = React.useState("");
-  const [paymentMethod, setPaymentMethod] = React.useState("cash");
-  const [personTypes, setPersonTypes] = React.useState([]);
+  const [tourDetail, setTourDetail] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedTour, setSelectedTour] = useState(null);
+  const [departDate, setDepartDate] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [province, setProvince] = useState(null);
+  const [ward, setWard] = useState(null);
+  const [note, setNote] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const [personTypes, setPersonTypes] = useState([]); // [{ id, name }]
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null); // 'cash' | 'momo'
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,26 +39,61 @@ export default function BookingPage() {
     const currentSlug = selectedTour?.slug || initialSlug;
     if (!currentSlug) return;
 
-    fetch(`http://localhost:5000/api/v1/tour-detail/${currentSlug}`, {
+    fetch(`http://localhost:5000/api/v1/tours/tour-detail/${currentSlug}`, {
       credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
         const detail = data.tourDetail;
+        if (!detail) {
+          showToast("Không tìm thấy chi tiết tour", "error");
+          return;
+        }
         setTourDetail(detail);
 
-        // Build person types from additionalPrices
-        if (
+        // 1) Primary source: allowTypePeople (populated objects: {_id, name})
+        const fromAllow =
+          Array.isArray(detail.allowTypePeople) &&
+          detail.allowTypePeople.length > 0
+            ? detail.allowTypePeople
+                .map((p) => {
+                  if (!p) return null;
+                  const id = p._id ? p._id.toString() : null;
+                  return id ? { id, name: p.name || "Khách" } : null;
+                })
+                .filter(Boolean)
+            : null;
+
+        // 2) Fallback: additionalPrices (populated additionalPrices.typeOfPersonId)
+        const fromAdditional =
           Array.isArray(detail.additionalPrices) &&
           detail.additionalPrices.length > 0
-        ) {
-          const arr = detail.additionalPrices.map((p) => ({
-            id: p.typeOfPersonId._id,
-            name: p.typeOfPersonId.name,
-          }));
-          setPersonTypes(arr);
+            ? detail.additionalPrices
+                .map((p) => {
+                  const tp = p?.typeOfPersonId;
+                  if (!tp) return null;
+                  const id = tp._id ? tp._id.toString() : null;
+                  return id ? { id, name: tp.name || "Khách" } : null;
+                })
+                .filter(Boolean)
+            : [];
+
+        // Choose priority: allowTypePeople > additionalPrices > empty
+        if (fromAllow && fromAllow.length > 0) {
+          setPersonTypes(fromAllow);
+        } else if (fromAdditional.length > 0) {
+          // ensure unique ids
+          const unique = [];
+          const seen = new Set();
+          fromAdditional.forEach((t) => {
+            if (!seen.has(t.id)) {
+              seen.add(t.id);
+              unique.push(t);
+            }
+          });
+          setPersonTypes(unique);
         } else {
-          setPersonTypes([]);
+          setPersonTypes([]); // no types known — render message in UI
         }
 
         if (!selectedCategory) setSelectedCategory(detail.categoryId || null);
@@ -65,30 +101,37 @@ export default function BookingPage() {
           setSelectedTour({ slug: detail.slug, title: detail.title });
       })
       .catch((err) => showToast("Lỗi tải tour: " + err.message, "error"));
-  }, [initialSlug, selectedTour?.slug, showToast]); // giữ nguyên như trước
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialSlug, selectedTour?.slug, showToast]);
 
   const seats = tourDetail?.seats || 0;
   const basePriceRaw = tourDetail?.prices || 0;
   const discount = tourDetail?.discount || 0;
   const discountedBase = Math.max(
     0,
-    Math.round(basePriceRaw * (1 - discount / 100))
+    Math.round(basePriceRaw * (1 - (discount || 0) / 100))
   );
 
-  const hasAdditional =
-    Array.isArray(tourDetail?.additionalPrices) &&
-    tourDetail.additionalPrices.length > 0;
-
-  // Map id -> moneyMore
+  // Map id -> moneyMore (robust to null)
   const additionalMapById = useMemo(() => {
     const map = {};
-    (tourDetail?.additionalPrices || []).forEach((p) => {
-      const id = p?.typeOfPersonId?._id;
-      if (id) map[id] = typeof p.moneyMore === "number" ? p.moneyMore : 0;
+    const arr = Array.isArray(tourDetail?.additionalPrices)
+      ? tourDetail.additionalPrices
+      : [];
+    arr.forEach((p) => {
+      const id = p?.typeOfPersonId?._id
+        ? p.typeOfPersonId._id.toString()
+        : null;
+      if (id) {
+        map[id] = typeof p.moneyMore === "number" ? p.moneyMore : 0;
+      }
     });
     return map;
   }, [tourDetail]);
 
+  const hasAdditional = Object.keys(additionalMapById).length > 0;
+
+  // usePeopleLogic hook (you already have this)
   const {
     baseCounts,
     exceedCounts,
@@ -96,8 +139,6 @@ export default function BookingPage() {
     handleBaseChange,
     handleExceedChange,
     formatVND,
-    totalBase,
-    totalExceed,
   } = usePeopleLogic({
     seats,
     discountedBase,

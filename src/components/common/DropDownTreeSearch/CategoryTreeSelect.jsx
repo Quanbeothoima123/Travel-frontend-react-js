@@ -4,7 +4,7 @@ import "./tree-dropdown.css";
 export default function CategoryTreeSelect({
   value, // { slug, title } | null
   onChange,
-  fetchUrl = "http://localhost:5000/api/v1/tour-categories?tree=true",
+  fetchUrl = "http://localhost:5000/api/v1/admin/tour-categories?tree=true",
   placeholder = "Chọn danh mục tour",
   noDataText = "Không có danh mục",
 }) {
