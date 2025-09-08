@@ -3,6 +3,7 @@ import ThumbnailUploader from "./ThumbnailUploader";
 import ImagesUploader from "./ImagesUploader";
 import DepartPlacesInput from "./DepartPlacesInput";
 import TagsInput from "./TagInput";
+import AllowTypePeopleSelect from "./AllowTypePeopleSelect";
 import AdditionalPricesInput from "./AdditionalPricesEditor";
 import TermEditor from "./TermsEditor";
 import DescriptionEditor from "./DescriptionEditor";
@@ -12,6 +13,7 @@ import "./TourCreatePage.css";
 import { useToast } from "../../../../contexts/ToastContext";
 import ConfirmModal from "../../../components/common/ConfirmModal";
 import LoadingModal from "../../../components/common/LoadingModal";
+
 const TourCreatePage = () => {
   const [form, setForm] = useState({
     categoryId: "",
@@ -36,6 +38,7 @@ const TourCreatePage = () => {
     frequency: "",
     specialExperience: "",
     additionalPrices: [],
+    allowTypePeople: [],
   });
   // ✅ lưu trạng thái modal
   const [showClearModal, setShowClearModal] = useState(false);
@@ -64,6 +67,7 @@ const TourCreatePage = () => {
       frequency: "",
       specialExperience: "",
       additionalPrices: [],
+      allowTypePeople: [],
     });
     setShowClearModal(false);
     showToast("Dữ liệu đã được làm mới", "success");
@@ -257,6 +261,13 @@ const TourCreatePage = () => {
             tags={form.tags}
             setTags={(tags) => setForm({ ...form, tags })}
             title={form.title}
+          />
+
+          {/* Allow Type People */}
+          <AllowTypePeopleSelect
+            personTypes={personTypes} // danh sách lấy từ API (mảng {_id,name})
+            value={form.allowTypePeople || []} // mảng id
+            onChange={(ids) => setForm({ ...form, allowTypePeople: ids })}
           />
 
           <AdditionalPricesInput

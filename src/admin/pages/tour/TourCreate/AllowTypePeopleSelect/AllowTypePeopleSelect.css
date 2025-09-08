@@ -1,0 +1,121 @@
+:root {
+  --brand: #e56f2c;
+  --brand-hover: #d85c1f;
+  --paper: #fff;
+  --bg: #f6f7fb;
+  --ink: #1b1b1f;
+  --radius: 6px;
+  --shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.allow-type-people {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.allow-type-people label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
+}
+
+.allow-type-people-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.allow-type-people-select {
+  flex: 1;
+}
+
+/* buttons dọc */
+.allow-type-people-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* hint text */
+.allow-type-people-hint {
+  display: block;
+  margin-top: 6px;
+  color: #666;
+  font-size: 12px;
+}
+
+/* react-select custom */
+.allow-type-people .react-select__control {
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  min-height: 38px;
+}
+
+.allow-type-people .react-select__control--is-focused {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px rgba(229, 111, 44, 0.15);
+}
+
+.allow-type-people .react-select__menu {
+  border-radius: var(--radius);
+  overflow: hidden;
+  z-index: 999;
+}
+
+.allow-type-people .react-select__menu-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.allow-type-people .react-select__option {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.allow-type-people .react-select__option--is-focused {
+  background-color: #f0f0f0;
+}
+
+.allow-type-people .react-select__option--is-selected {
+  background-color: var(--brand);
+  color: white;
+}
+
+/* nút chung */
+.allow-type-people-buttons .btn {
+  background-color: var(--brand);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  transition: background-color 0.2s ease;
+}
+
+.allow-type-people-buttons .btn:hover {
+  background-color: var(--brand-hover);
+}
+
+/* size nhỏ cho nút trong form */
+.allow-type-people-buttons .btn-small {
+  font-size: 12px;
+  padding: 4px 10px;
+}
+
+@media (max-width: 600px) {
+  .allow-type-people label {
+    font-size: 13px;
+  }
+
+  .allow-type-people-hint {
+    font-size: 11px;
+  }
+}
