@@ -265,11 +265,22 @@ export default function BookingPage() {
         }
       );
       const data = await response.json();
-      if (data.success) {
-        showToast(
-          "Đặt tour thành công! Vui lòng đến công ty để thanh toán.",
-          "success"
-        );
+
+      if (response.ok && data.success && data.invoice) {
+        const inv = data.invoice;
+        const invoiceId = inv._id || inv.id;
+        const invoiceCode = inv.invoiceCode || "";
+
+        // tạo query params
+        const params = new URLSearchParams({
+          orderId: invoiceId,
+          resultCode: "0", // 0 = thành công
+          orderInfo: `Thanh toán đơn hàng ${invoiceCode}`,
+          transId: inv.transactionId || "", // có thể null nếu là cash
+        });
+
+        // redirect đến trang kết quả (tái sử dụng chung với MoMo)
+        window.location.href = `http://localhost:3000/payment/momo/result?${params.toString()}`;
       } else {
         showToast(data.message || "Đặt tour thất bại", "error");
       }
@@ -309,10 +320,63 @@ export default function BookingPage() {
     }
   };
 
+  // --- thêm hàm submitCard (dán gần submitMomo / submitCash) ---
+  const submitCard = async () => {
+    const payload = buildPayload();
+    // force payment type to card to be safe
+    payload.typeOfPayment = "card";
+
+    try {
+      setIsSubmitting(true);
+
+      // NOTE: sửa URL nếu backend của bạn expose createInvoice ở route khác
+      const response = await fetch(
+        "http://localhost:5000/api/v1/invoice/create",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data?.invoice) {
+        const inv = data.invoice;
+        const invoiceId = inv._id || inv.id;
+        const invoiceCode = inv.invoiceCode || "";
+
+        // build redirect params: resultCode=0 => treat as success in MomoPaymentResultPage
+        const params = new URLSearchParams({
+          orderId: invoiceId,
+          resultCode: "0",
+          orderInfo: `Thanh toán đơn hàng ${invoiceCode}`,
+          transId: inv.transactionId || "", // nếu backend có transactionId cho card
+        });
+
+        // redirect to the same result page used by MoMo
+        window.location.href = `http://localhost:3000/payment/momo/result?${params.toString()}`;
+        return;
+      }
+
+      // nếu backend trả lỗi
+      showToast(
+        data?.message || "Không thể tạo hóa đơn thanh toán bằng thẻ.",
+        "error"
+      );
+    } catch (err) {
+      showToast("Lỗi server khi tạo hóa đơn (card): " + err.message, "error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleConfirm = async () => {
     setIsConfirmOpen(false);
     if (confirmAction === "cash") await submitCash();
     else if (confirmAction === "momo") await submitMomo();
+    else if (confirmAction === "card") await submitCard();
     setConfirmAction(null);
   };
 
@@ -387,6 +451,7 @@ export default function BookingPage() {
           onChangePayment={setPaymentMethod}
           onSubmitCash={() => openConfirm("cash")}
           onSubmitMomo={() => openConfirm("momo")}
+          onSubmitCard={() => openConfirm("card")} // <-- thêm
           canSubmit={canSubmit}
           isSubmitting={isSubmitting}
         />

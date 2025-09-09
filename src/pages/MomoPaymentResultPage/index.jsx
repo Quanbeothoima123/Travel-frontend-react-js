@@ -152,12 +152,12 @@ export default function MomoPaymentResultPage() {
             {isSuccess() ? (
               <>
                 <FaCheckCircle className="result-icon" />
-                <h2 className="result-title">Thanh toán thành công</h2>
+                <h2 className="result-title">Đặt tour thành công</h2>
               </>
             ) : (
               <>
                 <FaTimesCircle className="result-icon" />
-                <h2 className="result-title">Thanh toán thất bại</h2>
+                <h2 className="result-title">Đặt tour thất bại</h2>
               </>
             )}
           </div>
@@ -305,7 +305,8 @@ export default function MomoPaymentResultPage() {
           {message && <div className="message">{message}</div>}
         </div>
         <div className="credit">
-          <small>Travelify — Cảm ơn bạn đã sử dụng dịch vụ</small>
+          Cảm ơn bạn đã quan tâm đến dịch vụ - Chúng tôi sẽ liên hệ sớm nhất với
+          bạn!
         </div>
       </div>
     </div>
