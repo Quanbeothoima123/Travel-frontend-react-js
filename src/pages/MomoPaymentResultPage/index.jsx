@@ -6,11 +6,18 @@ import {
   FaHome,
   FaEnvelope,
   FaFilePdf,
+  FaUser,
+  FaMapMarkerAlt,
+  FaPhone,
+  FaCalendarAlt,
+  FaUsers,
+  FaChair,
+  FaTag,
+  FaStickyNote,
 } from "react-icons/fa";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import "./MomoPaymentResultPage.css";
-
 export default function MomoPaymentResultPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -24,80 +31,28 @@ export default function MomoPaymentResultPage() {
   const [error, setError] = useState(null);
 
   const qs = new URLSearchParams(location.search);
-  const orderId = qs.get("orderId") || qs.get("orderid") || qs.get("invoiceId");
-  const resultCode =
-    qs.get("resultCode") || qs.get("resultcode") || qs.get("errorCode");
-  const transId = qs.get("transId") || qs.get("transactionId");
+  const orderId = qs.get("orderId");
+  const resultCode = qs.get("resultCode");
+  const transId = qs.get("transId");
 
-  // helper formatters
-  const formatMoney = (v) => {
-    if (v == null) return "Chưa có thông tin";
-    try {
-      return new Intl.NumberFormat("vi-VN", {
-        style: "currency",
-        currency: "VND",
-      }).format(v);
-    } catch {
-      return v;
-    }
-  };
-  const formatDate = (d) => {
-    if (!d) return "Chưa có thông tin";
-    try {
-      return new Date(d).toLocaleString("vi-VN");
-    } catch {
-      return d;
-    }
-  };
+  const formatMoney = (v) =>
+    v != null
+      ? new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }).format(v)
+      : "Chưa có thông tin";
 
-  // fetch invoice
+  const formatDate = (d) =>
+    d ? new Date(d).toLocaleString("vi-VN") : "Chưa có thông tin";
+
   useEffect(() => {
-    let cancelled = false;
     if (!orderId) {
       setError("Không tìm thấy orderId trong URL.");
       setLoading(false);
       return;
     }
-
     const fetchInvoice = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(
-          `http://localhost:5000/api/v1/admin/invoice/${orderId}`,
-          {
-            credentials: "include",
-          }
-        );
-        if (!res.ok) {
-          const txt = await res.text();
-          throw new Error(txt || res.statusText);
-        }
-        const json = await res.json();
-        // backend might return { invoice: { ... } } or invoice object directly
-        const inv = json.invoice || json;
-        if (!cancelled) setInvoice(inv);
-      } catch (err) {
-        if (!cancelled) setError(err.message || "Lỗi khi tải invoice");
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-
-    fetchInvoice();
-    return () => (cancelled = true);
-  }, [orderId]);
-
-  // If MoMo returned resultCode=0 but invoice not updated yet, poll a few times
-  useEffect(() => {
-    if (!orderId) return;
-    if (String(resultCode) !== "0") return;
-    if (!invoice || invoice.status === "paid" || invoice.isPaid) return;
-
-    let attempts = 0;
-    const maxAttempts = 8;
-    const timer = setInterval(async () => {
-      attempts++;
       try {
         const res = await fetch(
           `http://localhost:5000/api/v1/invoice/${orderId}`,
@@ -105,36 +60,26 @@ export default function MomoPaymentResultPage() {
             credentials: "include",
           }
         );
-        if (res.ok) {
-          const json = await res.json();
-          const inv = json.invoice || json;
-          setInvoice(inv);
-          if (inv.status === "paid" || inv.isPaid) {
-            clearInterval(timer);
-          }
-        }
-      } catch (e) {
-        // ignore
+        if (!res.ok) throw new Error(await res.text());
+        const json = await res.json();
+        setInvoice(json.invoice || json);
+      } catch (err) {
+        setError(err.message || "Lỗi khi tải invoice");
+      } finally {
+        setLoading(false);
       }
-      if (attempts >= maxAttempts) clearInterval(timer);
-    }, 2000);
+    };
+    fetchInvoice();
+  }, [orderId]);
 
-    return () => clearInterval(timer);
-  }, [orderId, resultCode, invoice]);
-
-  const isSuccess = () => {
-    if (invoice && (invoice.status === "paid" || invoice.isPaid === true))
-      return true;
-    if (String(resultCode) === "0") return true;
-    return false;
-  };
+  const isSuccess = () =>
+    invoice?.isPaid || invoice?.status === "paid" || String(resultCode) === "0";
 
   const handleSendEmail = async () => {
     if (!orderId) return;
     setSendingEmail(true);
     setMessage(null);
     try {
-      // backend expected GET with orderId as query param (adjust if your backend endpoint differs)
       const res = await fetch(
         `http://localhost:5000/api/v1/invoice/send-email?orderId=${encodeURIComponent(
           orderId
@@ -142,11 +87,9 @@ export default function MomoPaymentResultPage() {
         { method: "GET", credentials: "include" }
       );
       const json = await res.json();
-      if (res.ok) {
-        setMessage(json.message || "Đã gửi email. Vui lòng kiểm tra hộp thư.");
-      } else {
-        setMessage(json.message || "Không thể gửi email. Vui lòng thử lại.");
-      }
+      setMessage(
+        res.ok ? json.message : json.message || "Không thể gửi email."
+      );
     } catch (err) {
       setMessage("Lỗi khi gửi email: " + err.message);
     } finally {
@@ -155,43 +98,26 @@ export default function MomoPaymentResultPage() {
   };
 
   const handlePrintPDF = async () => {
-    if (!invoiceRef.current) {
-      window.print();
-      return;
-    }
+    if (!invoiceRef.current) return window.print();
     setPrinting(true);
     try {
-      // render the invoice card to canvas
       const canvas = await html2canvas(invoiceRef.current, {
         scale: 2,
         useCORS: true,
       });
-      const imgData = canvas.toDataURL("image/png");
-
-      // create PDF (A4)
       const pdf = new jsPDF("p", "mm", "a4");
+      const imgData = canvas.toDataURL("image/png");
       const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-
-      // create image ratio
       const imgProps = pdf.getImageProperties(imgData);
-      const imgWidthMm = pageWidth - 20; // margin 10mm
-      const imgHeightMm = (imgProps.height * imgWidthMm) / imgProps.width;
-
-      let position = 10;
-      pdf.addImage(imgData, "PNG", 10, position, imgWidthMm, imgHeightMm);
-      // if content taller than page, add pages
-      let remainingHeightPx =
-        canvas.height - imgProps.height * (imgWidthMm / imgProps.width);
-      // (rare) For large content, we could split into multiple pages. Basic single page for most invoices.
-
-      const fileName = invoice?.invoiceCode
-        ? `${invoice.invoiceCode}.pdf`
-        : `invoice-${orderId}.pdf`;
-      pdf.save(fileName);
+      const imgHeight = (imgProps.height * (pageWidth - 20)) / imgProps.width;
+      pdf.addImage(imgData, "PNG", 10, 10, pageWidth - 20, imgHeight);
+      pdf.save(
+        invoice?.invoiceCode
+          ? `${invoice.invoiceCode}.pdf`
+          : `invoice-${orderId}.pdf`
+      );
     } catch (err) {
       console.error("PDF error:", err);
-      // fallback
       window.print();
     } finally {
       setPrinting(false);
@@ -200,30 +126,23 @@ export default function MomoPaymentResultPage() {
 
   const handleHome = () => navigate("/");
 
-  // render helpers for arrays
-  const renderSeatList = (arr) => {
-    if (!Array.isArray(arr) || arr.length === 0)
-      return <span>Chưa có thông tin</span>;
-    return (
+  const renderSeatList = (arr, isAdditional = false) =>
+    Array.isArray(arr) && arr.length > 0 ? (
       <ul className="seat-list">
-        {arr.map((s, idx) => {
-          const tp = s.typeOfPersonId || s.typeOfPerson || s.type; // different shapes
-          const name =
-            typeof tp === "object"
-              ? tp.name || tp.title || tp._id || "Khách"
-              : tp || "Khách";
-          return (
-            <li key={idx}>
-              <strong>{name}:</strong> {s.quantity ?? 0}{" "}
-              {s.moneyMoreForOne
-                ? `(+ ${formatMoney(s.moneyMoreForOne)} / người)`
-                : ""}
-            </li>
-          );
-        })}
+        {arr.map((s, idx) => (
+          <li key={idx} className="seat-item">
+            <FaUsers className="seat-icon" />{" "}
+            <strong>{s.typeOfPersonId?.name || "Khách"}:</strong>{" "}
+            {s.quantity ?? 0}
+            {isAdditional && s.moneyMoreForOne
+              ? ` (+${formatMoney(s.moneyMoreForOne)} / người)`
+              : ""}
+          </li>
+        ))}
       </ul>
+    ) : (
+      <span className="no-info">Chưa có thông tin</span>
     );
-  };
 
   return (
     <div className="momo-result-page">
@@ -233,126 +152,130 @@ export default function MomoPaymentResultPage() {
             {isSuccess() ? (
               <>
                 <FaCheckCircle className="result-icon" />
-                <h2>Thanh toán thành công</h2>
+                <h2 className="result-title">Thanh toán thành công</h2>
               </>
             ) : (
               <>
                 <FaTimesCircle className="result-icon" />
-                <h2>Thanh toán không thành công</h2>
+                <h2 className="result-title">Thanh toán thất bại</h2>
               </>
             )}
           </div>
 
           <div className="result-body" ref={invoiceRef}>
             {loading ? (
-              <p>Đang tải thông tin hóa đơn...</p>
+              <p className="loading-text">Đang tải thông tin hóa đơn...</p>
             ) : error ? (
               <p className="error-text">{error}</p>
             ) : !invoice ? (
-              <p>Không tìm thấy hóa đơn.</p>
+              <p className="no-info">Không tìm thấy hóa đơn.</p>
             ) : (
               <div className="invoice-card">
+                <div className="invoice-header">
+                  <h3>Hóa đơn chi tiết</h3>
+                </div>
                 <div className="invoice-row">
-                  <div className="label">Mã hóa đơn</div>
+                  <div className="label">
+                    <FaTag className="icon" /> Mã hóa đơn
+                  </div>
+                  <div className="value">{invoice.invoiceCode}</div>
+                </div>
+                <div className="invoice-row">
+                  <div className="label">
+                    <FaTag className="icon" /> Trạng thái
+                  </div>
+                  <div className="value">{invoice.status}</div>
+                </div>
+                <div className="invoice-row">
+                  <div className="label">
+                    <FaTag className="icon" /> Phương thức
+                  </div>
+                  <div className="value">{invoice.typeOfPayment}</div>
+                </div>
+                <div className="invoice-row">
+                  <div className="label">
+                    <FaTag className="icon" /> Mã giao dịch
+                  </div>
                   <div className="value">
-                    {invoice.invoiceCode || "Chưa có thông tin"}
+                    {invoice.transactionId || transId || "Chưa có"}
                   </div>
                 </div>
-
                 <div className="invoice-row">
-                  <div className="label">Trạng thái</div>
-                  <div className="value">
-                    {invoice.status || "Chưa có thông tin"}
+                  <div className="label">
+                    <FaCalendarAlt className="icon" /> Ngày thanh toán
                   </div>
+                  <div className="value">{formatDate(invoice.datePayment)}</div>
                 </div>
-
-                <div className="invoice-row">
-                  <div className="label">Phương thức</div>
-                  <div className="value">
-                    {invoice.typeOfPayment || "Chưa có thông tin"}
+                <div className="invoice-row highlight">
+                  <div className="label">
+                    <FaTag className="icon" /> Tổng tiền
                   </div>
-                </div>
-
-                <div className="invoice-row">
-                  <div className="label">Mã giao dịch (transId)</div>
-                  <div className="value">
-                    {invoice.transactionId || transId || "Chưa có thông tin"}
-                  </div>
-                </div>
-
-                <div className="invoice-row">
-                  <div className="label">Ngày thanh toán</div>
-                  <div className="value">
-                    {formatDate(invoice.datePayment || invoice.updatedAt)}
-                  </div>
-                </div>
-
-                <div className="invoice-row">
-                  <div className="label">Tổng tiền</div>
                   <div className="value">{formatMoney(invoice.totalPrice)}</div>
                 </div>
 
-                <hr />
+                <hr className="divider" />
 
                 <div className="invoice-row">
-                  <div className="label">Người đặt</div>
+                  <div className="label">
+                    <FaUser className="icon" /> Người đặt
+                  </div>
+                  <div className="value">{invoice.nameOfUser}</div>
+                </div>
+                <div className="invoice-row">
+                  <div className="label">
+                    <FaPhone className="icon" /> SĐT
+                  </div>
+                  <div className="value">{invoice.phoneNumber}</div>
+                </div>
+                <div className="invoice-row">
+                  <div className="label">
+                    <FaEnvelope className="icon" /> Email
+                  </div>
+                  <div className="value">{invoice.email}</div>
+                </div>
+                <div className="invoice-row">
+                  <div className="label">
+                    <FaMapMarkerAlt className="icon" /> Địa chỉ
+                  </div>
                   <div className="value">
-                    {invoice.nameOfUser || "Chưa có thông tin"}
+                    {`${invoice.address || ""}, ${
+                      invoice.ward?.name_with_type || ""
+                    }, ${invoice.province?.name_with_type || ""}`.trim()}
                   </div>
                 </div>
-
                 <div className="invoice-row">
-                  <div className="label">SĐT</div>
-                  <div className="value">
-                    {invoice.phoneNumber || "Chưa có thông tin"}
+                  <div className="label">
+                    <FaCalendarAlt className="icon" /> Ngày khởi hành
                   </div>
-                </div>
-
-                <div className="invoice-row">
-                  <div className="label">Email</div>
-                  <div className="value">
-                    {invoice.email || "Chưa có thông tin"}
-                  </div>
-                </div>
-
-                <div className="invoice-row">
-                  <div className="label">Địa chỉ</div>
-                  <div className="value">
-                    {invoice.address || "Chưa có thông tin"}
-                  </div>
-                </div>
-
-                <div className="invoice-row">
-                  <div className="label">Ngày khởi hành</div>
                   <div className="value">
                     {formatDate(invoice.departureDate)}
                   </div>
                 </div>
-
                 <div className="invoice-row">
-                  <div className="label">Tổng số khách</div>
-                  <div className="value">
-                    {invoice.totalPeople ?? "Chưa có thông tin"}
+                  <div className="label">
+                    <FaUsers className="icon" /> Tổng số khách
                   </div>
+                  <div className="value">{invoice.totalPeople}</div>
                 </div>
-
                 <div className="invoice-row">
-                  <div className="label">Ghế (loại cơ bản)</div>
+                  <div className="label">
+                    <FaChair className="icon" /> Ghế cơ bản
+                  </div>
                   <div className="value">{renderSeatList(invoice.seatFor)}</div>
                 </div>
-
                 <div className="invoice-row">
-                  <div className="label">Ghế thêm (phụ phí)</div>
+                  <div className="label">
+                    <FaChair className="icon" /> Ghế thêm
+                  </div>
                   <div className="value">
-                    {renderSeatList(invoice.seatAddFor)}
+                    {renderSeatList(invoice.seatAddFor, true)}
                   </div>
                 </div>
-
                 <div className="invoice-row">
-                  <div className="label">Ghi chú</div>
-                  <div className="value">
-                    {invoice.note || "Chưa có thông tin"}
+                  <div className="label">
+                    <FaStickyNote className="icon" /> Ghi chú
                   </div>
+                  <div className="value">{invoice.note}</div>
                 </div>
               </div>
             )}
@@ -360,39 +283,29 @@ export default function MomoPaymentResultPage() {
 
           <div className="result-footer">
             <button className="btn btn-ghost" onClick={handleHome}>
-              <FaHome /> <span>Quay về trang chủ</span>
+              <FaHome className="btn-icon" /> <span>Trang chủ</span>
             </button>
-
-            <div className="middle-actions">
-              <button
-                className="btn btn-secondary"
-                onClick={handleSendEmail}
-                disabled={sendingEmail || !orderId}
-              >
-                <FaEnvelope />{" "}
-                <span>
-                  {sendingEmail ? "Đang gửi..." : "Gửi hóa đơn về email"}
-                </span>
-              </button>
-              {message && <div className="small-message">{message}</div>}
-            </div>
-
+            <button
+              className="btn btn-secondary"
+              onClick={handleSendEmail}
+              disabled={sendingEmail}
+            >
+              <FaEnvelope className="btn-icon" />{" "}
+              {sendingEmail ? "Đang gửi..." : "Gửi email"}
+            </button>
             <button
               className="btn btn-primary"
               onClick={handlePrintPDF}
               disabled={printing || !invoice}
             >
-              <FaFilePdf />{" "}
-              <span>{printing ? "Đang tạo PDF..." : "In / Xuất PDF"}</span>
+              <FaFilePdf className="btn-icon" />{" "}
+              {printing ? "Đang tạo PDF..." : "Xuất PDF"}
             </button>
           </div>
+          {message && <div className="message">{message}</div>}
         </div>
-
         <div className="credit">
-          <small>
-            Travelify — Cảm ơn bạn đã sử dụng dịch vụ. Nếu có thắc mắc, liên hệ
-            CSKH.
-          </small>
+          <small>Travelify — Cảm ơn bạn đã sử dụng dịch vụ</small>
         </div>
       </div>
     </div>
