@@ -255,12 +255,15 @@ export default function BookingPage() {
     const payload = buildPayload();
     try {
       setIsSubmitting(true);
-      const response = await fetch("http://localhost:5000/api/v1/invoice", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/v1/invoice/payUsingCash",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
       const data = await response.json();
       if (data.success) {
         showToast(
@@ -282,7 +285,7 @@ export default function BookingPage() {
     try {
       setIsSubmitting(true);
       const response = await fetch(
-        "http://localhost:5000/api/v1/pay-with-momo",
+        "http://localhost:5000/api/v1/invoice/pay-with-momo",
         {
           method: "POST",
           credentials: "include",

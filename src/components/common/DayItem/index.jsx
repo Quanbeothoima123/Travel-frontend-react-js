@@ -12,7 +12,7 @@ const DayItem = ({ day, title, image, description, isOpen }) => {
         )}
         <div className={`day-title ${open || isOpen ? "expanded" : ""}`}>
           <span>Ngày {day}</span>
-          <h3>{title}</h3>
+          <h5>{title}</h5>
         </div>
         <span className={`dropdown-icon ${open || isOpen ? "open" : ""}`}>
           ▼

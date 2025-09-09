@@ -9,6 +9,7 @@ import Register from "./pages/Auth/Register";
 import BookingPage from "./pages/BookingPage";
 import ReAuthFlow from "./pages/ReAuthFlow";
 import SearchPage from "./pages/SearchPage";
+import MomoPaymentResultPage from "./pages/MomoPaymentResultPage";
 import AdminLayout from "./admin/components/layout/AdminLayout";
 import TourCategory from "./admin/pages/tour-category/TourCategory";
 import { ToastProvider } from "./contexts/ToastContext";
@@ -48,6 +49,10 @@ function App() {
                     <Route
                       path="/search/tours/:categorySlug"
                       element={<SearchPage />}
+                    />
+                    <Route
+                      path="/payment/momo/result"
+                      element={<MomoPaymentResultPage />}
                     />
                   </Routes>
                 </>
