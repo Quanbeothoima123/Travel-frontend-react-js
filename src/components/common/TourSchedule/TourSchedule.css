@@ -3,8 +3,11 @@
   max-width: 100%;
   margin: 20px auto;
   padding: 20px;
-  background: #f8f9fa;
-  border-radius: 10px;
+  background: var(--color-card-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text);
+  font-family: inherit;
 }
 
 .schedule-header {
@@ -15,31 +18,38 @@
 }
 
 .schedule-header h2 {
-  font-size: 20px;
-  color: #333;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
 }
 
-.schedule-header button {
-  font-size: 14px;
-  background-color: #e56f2c;
-  color: white;
+.toggle-btn {
+  font-size: 0.875rem;
+  background-color: var(--color-primary);
+  color: #fff;
   border: none;
   padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-.schedule-header button:hover {
-  background-color: #d65a1a;
+.toggle-btn:hover {
+  background-color: var(--color-primary-hover, #d65a1a);
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   .tour-schedule {
     padding: 15px;
   }
 
   .schedule-header h2 {
-    font-size: 18px;
+    font-size: 1.125rem;
+  }
+
+  .toggle-btn {
+    font-size: 0.8rem;
+    padding: 4px 8px;
   }
 }
