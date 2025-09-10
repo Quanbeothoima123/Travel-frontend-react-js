@@ -13,8 +13,8 @@ import {
   FaLinkedin,
   FaPaperPlane,
 } from "react-icons/fa";
+import { useToast } from "../../../contexts/ToastContext";
 import "./TourInfo.css";
-import { useToast } from "../../../contexts/ToastContext"; // chỗ bạn để ToastContext
 
 const TourInfo = ({ tourDetail }) => {
   const [phone, setPhone] = useState("");
@@ -42,9 +42,7 @@ const TourInfo = ({ tourDetail }) => {
   const stay = `${hotelId.name} ${hotelId.star} sao`;
   const start = frequency.title;
 
-  // ✅ Hàm kiểm tra số điện thoại Việt Nam
   const isValidVNPhone = (number) => {
-    // Bắt đầu bằng 0 hoặc +84, sau đó có 9-10 số
     const regex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
     return regex.test(number);
   };
@@ -54,7 +52,6 @@ const TourInfo = ({ tourDetail }) => {
       showToast("Vui lòng nhập số điện thoại!", "error");
       return;
     }
-
     if (!isValidVNPhone(phone)) {
       showToast("Số điện thoại không hợp lệ!", "error");
       return;
@@ -65,18 +62,14 @@ const TourInfo = ({ tourDetail }) => {
         "http://localhost:5000/api/v1/customer-consolation",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify({ phoneNumber: phone, tourId }),
         }
       );
-
       const data = await res.json();
-
       if (data.code === 200) {
-        showToast("Chúng tôi sẽ sớm liên hệ với bạn sớm nhất!", "success");
+        showToast("Chúng tôi sẽ sớm liên hệ với bạn!", "success");
         setPhone("");
       } else {
         showToast(data.message || "Có lỗi xảy ra", "error");
@@ -121,7 +114,6 @@ const TourInfo = ({ tourDetail }) => {
       )}
 
       <div className="price">
-        Giá từ:
         {discountedPrice.toLocaleString("vi-VN", {
           style: "currency",
           currency: "VND",
@@ -154,11 +146,9 @@ const TourInfo = ({ tourDetail }) => {
       </div>
 
       <p className="note">
-        Hoặc Quý Khách có thể để lại thông tin liên hệ để được tư vấn chi tiết
-        hoặc liên hệ trực tiếp tư vấn.
+        Hoặc Quý Khách có thể để lại thông tin liên hệ để được tư vấn chi tiết.
       </p>
 
-      {/* Ô nhập số điện thoại + nút gửi đi */}
       <div className="phone-input">
         <input
           type="tel"
