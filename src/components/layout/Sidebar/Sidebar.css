@@ -5,13 +5,12 @@
   left: -260px;
   width: 260px;
   height: 100%;
-  background: #243045; /* Xanh đậm sáng hơn */
+  background: var(--color-card-bg); /* nền sidebar */
   padding: 20px 15px;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-md);
   transition: left 0.35s ease;
   z-index: 1000;
   overflow-y: auto;
-  font-family: "Segoe UI", sans-serif;
 }
 
 .sidebar.open {
@@ -26,12 +25,12 @@
   border: none;
   background: none;
   font-size: 1.6rem;
-  color: #f1f5f9;
+  color: var(--color-text);
   cursor: pointer;
   transition: transform 0.2s ease, color 0.3s ease;
 }
 .close-btn:hover {
-  color: #38bdf8;
+  color: var(--color-primary);
   transform: rotate(90deg);
 }
 
@@ -53,28 +52,28 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 14px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  color: #f8fafc;
+  color: var(--color-text);
   font-weight: 500;
   font-size: 15px;
   transition: background 0.3s ease, color 0.3s ease;
 }
 
 .sidebar-link:hover {
-  background: #334155;
-  color: #38bdf8;
+  background: var(--color-secondary);
+  color: var(--color-primary);
 }
 
 .sidebar-link.active {
-  background: #0ea5e9;
+  background: var(--color-primary);
   color: #fff;
 }
 
-/* ✅ Khi mở rộng menu cha */
+/* Khi mở rộng menu cha */
 .sidebar-item.open > .sidebar-link {
-  background: #bd7aa1; /* nền khác biệt */
-  color: #38bdf8;
+  background: var(--color-border);
+  color: var(--color-primary);
   font-weight: 600;
 }
 
@@ -83,14 +82,14 @@
   font-size: 0.9rem;
   margin-left: 8px;
   transition: transform 0.3s ease, color 0.3s ease;
-  color: #cbd5e1;
+  color: var(--color-text-muted);
 }
 .sidebar-link:hover .toggle-icon {
-  color: #38bdf8;
+  color: var(--color-primary);
 }
 .sidebar-item.open .toggle-icon {
   transform: rotate(90deg);
-  color: #38bdf8;
+  color: var(--color-primary);
 }
 
 /* Submenu */
@@ -109,13 +108,28 @@
 .sidebar-submenu .sidebar-link {
   padding: 10px 12px;
   font-size: 14px;
-  border-radius: 8px;
-  color: #e2e8f0;
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
   background: transparent;
 }
 .sidebar-submenu .sidebar-link:hover {
-  background: #475569;
-  color: #38bdf8;
+  background: var(--color-border);
+  color: var(--color-primary);
+}
+/* Active item */
+.sidebar-item.active > .sidebar-link {
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 8px;
+}
+.sidebar-item.active > .sidebar-link a {
+  color: #fff;
+}
+
+/* Active submenu item */
+.sidebar-submenu .sidebar-item.active > .sidebar-link {
+  background: var(--color-primary-light);
+  color: #fff;
 }
 
 /* Scrollbar */
@@ -123,11 +137,11 @@
   width: 6px;
 }
 .sidebar::-webkit-scrollbar-thumb {
-  background: #64748b;
+  background: var(--color-border);
   border-radius: 4px;
 }
 .sidebar::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--color-secondary);
 }
 
 /* Animation */
@@ -142,71 +156,7 @@
   }
 }
 
-/* ========== AUTH SECTION TRONG SIDEBAR ========== */
-.sidebar-auth {
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.sidebar-auth .btn-auth {
-  display: block;
-  text-align: center;
-  padding: 10px;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 15px;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.sidebar-auth .btn-login {
-  background: #f9a8d4; /* Hồng cánh sen */
-  color: #fff;
-}
-.sidebar-auth .btn-login:hover {
-  background: #ec4899;
-  transform: scale(1.05);
-}
-
-.sidebar-auth .btn-register {
-  background: #38bdf8; /* Xanh nhạt */
-  color: #fff;
-}
-.sidebar-auth .btn-register:hover {
-  background: #0ea5e9;
-  transform: scale(1.05);
-}
-
-.sidebar-auth .user-info {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #334155;
-  padding: 8px 12px;
-  border-radius: 10px;
-  color: #f1f5f9;
-  font-size: 14px;
-}
-
-.sidebar-auth .user-info button {
-  background: #ef4444;
-  color: #fff;
-  border: none;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-.sidebar-auth .user-info button:hover {
-  background: #dc2626;
-}
-
-/* Ẩn sidebar trên desktop nếu bạn chỉ muốn mobile */
+/* Ẩn sidebar trên desktop */
 @media (min-width: 1024px) {
   .sidebar {
     display: none;
