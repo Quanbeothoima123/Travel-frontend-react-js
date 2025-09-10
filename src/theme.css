@@ -615,3 +615,19 @@ button {
     max-width: 100%;
   }
 }
+
+/* === Sidebar Highlight === */
+.sidebar-item.active > .sidebar-link {
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-md);
+}
+
+.sidebar-item.active > .sidebar-link a {
+  color: #fff;
+}
+
+.sidebar-submenu .sidebar-item.active > .sidebar-link {
+  background: var(--color-primary-light);
+  color: #fff;
+}
