@@ -25,9 +25,10 @@ const MenuItem = ({ item, depth = 0, basePath, pathname }) => {
     linkTo = `/${basePath}`;
   }
 
-  // Check active (trang hiện tại hoặc con của nó)
+  // Check active
   const isActive =
-    pathname === linkTo || (hasChildren && pathname.startsWith(`/${basePath}`));
+    depth === 0 &&
+    (pathname === linkTo || pathname.startsWith(`/${basePath}/`));
 
   return (
     <li

@@ -1,6 +1,6 @@
 import React from "react";
-import { FaBed, FaCarSide, FaUserFriends } from "react-icons/fa";
-import { Link } from "react-router-dom"; // Import Link
+import { FaBed, FaCarSide, FaHotel, FaUsers } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import "./TourCard.css";
 
 const TourCard = ({ tour }) => {
@@ -14,8 +14,16 @@ const TourCard = ({ tour }) => {
       {tour.discount > 0 && (
         <span className="discount-badge">-{tour.discount}%</span>
       )}
-      <img src={tour.thumbnail} alt={tour.title} />
+
+      {/* Thumbnail */}
+      <div className="image-wrapper">
+        <img src={tour.thumbnail} alt={tour.title} />
+      </div>
+
+      {/* Title */}
       <h3>{tour.title}</h3>
+
+      {/* Info */}
       <p>
         <FaBed /> {tour.day} Ngày {tour.night} Đêm
       </p>
@@ -23,8 +31,13 @@ const TourCard = ({ tour }) => {
         <FaCarSide /> {tour.vehicle[0]}
       </p>
       <p>
-        <FaUserFriends /> Khách sạn {tour.hotelStar} sao
+        <FaHotel /> Khách sạn {tour.hotelStar} sao
       </p>
+      <p>
+        <FaUsers /> Số chỗ: {tour.seats}
+      </p>
+
+      {/* Price */}
       <p className="price">
         {discountedPrice && (
           <span className="original-price">
@@ -32,16 +45,14 @@ const TourCard = ({ tour }) => {
           </span>
         )}
         <span className={discountedPrice ? "discounted-price" : ""}>
-          {discountedPrice
-            ? discountedPrice.toLocaleString()
-            : originalPrice.toLocaleString()}{" "}
-          VNĐ
+          {(discountedPrice || originalPrice).toLocaleString()} VNĐ
         </span>
       </p>
-      <p>
-        <FaUserFriends /> Số người: {tour.seats}
-      </p>
-      <Link to={`/tour/${tour.slug}`}>Xem Thêm</Link>
+
+      {/* Link */}
+      <Link to={`/tour/${tour.slug}`} className="details-link">
+        Xem chi tiết
+      </Link>
     </div>
   );
 };

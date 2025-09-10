@@ -185,12 +185,13 @@ const TourCreatePage = () => {
     }
   };
 
-  const handleCheck = () =>
+  const handleCheck = () => {
     postForm(
       "http://localhost:5000/api/v1/admin/tours/check-info-tour-create",
       "Dữ liệu tour hợp lệ",
       "Thông tin không hợp lệ"
     );
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
