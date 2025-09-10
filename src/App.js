@@ -1,6 +1,12 @@
 // src/App.js
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import Header from "./components/layout/Header";
 import Home from "./pages/Home";
 import DetailTour from "./pages/DetailTour";
@@ -23,74 +29,88 @@ import AdminTourDetail from "./admin/pages/tour/AdminTourDetail";
 import TourEditPage from "./admin/pages/tour/TourEdit";
 import AdminLogin from "./admin/pages/Login";
 import AdminPrivateRoute from "./admin/components/routes/AdminPrivateRoute";
+import UserLayout from "./components/layout/UserLayout";
+import UserProfile from "./components/common/UserProfile";
+
+// Component để xử lý hiển thị Header có điều kiện
+function AppContent() {
+  const location = useLocation();
+
+  // Ẩn Header khi ở /user/* và /admin/*
+  const hideHeader =
+    location.pathname.startsWith("/user") ||
+    location.pathname.startsWith("/admin");
+
+  return (
+    <>
+      {!hideHeader && <Header />}
+
+      <Routes>
+        {/* User routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/tour/:slug" element={<DetailTour />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/re-auth" element={<ReAuthFlow />} />
+        <Route path="/booking-tour/:slug" element={<BookingPage />} />
+        <Route path="/search/tours/:categorySlug" element={<SearchPage />} />
+        <Route
+          path="/payment/momo/result"
+          element={<MomoPaymentResultPage />}
+        />
+
+        {/* User dashboard routes */}
+        <Route path="/user/*" element={<UserLayout />}>
+          {/* Redirect mặc định */}
+          <Route index element={<Navigate to="profile" replace />} />
+          <Route path="profile" element={<UserProfile />} />
+          <Route path="transactions" element={<div>Lịch sử giao dịch</div>} />
+          <Route path="posts" element={<div>Bài viết cá nhân</div>} />
+          <Route path="favorites" element={<div>Tour yêu thích</div>} />
+          <Route path="coupons" element={<div>Mã giảm giá</div>} />
+          <Route path="support" element={<div>Liên hệ hỗ trợ</div>} />
+          <Route path="dark-mode" element={<div>Chế độ tối</div>} />
+        </Route>
+
+        {/* Admin routes */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminPrivateRoute>
+              <AdminLayout />
+            </AdminPrivateRoute>
+          }
+        >
+          <Route path="tour-categories" element={<TourCategory />} />
+          <Route
+            path="tour-categories/create"
+            element={<TourCategoryCreate />}
+          />
+          <Route
+            path="tour-categories/detail/:id"
+            element={<TourCategoryDetail />}
+          />
+          <Route
+            path="tour-categories/update/:id"
+            element={<TourCategoryUpdate />}
+          />
+          <Route path="tours" element={<TourManager />} />
+          <Route path="tours/create" element={<TourCreatePage />} />
+          <Route path="tours/detail/:tourId" element={<AdminTourDetail />} />
+          <Route path="tours/edit/:tourId" element={<TourEditPage />} />
+        </Route>
+      </Routes>
+    </>
+  );
+}
 
 function App() {
   return (
     <Router>
       <ToastProvider>
         <AuthProvider>
-          <Routes>
-            {/* User routes */}
-            <Route
-              path="/*"
-              element={
-                <>
-                  <Header />
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/tour/:slug" element={<DetailTour />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/re-auth" element={<ReAuthFlow />} />
-                    <Route
-                      path="/booking-tour/:slug"
-                      element={<BookingPage />}
-                    />
-                    <Route
-                      path="/search/tours/:categorySlug"
-                      element={<SearchPage />}
-                    />
-                    <Route
-                      path="/payment/momo/result"
-                      element={<MomoPaymentResultPage />}
-                    />
-                  </Routes>
-                </>
-              }
-            />
-
-            {/* Admin routes */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route
-              path="/admin"
-              element={
-                <AdminPrivateRoute>
-                  <AdminLayout />
-                </AdminPrivateRoute>
-              }
-            >
-              <Route path="tour-categories" element={<TourCategory />} />
-              <Route
-                path="tour-categories/create"
-                element={<TourCategoryCreate />}
-              />
-              <Route
-                path="tour-categories/detail/:id"
-                element={<TourCategoryDetail />}
-              />
-              <Route
-                path="tour-categories/update/:id"
-                element={<TourCategoryUpdate />}
-              />
-              <Route path="tours" element={<TourManager />} />
-              <Route path="tours/create" element={<TourCreatePage />} />
-              <Route
-                path="tours/detail/:tourId"
-                element={<AdminTourDetail />}
-              />
-              <Route path="tours/edit/:tourId" element={<TourEditPage />} />
-            </Route>
-          </Routes>
+          <AppContent />
         </AuthProvider>
       </ToastProvider>
     </Router>

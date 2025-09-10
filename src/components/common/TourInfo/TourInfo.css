@@ -52,8 +52,8 @@ p,
 }
 
 .price {
-  font-size: 1.125rem; /* 18px */
-  color: var(--color-primary);
+  font-size: 2rem; /* 18px */
+  color: var(--color-danger);
   margin: 15px 0;
   font-weight: bold;
 }

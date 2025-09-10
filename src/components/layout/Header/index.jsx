@@ -5,7 +5,6 @@ import {
   FaCaretDown,
   FaAngleRight,
   FaUserEdit,
-  FaHistory,
   FaSignOutAlt,
   FaBars,
 } from "react-icons/fa";
@@ -201,20 +200,12 @@ const Header = () => {
               </button>
               <div className="user-menu">
                 <Link
-                  to="/"
+                  to="/user/profile"
                   className="menu-item"
                   onClick={() => setIsUserMenuOpen(false)}
                 >
                   <FaUserEdit />
                   <span>Thông tin cá nhân</span>
-                </Link>
-                <Link
-                  to="/"
-                  className="menu-item"
-                  onClick={() => setIsUserMenuOpen(false)}
-                >
-                  <FaHistory />
-                  <span>Lịch sử giao dịch</span>
                 </Link>
                 <Link to="/" className="menu-item" onClick={handleLogout}>
                   <FaSignOutAlt />
