@@ -1,0 +1,170 @@
+/* =========================
+   Font Face (Variable Font)
+   ========================= */
+@font-face {
+  font-family: "Roboto";
+  src: url("/src/assets/fonts/Roboto-VariableFont_wdth\,wght.ttf")
+    format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/src/assets/fonts/Roboto-Italic-VariableFont_wdth\,wght.ttf")
+    format("truetype");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* =========================
+   Root Variables (Light Mode)
+   ========================= */
+:root {
+  --font-base: "Roboto", sans-serif;
+
+  /* Light Theme Colors */
+  --color-bg: #ffffff;
+  --color-text: #1a1a1a;
+  --color-text-muted: #666666;
+
+  --color-primary: #0077b6; /* xanh biển du lịch */
+  --color-primary-hover: #005f8a;
+
+  --color-secondary: #90e0ef; /* xanh nhạt */
+  --color-accent: #ffb703; /* vàng nắng */
+  --color-danger: #e63946; /* đỏ cảnh báo */
+
+  --color-border: #e0e0e0;
+  --color-card-bg: #f9f9f9;
+}
+
+/* =========================
+   Dark Mode
+   ========================= */
+[data-theme="dark"] {
+  --color-bg: #121212;
+  --color-text: #f5f5f5;
+  --color-text-muted: #aaaaaa;
+
+  --color-primary: #0096c7;
+  --color-primary-hover: #48cae4;
+
+  --color-secondary: #023e8a;
+  --color-accent: #ffd166;
+  --color-danger: #ef233c;
+
+  --color-border: #2a2a2a;
+  --color-card-bg: #1e1e1e;
+}
+
+/* =========================
+   Global Reset & Base
+   ========================= */
+body {
+  margin: 0;
+  font-family: var(--font-base);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+/* =========================
+   Typography Scale
+   ========================= */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 1rem 0;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0.75rem 0;
+}
+
+h3 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0.75rem 0;
+}
+
+h4 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0.5rem 0;
+}
+
+h5 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0.5rem 0;
+}
+
+h6 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0.5rem 0;
+}
+
+p {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  margin: 0.5rem 0;
+}
+
+small {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+/* =========================
+   Buttons
+   ========================= */
+button {
+  font-family: var(--font-base);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button.primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+button.primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+button.secondary {
+  background-color: var(--color-secondary);
+  color: #ffffff;
+}
+
+button.accent {
+  background-color: var(--color-accent);
+  color: #1a1a1a;
+}
+
+button.danger {
+  background-color: var(--color-danger);
+  color: #ffffff;
+}
