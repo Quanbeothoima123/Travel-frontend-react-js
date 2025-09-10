@@ -1,4 +1,6 @@
-/* Pagination.css */
+/* =========================
+   Pagination
+   ========================= */
 .custom-pagination {
   display: flex;
   align-items: center;
@@ -9,10 +11,10 @@
 }
 
 .page-btn {
-  background: #fff;
-  border: 1px solid #ddd;
+  background: var(--color-bg, #fff);
+  border: 1px solid var(--color-border, #ddd);
   padding: 8px 14px;
-  border-radius: 50%;
+  border-radius: var(--radius-full, 50%);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -22,17 +24,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--color-text, #1a1a1a);
 }
 
 .page-btn:hover {
-  background: #f3f4f6;
-  border-color: #bbb;
+  background: var(--color-card-bg, #f3f4f6);
+  border-color: var(--color-text-muted, #bbb);
 }
 
 .page-btn.active {
-  background: #3b82f6; /* xanh dương */
+  background: var(--color-primary, #3b82f6);
   color: #fff;
-  border-color: #3b82f6;
+  border-color: var(--color-primary, #3b82f6);
   font-weight: bold;
 }
 
@@ -43,7 +46,7 @@
 
 .page-ellipsis {
   padding: 0 6px;
-  color: #888;
+  color: var(--color-text-muted, #888);
   font-size: 16px;
   user-select: none;
 }
