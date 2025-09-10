@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import * as FaIcons from "react-icons/fa"; // import toàn bộ icon FA
+import * as FaIcons from "react-icons/fa";
 import "./TourTerms.css";
 
 const TourTerms = ({ terms }) => {
@@ -7,7 +7,6 @@ const TourTerms = ({ terms }) => {
   const [height, setHeight] = useState("auto");
   const contentRef = useRef(null);
 
-  // Lọc bỏ những mục không có description
   const filteredTerms = (terms || [])
     .filter((term) => term.description && term.description.trim() !== "")
     .sort((a, b) => a.index - b.index);
@@ -18,14 +17,11 @@ const TourTerms = ({ terms }) => {
     }
   }, [activeTab, filteredTerms]);
 
-  // Hàm lấy icon component từ string
   const getIcon = (iconName) => {
-    return FaIcons[iconName] || FaIcons.FaRegFileAlt; // fallback nếu không tồn tại
+    return FaIcons[iconName] || FaIcons.FaRegFileAlt;
   };
 
-  if (filteredTerms.length === 0) {
-    return null; // Không có term nào hợp lệ thì ẩn luôn
-  }
+  if (filteredTerms.length === 0) return null;
 
   return (
     <div className="tour-terms">
@@ -39,7 +35,7 @@ const TourTerms = ({ terms }) => {
               onClick={() => setActiveTab(index)}
             >
               <Icon className="tab-icon" />
-              {term.termId.title}
+              <span>{term.termId.title}</span>
             </button>
           );
         })}
