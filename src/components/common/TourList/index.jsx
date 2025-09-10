@@ -13,13 +13,9 @@ const TourList = ({ endpoint }) => {
   }, [endpoint]);
 
   return (
-    <div className="tour-list d-flex flex-wrap justify-content-center">
+    <div className="tour-list">
       {tours.slice(0, 9).map((tour) => (
-        <TourCard
-          key={tour._id}
-          tour={tour}
-          className="col-12 col-sm-6 col-md-4"
-        />
+        <TourCard key={tour._id} tour={tour} />
       ))}
     </div>
   );
