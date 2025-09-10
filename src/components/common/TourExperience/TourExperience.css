@@ -1,54 +1,60 @@
+/* =========================
+   Tour Experience Wrapper
+   ========================= */
 .tour-experience {
   width: 690px;
   max-width: 100%;
   margin: 20px auto 0;
   padding: 20px;
-  background: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  font-family: Arial, sans-serif;
-  color: #333;
+  background: var(--color-card-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text);
+  font-family: inherit; /* theo theme */
 }
 
+/* Heading */
 .tour-experience h2 {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 1.25rem;
+  font-weight: 600;
   margin-bottom: 15px;
-  color: #2c3e50;
+  color: var(--color-text);
   text-align: center;
 }
 
+/* Content text */
 .experience-content {
   line-height: 1.6;
   overflow-wrap: break-word;
   word-break: break-word;
   max-width: 100%;
-  overflow-x: hidden; /* Ngăn tràn ngang */
+  overflow-x: hidden;
 }
 
-/* Ảnh co theo khung */
+/* Images */
 .experience-content img {
-  max-width: 100% !important;
-  height: auto !important;
+  max-width: 100%;
+  height: auto;
   display: block;
   margin: 10px auto;
   object-fit: contain;
+  border-radius: var(--radius-sm);
   box-sizing: border-box;
 }
 
-/* Video, iframe, embed: giữ tỉ lệ và responsive */
+/* Video, iframe, embed */
 .experience-content iframe,
 .experience-content embed,
 .experience-content video {
-  max-width: 100% !important;
-  height: auto !important;
+  max-width: 100%;
+  height: auto;
   display: block;
   margin: 15px auto;
-  border-radius: 6px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-xs);
 }
 
-/* Nếu muốn giữ tỉ lệ 16:9 */
+/* Video wrapper 16:9 */
 .experience-content .video-wrapper {
   position: relative;
   padding-bottom: 56.25%; /* 16:9 */
@@ -65,7 +71,7 @@
   height: 100%;
 }
 
-/* Cho bảng scroll ngang nếu nhiều cột */
+/* Tables scrollable */
 .experience-content table {
   width: 100%;
   border-collapse: collapse;
@@ -75,45 +81,47 @@
   margin: 10px 0;
 }
 
-/* Style bảng đẹp hơn */
+/* Table styling */
 .experience-content table th,
 .experience-content table td {
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   padding: 8px 12px;
   text-align: left;
 }
 
 .experience-content table th {
-  background: #f1f1f1;
-  font-weight: bold;
+  background: var(--color-bg);
+  font-weight: 600;
 }
 
 .experience-content table tr:nth-child(even) {
-  background: #fafafa;
+  background: var(--color-card-bg);
 }
 
 /* Code block / pre */
 .experience-content pre {
-  background: #272822;
-  color: #f8f8f2;
+  background: var(--color-code-bg, #272822);
+  color: var(--color-code-text, #f8f8f2);
   padding: 10px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   overflow-x: auto;
-  font-size: 14px;
+  font-size: 0.875rem;
   margin: 10px 0;
 }
 .experience-content code {
   font-family: Consolas, Monaco, "Courier New", monospace;
 }
 
-/* Responsive adjustments */
+/* =========================
+   Responsive
+   ========================= */
 @media (max-width: 768px) {
   .tour-experience {
     padding: 15px;
   }
 
   .tour-experience h2 {
-    font-size: 18px;
+    font-size: 1.125rem;
   }
 }
 
@@ -123,6 +131,6 @@
   }
 
   .tour-experience h2 {
-    font-size: 16px;
+    font-size: 1rem;
   }
 }
