@@ -82,6 +82,7 @@ p,
 }
 .btn-main:hover {
   background: var(--color-primary-hover);
+  color: var(--color-bg);
 }
 
 .booking-button {

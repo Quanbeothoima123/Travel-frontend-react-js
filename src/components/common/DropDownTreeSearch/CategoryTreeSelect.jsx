@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import "./tree-dropdown.css";
+import "./tree-dropdown.css"; // file CSS riêng
 
 export default function CategoryTreeSelect({
-  value, // { slug, title } | null
+  value,
   onChange,
   fetchUrl = "http://localhost:5000/api/v1/admin/tour-categories?tree=true",
   placeholder = "Chọn danh mục tour",
@@ -31,7 +31,6 @@ export default function CategoryTreeSelect({
     return () => (mounted = false);
   }, [fetchUrl]);
 
-  // đóng khi click ngoài
   useEffect(() => {
     const onDocClick = (e) => {
       if (!wrapRef.current) return;
@@ -41,7 +40,6 @@ export default function CategoryTreeSelect({
     return () => document.removeEventListener("mousedown", onDocClick);
   }, []);
 
-  // filter theo query
   const filteredTree = useMemo(() => {
     if (!q.trim()) return tree;
     const needle = q.trim().toLowerCase();
@@ -87,7 +85,6 @@ export default function CategoryTreeSelect({
             ? value.title || findTitleById(tree, value._id) || placeholder
             : placeholder}
         </span>
-
         <span className="tdp-caret">▾</span>
       </div>
 
@@ -133,7 +130,7 @@ function TreeNode({ node, onPick, depth }) {
 
   return (
     <li className="tdp-li">
-      <div className="tdp-row" style={{ paddingLeft: depth * 12 + 8 }}>
+      <div className="tdp-row" style={{ "--tdp-depth": depth }}>
         {hasChildren ? (
           <button
             type="button"

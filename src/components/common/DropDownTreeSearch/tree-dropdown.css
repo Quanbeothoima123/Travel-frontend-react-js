@@ -1,43 +1,55 @@
-/* Field */
+/* =========================
+   Field wrapper
+   ========================= */
 .tdp-field {
   position: relative;
   width: 100%;
   font-size: 14px;
+  font-family: var(--font-base);
 }
 
+/* =========================
+   Control
+   ========================= */
 .tdp-control {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 10px 12px;
-  background: #fff;
+  background: var(--color-card-bg);
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .tdp-control.is-open {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
 }
 
 .tdp-placeholder {
-  color: #6b7280;
+  color: var(--color-text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   flex: 1;
 }
+
 .tdp-placeholder.has-value {
-  color: #111827;
+  color: var(--color-text);
 }
 
+/* Caret */
 .tdp-caret {
-  margin-left: 8px;
-  color: #6b7280;
+  margin-left: 10px; /* tạo khoảng cách với chữ */
+  color: var(--color-text-muted);
+  font-size: 0.85em;
 }
 
-/* Menu */
+/* =========================
+   Menu
+   ========================= */
 .tdp-menu {
   position: absolute;
   top: 100%;
@@ -45,47 +57,56 @@
   right: 0;
   z-index: 50;
   margin-top: 6px;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
   max-height: 360px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
+/* Search input */
 .tdp-search {
   padding: 8px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--color-border);
 }
 .tdp-search input {
   width: 100%;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   padding: 8px 10px;
   outline: none;
-  box-sizing: border-box;
+  font-size: 14px;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
+/* List wrapper */
 .tdp-list {
   overflow: auto;
-  padding: 6px 4px;
   flex: 1;
+  padding: 4px 0;
 }
 
+/* Empty message */
 .tdp-empty {
   padding: 14px;
-  color: #6b7280;
+  color: var(--color-text-muted);
   text-align: center;
+  font-size: 14px;
 }
 
-/* Tree */
+/* =========================
+   Tree nodes
+   ========================= */
 .tdp-ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
+
 .tdp-li {
   margin: 0;
 }
@@ -93,69 +114,82 @@
 .tdp-row {
   display: flex;
   align-items: center;
-  gap: 6px; /* khoảng cách caret ↔ text */
-  padding: 4px 6px;
-  border-radius: 6px;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
   justify-content: flex-start;
+  transition: background 0.2s;
 }
+
 .tdp-row:hover {
-  background: #f9fafb;
+  background: var(--color-secondary);
 }
 
-/* ✅ Guard: đừng để CSS ngoài kéo các button full width */
-.tdp-row button {
-  width: auto !important;
-}
-
+/* Toggle for tree */
 .tdp-toggle {
   width: 18px;
   height: 18px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-card-bg);
   position: relative;
-  flex: 0 0 auto;
   cursor: pointer;
+  flex-shrink: 0;
+  margin-right: 6px; /* cách chữ */
 }
+
 .tdp-toggle::after {
   content: "";
   position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 6px;
-  height: 6px;
-  border-right: 2px solid #6b7280;
-  border-bottom: 2px solid #6b7280;
-  transform: rotate(-45deg);
+  top: 50%;
+  left: 50%;
+  width: 0.375rem;
+  height: 0.375rem;
+  border-right: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: translate(-50%, -50%) rotate(-45deg);
   transition: transform 0.15s;
 }
+
 .tdp-toggle.open::after {
-  transform: rotate(45deg);
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 
+/* Bullet for leaf nodes */
 .tdp-bullet {
   width: 18px;
   height: 18px;
-  flex: 0 0 auto;
+  flex-shrink: 0;
+  margin-right: 6px;
 }
 
+/* Label button */
 .tdp-label {
   appearance: none;
   border: none;
   background: none;
   text-align: left;
   cursor: pointer;
-  padding: 2px 0;
-  border-radius: 4px;
-  flex: unset; /* không kéo giãn full hàng */
+  padding: 4px 0;
+  border-radius: var(--radius-sm);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #111827;
+  color: var(--color-text);
   font-size: 14px;
 }
+
 .tdp-label:hover {
-  color: #0b63f3;
+  color: var(--color-primary);
+}
+
+/* =========================
+   Flat list (ProvinceSelect)
+   ========================= */
+.tdp-flat li button.tdp-label {
+  padding: 6px 12px;
+  width: 100%;
+  display: block;
 }
 
 /* Responsive */
