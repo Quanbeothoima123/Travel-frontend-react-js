@@ -1,3 +1,6 @@
+/* =========================
+   Auth Container
+   ========================= */
 .auth-container {
   min-height: 100vh;
   display: flex;
@@ -10,11 +13,14 @@
     linear-gradient(to right, #2193b0, #6dd5ed);
 }
 
+/* =========================
+   Auth Card
+   ========================= */
 .auth-card {
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--color-card-bg, rgba(255, 255, 255, 0.9));
   padding: 30px 40px;
-  border-radius: 16px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-lg, 16px);
+  box-shadow: var(--shadow-lg, 0 6px 16px rgba(0, 0, 0, 0.15));
   width: 100%;
   max-width: 420px;
   text-align: center;
@@ -22,10 +28,13 @@
 
 .auth-card h2 {
   margin-bottom: 20px;
-  font-size: 24px;
-  color: #006994; /* xanh biển */
+  font-size: 1.5rem;
+  color: var(--color-primary, #006994);
 }
 
+/* =========================
+   Form Group
+   ========================= */
 .form-group {
   text-align: left;
   margin-bottom: 16px;
@@ -33,7 +42,7 @@
 
 .form-group label {
   font-weight: 600;
-  color: #004466;
+  color: var(--color-text, #1a1a1a);
   display: block;
   margin-bottom: 6px;
 }
@@ -41,30 +50,34 @@
 .form-group input {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 15px;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: var(--radius-md, 8px);
+  font-size: 0.9375rem; /* 15px */
+  background: var(--color-bg, #fff);
+  color: var(--color-text, #1a1a1a);
 }
 
+/* =========================
+   Buttons
+   ========================= */
 .auth-btn {
   width: 100%;
   padding: 12px;
-  background: linear-gradient(to right, #e4b6e4, #db2f8e);
   border: none;
-  border-radius: 8px;
-  color: white;
+  border-radius: var(--radius-md, 8px);
   font-weight: bold;
-  font-size: 16px;
+  font-size: 1rem;
   cursor: pointer;
-  transition: 0.3s;
-
-  display: flex; /* thêm */
-  justify-content: center; /* căn giữa ngang */
-  align-items: center; /* căn giữa dọc */
+  transition: all 0.3s ease;
+  color: #fff;
+  background: var(--color-primary, #db2f8e);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .auth-btn:hover {
-  background: linear-gradient(to right, #cfdd7d, #bba048);
+  background: var(--color-primary-hover, #bba048);
 }
 
 .auth-btn[disabled] {
@@ -72,33 +85,37 @@
   cursor: not-allowed;
 }
 
-.re-auth {
-  width: 50%;
-  padding: 5px;
-  background: linear-gradient(to right, #d67f4d, #d65d0c);
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-weight: bold;
-  font-size: 10px;
-  cursor: pointer;
-  transition: 0.3s;
-  margin-top: 20px;
-  display: flex; /* thêm */
-  justify-content: center; /* căn giữa ngang */
-  align-items: center; /* căn giữa dọc */
-}
-.otp-hint {
-  margin-bottom: 10px;
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-/* Nút phụ */
+/* Secondary / sub buttons */
 .auth-btn.secondary {
-  background: #475569;
+  background: var(--color-secondary, #475569);
   margin-top: 10px;
 }
 .auth-btn.secondary:hover {
-  background: #334155;
+  background: var(--color-accent, #334155);
+}
+
+/* Re-auth link button */
+.re-auth {
+  width: 50%;
+  padding: 5px;
+  background: #bdbaba;
+  border-radius: var(--radius-md, 8px);
+  color: #e90b0b;
+  font-weight: bold;
+  font-size: 0.625rem; /* 10px */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* OTP hint */
+.otp-hint {
+  margin-bottom: 10px;
+  font-size: 0.875rem; /* 14px */
+  color: var(--color-text-muted, #666);
+  opacity: 0.9;
 }
