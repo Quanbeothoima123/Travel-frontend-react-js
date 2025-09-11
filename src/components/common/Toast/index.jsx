@@ -13,7 +13,6 @@ const Toast = ({ toasts }) => {
             {toast.type === "error" ? "⚠️" : "✅"}
           </span>
           <span className="toast-message">{toast.message}</span>
-
           {/* Progress bar */}
           <div className="toast-progress" />
         </div>
