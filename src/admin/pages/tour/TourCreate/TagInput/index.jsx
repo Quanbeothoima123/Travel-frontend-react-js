@@ -4,6 +4,7 @@ import LoadingModal from "../../../../components/common/LoadingModal";
 import { generateTagsLocal } from "../../../../../utils/tagGenerator";
 import { useToast } from "../../../../../contexts/ToastContext";
 const TagsInput = ({ tags, setTags, title }) => {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
@@ -30,7 +31,7 @@ const TagsInput = ({ tags, setTags, title }) => {
     setLoading(true);
     try {
       const res = await fetch(
-        "http://localhost:5000/api/v1/admin/tours/generate-tags-ai",
+        `${API_BASE}/api/v1/admin/tours/generate-tags-ai`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -42,6 +43,7 @@ const TagsInput = ({ tags, setTags, title }) => {
       let newTags = [];
 
       if (data.success && Array.isArray(data.tags)) {
+        showToast("Tạo tag tự động bằng AI thành công", "success");
         newTags = data.tags;
       } else {
         // fallback local

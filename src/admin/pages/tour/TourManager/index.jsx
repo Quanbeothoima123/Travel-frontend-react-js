@@ -3,25 +3,19 @@ import { Link, useSearchParams } from "react-router-dom";
 import { FaPlusCircle } from "react-icons/fa";
 import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
 import ConfirmModal from "../../../../components/common/ConfirmModal";
+import LoadingModal from "../../../../admin/components/common/LoadingModal";
 import "./TourManager.css";
 import { useToast } from "../../../../contexts/ToastContext";
 
-const TOP_CONFIG = {
-  TOUR_LIST: "http://localhost:5000/api/v1/admin/tours/tour",
-  TOUR_BULK_UPDATE: "http://localhost:5000/api/v1/admin/tour/bulk-update",
-  TOUR_SINGLE_UPDATE: "http://localhost:5000/api/v1/admin/tours/tour",
-  CATEGORY_TREE_FETCH:
-    "http://localhost:5000/api/v1/admin/tour-categories?tree=true",
-};
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 
 export default function TourManager() {
   const [tours, setTours] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [updating, setUpdating] = useState(false);
   const { showToast } = useToast();
 
-  // --- URL Search Params ---
   const [searchParams, setSearchParams] = useSearchParams();
-
   const [searchInput, setSearchInput] = useState(
     searchParams.get("search") || ""
   );
@@ -39,14 +33,19 @@ export default function TourManager() {
   );
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
   const [limit] = useState(10);
-
   const [pagination, setPagination] = useState({
     total: 0,
     totalPages: 1,
     currentPage: 1,
   });
 
-  // --- đồng bộ state -> URL ---
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [positions, setPositions] = useState({});
+  const [setStatusForUpdate, setSetStatusForUpdate] = useState("no_change");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+
   useEffect(() => {
     const params = {};
     if (searchQuery) params.search = searchQuery;
@@ -62,6 +61,7 @@ export default function TourManager() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, sort, category, statusFilter, page, limit]);
 
+  // ========================= Fetch Tours =========================
   async function fetchTours() {
     setLoading(true);
     try {
@@ -74,26 +74,27 @@ export default function TourManager() {
       params.set("page", page);
       params.set("limit", limit);
 
-      const res = await fetch(`${TOP_CONFIG.TOUR_LIST}?${params.toString()}`, {
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${API_BASE}/api/v1/admin/tours/get-all-tour?${params}`,
+        {
+          credentials: "include",
+        }
+      );
       const data = await res.json();
 
-      if (data && Array.isArray(data.data)) {
+      if (data.success && Array.isArray(data.data)) {
         setTours(data.data);
         setPagination(
           data.pagination || { total: 0, totalPages: 1, currentPage: 1 }
         );
-
         const posMap = {};
         data.data.forEach((t) => {
           posMap[t._id] = typeof t.position === "number" ? t.position : 0;
         });
-        // reset positions + selected
         setSelectedIds(new Set());
         setPositions(posMap);
       } else {
-        console.warn("fetchTours: unexpected response", data);
+        showToast(data.message || "Không thể tải danh sách tour", "error");
         setTours([]);
         setPagination({ total: 0, totalPages: 1, currentPage: 1 });
       }
@@ -105,35 +106,11 @@ export default function TourManager() {
     }
   }
 
-  // selection & edits
-  const [selectedIds, setSelectedIds] = useState(new Set());
-  const [positions, setPositions] = useState({});
-  const [setStatusForUpdate, setSetStatusForUpdate] = useState("no_change");
-
-  const onSearchKeyDown = (e) => {
-    if (e.key === "Enter") {
-      setPage(1);
-      setSearchQuery(searchInput.trim());
-    }
-  };
-
-  const SORT_OPTIONS = [
-    { value: "", label: "Mặc định" },
-    { value: "price_desc", label: "Giá giảm dần" },
-    { value: "price_asc", label: "Giá tăng dần" },
-    { value: "position_desc", label: "Vị trí giảm dần" },
-    { value: "position_asc", label: "Vị trí tăng dần" },
-    { value: "discount_desc", label: "Giảm giá giảm dần" },
-    { value: "discount_asc", label: "Giảm giá tăng dần" },
-    { value: "title_asc", label: "Tên A → Z" },
-    { value: "title_desc", label: "Tên Z → A" },
-  ];
-
+  // ========================= Helpers =========================
   function toggleSelect(id) {
     setSelectedIds((s) => {
       const copy = new Set(s);
-      if (copy.has(id)) copy.delete(id);
-      else copy.add(id);
+      copy.has(id) ? copy.delete(id) : copy.add(id);
       return copy;
     });
   }
@@ -150,24 +127,36 @@ export default function TourManager() {
     setPositions((p) => ({ ...p, [id]: value }));
   }
 
+  const formatVND = (v) =>
+    typeof v === "number"
+      ? new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }).format(v)
+      : v;
+
+  const allSelected = selectedIds.size > 0 && selectedIds.size === tours.length;
+
+  // ========================= API Calls =========================
   async function patchSingle(id, payload) {
     try {
-      const res = await fetch(`${TOP_CONFIG.TOUR_SINGLE_UPDATE}/${id}`, {
+      const res = await fetch(`${API_BASE}/api/v1/admin/tours/update/${id}`, {
         method: "PATCH",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      return res.ok;
+      const data = await res.json();
+      return data;
     } catch (e) {
       console.error("patchSingle error", e);
-      return false;
+      return { success: false, message: "Lỗi kết nối server" };
     }
   }
 
   async function handleBulkUpdate() {
     if (selectedIds.size === 0) {
-      showToast("Hãy chọn ít nhất 1 tour bằng checkbox.", "error");
+      showToast("Hãy chọn ít nhất 1 tour.", "error");
       return;
     }
 
@@ -186,103 +175,77 @@ export default function TourManager() {
       return;
     }
 
+    setUpdating(true);
     try {
-      const bulkRes = await fetch(TOP_CONFIG.TOUR_BULK_UPDATE, {
+      const res = await fetch(`${API_BASE}/api/v1/admin/tours/bulk-update`, {
         method: "PATCH",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids, set: setObj, positions: positionsPayload }),
       });
+      const data = await res.json();
 
-      if (bulkRes.ok) {
-        showToast("Cập nhật thành công (bulk).", "success");
-        await fetchTours();
-        return;
+      if (data.success) {
+        showToast(data.message || "Cập nhật thành công.", "success");
+      } else {
+        showToast(data.message || "Có lỗi khi cập nhật.", "error");
       }
-    } catch (e) {
-      console.warn("bulk-update lỗi, fallback sang single updates", e);
-    }
 
-    const results = await Promise.all(
-      ids.map(async (id) => {
-        const payload = {};
-        if (setObj.hasOwnProperty("active")) payload.active = setObj.active;
-        if (positions[id] !== undefined)
-          payload.position = Number(positions[id]);
-        if (Object.keys(payload).length === 0) return true;
-        return await patchSingle(id, payload);
-      })
-    );
-
-    if (results.every(Boolean)) {
-      showToast("Cập nhật thành công.", "success");
       await fetchTours();
-    } else {
-      showToast("Có lỗi khi cập nhật một số tour.", "error");
+    } catch (e) {
+      console.error("bulk-update error", e);
+      showToast("Không thể cập nhật (bulk).", "error");
+    } finally {
+      setUpdating(false);
     }
   }
 
   async function handleToggleActiveOne(id, newActive) {
-    setTours((t) =>
-      t.map((x) => (x._id === id ? { ...x, active: newActive } : x))
-    );
-    const ok = await patchSingle(id, { active: newActive });
-    if (!ok) {
-      showToast("Không thể cập nhật trạng thái. Thử load lại trang.", "error");
-      await fetchTours();
+    setUpdating(true);
+    const data = await patchSingle(id, { active: newActive });
+    if (data.success) {
+      showToast(data.message || "Cập nhật thành công.", "success");
+    } else {
+      showToast(data.message || "Không thể cập nhật trạng thái.", "error");
     }
-  }
-
-  const formatVND = (v) =>
-    typeof v === "number"
-      ? new Intl.NumberFormat("vi-VN", {
-          style: "currency",
-          currency: "VND",
-        }).format(v)
-      : v;
-
-  const allSelected = selectedIds.size > 0 && selectedIds.size === tours.length;
-
-  // --- Confirm delete state ---
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
-
-  function handleDelete(id) {
-    setSelectedId(id);
-    setIsModalOpen(true);
+    await fetchTours();
+    setUpdating(false);
   }
 
   async function confirmDelete() {
     if (!selectedId) return;
-
+    setUpdating(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/v1/admin/tours/delete/${selectedId}`,
+        `${API_BASE}/api/v1/admin/tours/delete/${selectedId}`,
         {
           method: "DELETE",
           credentials: "include",
         }
       );
-
-      if (res.ok) {
-        showToast("Xóa tour thành công.", "success");
-        await fetchTours();
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Xóa tour thành công.", "success");
       } else {
-        const data = await res.json().catch(() => ({}));
         showToast(data.message || "Xóa thất bại.", "error");
       }
+      await fetchTours();
     } catch (e) {
       console.error("delete error", e);
       showToast("Lỗi khi xóa tour.", "error");
     } finally {
+      setUpdating(false);
       setIsModalOpen(false);
       setSelectedId(null);
     }
   }
 
+  // ========================= Render =========================
   return (
     <div className="tm-wrap">
-      {/* Bộ lọc trên cùng */}
+      <LoadingModal open={updating} message="Đang xử lý cập nhật..." />
+
+      {/* Top Controls */}
       <div className="tm-top-controls">
         <div className="tm-left-controls">
           <div className="tm-search">
@@ -290,21 +253,27 @@ export default function TourManager() {
               placeholder="Tìm tour theo tên — bấm Enter để tìm"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={onSearchKeyDown}
+              onKeyDown={(e) =>
+                e.key === "Enter" && setSearchQuery(searchInput.trim())
+              }
             />
           </div>
           <div className="tm-sort">
             <select value={sort} onChange={(e) => setSort(e.target.value)}>
-              {SORT_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
+              <option value="">Mặc định</option>
+              <option value="price_desc">Giá giảm dần</option>
+              <option value="price_asc">Giá tăng dần</option>
+              <option value="position_desc">Vị trí giảm dần</option>
+              <option value="position_asc">Vị trí tăng dần</option>
+              <option value="discount_desc">Giảm giá giảm dần</option>
+              <option value="discount_asc">Giảm giá tăng dần</option>
+              <option value="title_asc">Tên A → Z</option>
+              <option value="title_desc">Tên Z → A</option>
             </select>
           </div>
           <div className="tm-category">
             <CategoryTreeSelect
-              fetchUrl={TOP_CONFIG.CATEGORY_TREE_FETCH}
+              fetchUrl={`${API_BASE}/api/v1/admin/tour-categories?tree=true`}
               value={category}
               onChange={(node) => {
                 setPage(1);
@@ -359,11 +328,11 @@ export default function TourManager() {
         </div>
       </div>
 
-      {/* Action bar */}
+      {/* Action Bar */}
       <div className="tm-action-bar">
         <div className="tm-action-left">
           <label>
-            Đặt trạng thái cập nhật:
+            Đặt trạng thái:
             <select
               value={setStatusForUpdate}
               onChange={(e) => setSetStatusForUpdate(e.target.value)}
@@ -384,7 +353,7 @@ export default function TourManager() {
         </div>
       </div>
 
-      {/* Bảng tour */}
+      {/* Table */}
       <div className="tm-table-wrap">
         {loading ? (
           <div className="tm-loading">Đang tải...</div>
@@ -417,7 +386,7 @@ export default function TourManager() {
                 {tours.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={10}
+                      colSpan={12}
                       style={{ textAlign: "center", padding: "30px 0" }}
                     >
                       Không có tour
@@ -431,11 +400,7 @@ export default function TourManager() {
                         (t.categoryId.title || t.categoryId.name)) ||
                       t.categoryTitle ||
                       "—";
-                    // --- TÍNH GIÁ SAU KHI GIẢM ---
-                    const pricesNum =
-                      typeof t.prices === "number"
-                        ? t.prices
-                        : Number(t.prices) || 0;
+                    const pricesNum = Number(t.prices) || 0;
                     const discountPct = Number(t.discount) || 0;
                     const discountedPrice =
                       pricesNum > 0
@@ -483,8 +448,8 @@ export default function TourManager() {
                             <span className="tm-slider" />
                           </label>
                         </td>
-                        <td>{formatVND(t.prices)}</td>
-                        <td>{t.discount ? `${t.discount}%` : "—"}</td>
+                        <td>{formatVND(pricesNum)}</td>
+                        <td>{discountPct ? `${discountPct}%` : "—"}</td>
                         <td>
                           {discountedPrice
                             ? formatVND(Math.round(discountedPrice))
@@ -522,7 +487,10 @@ export default function TourManager() {
                             Sửa
                           </Link>
                           <button
-                            onClick={() => handleDelete(t._id)}
+                            onClick={() => {
+                              setSelectedId(t._id);
+                              setIsModalOpen(true);
+                            }}
                             className="tm-action-delete"
                           >
                             Xóa
@@ -556,7 +524,7 @@ export default function TourManager() {
           </>
         )}
       </div>
-      {/* Confirm Modal */}
+
       <ConfirmModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
