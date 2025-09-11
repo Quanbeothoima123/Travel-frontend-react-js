@@ -1,6 +1,6 @@
 /* DetailTour.css */
 .detail-tour {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 20px;
 }
@@ -19,19 +19,32 @@
   flex: 0 0 504px;
 }
 
-@media (max-width: 1024px) {
+/* Tablet: chuyển thành layout dọc, full width */
+@media (max-width: 1500px) {
   .main-content {
     flex-direction: column;
   }
 
   .left-column,
   .right-column {
+    flex: 1 1 100%;
     max-width: 100%;
   }
 }
 
-@media (max-width: 768px) {
+/* Mobile: thêm padding nhỏ hơn, mọi thứ full width */
+@media (max-width: 1499px) {
   .detail-tour {
     padding: 10px;
+  }
+
+  .main-content {
+    gap: 15px;
+  }
+
+  .left-column,
+  .right-column {
+    width: 100%;
+    max-width: 100%;
   }
 }

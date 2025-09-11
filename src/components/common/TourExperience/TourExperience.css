@@ -2,7 +2,6 @@
    Tour Experience Wrapper
    ========================= */
 .tour-experience {
-  width: 690px;
   max-width: 100%;
   margin: 20px auto 0;
   padding: 20px;
@@ -118,6 +117,7 @@
 @media (max-width: 768px) {
   .tour-experience {
     padding: 15px;
+    max-width: 95%; /* cho thoáng trên tablet */
   }
 
   .tour-experience h2 {
@@ -128,6 +128,7 @@
 @media (max-width: 480px) {
   .tour-experience {
     padding: 10px;
+    max-width: 100%;
   }
 
   .tour-experience h2 {
