@@ -326,7 +326,7 @@ const BasicInfo = ({
           Lấy tự động
         </button>
       </div>
-      <LoadingModal open={slugLoading} message={slugMessage} />
+      <LoadingModal open={slugLoading} message={slugMessage} icon="FaAnchor" />
     </div>
   );
 };

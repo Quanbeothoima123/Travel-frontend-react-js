@@ -103,7 +103,7 @@ const TagsInput = ({ tags, setTags, title }) => {
       </div>
 
       {/* Modal loading khi gọi AI */}
-      <LoadingModal open={loading} message={loadingMessage} />
+      <LoadingModal open={loading} message={loadingMessage} icon="FaTags" />
     </div>
   );
 };
