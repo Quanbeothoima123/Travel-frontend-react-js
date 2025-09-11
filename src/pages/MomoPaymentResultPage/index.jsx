@@ -18,22 +18,23 @@ import {
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import "./MomoPaymentResultPage.css";
+import LoadingModal from "../../admin/components/common/LoadingModal";
+import { useToast } from "../../../src/contexts/ToastContext";
+
 export default function MomoPaymentResultPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const invoiceRef = useRef(null);
-
   const [invoice, setInvoice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [printing, setPrinting] = useState(false);
-  const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
-
   const qs = new URLSearchParams(location.search);
   const orderId = qs.get("orderId");
   const resultCode = qs.get("resultCode");
   const transId = qs.get("transId");
+  const { showToast } = useToast();
 
   const formatMoney = (v) =>
     v != null
@@ -78,20 +79,24 @@ export default function MomoPaymentResultPage() {
   const handleSendEmail = async () => {
     if (!orderId) return;
     setSendingEmail(true);
-    setMessage(null);
+
     try {
       const res = await fetch(
-        `http://localhost:5000/api/v1/invoice/send-email?orderId=${encodeURIComponent(
+        `http://localhost:5000/api/v1/invoice/send-email/${encodeURIComponent(
           orderId
         )}`,
         { method: "GET", credentials: "include" }
       );
+
       const json = await res.json();
-      setMessage(
-        res.ok ? json.message : json.message || "Không thể gửi email."
-      );
+
+      if (json.success) {
+        showToast(json.message || "Email đã được gửi thành công 🎉", "success");
+      } else {
+        showToast(json.message || "Không thể gửi email.", "error");
+      }
     } catch (err) {
-      setMessage("Lỗi khi gửi email: " + err.message);
+      showToast("Lỗi khi gửi email: " + err.message, "error");
     } finally {
       setSendingEmail(false);
     }
@@ -290,25 +295,34 @@ export default function MomoPaymentResultPage() {
               onClick={handleSendEmail}
               disabled={sendingEmail}
             >
-              <FaEnvelope className="btn-icon" />{" "}
-              {sendingEmail ? "Đang gửi..." : "Gửi email"}
+              <FaEnvelope className="btn-icon" /> Gửi email
             </button>
             <button
               className="btn btn-primary"
               onClick={handlePrintPDF}
               disabled={printing || !invoice}
             >
-              <FaFilePdf className="btn-icon" />{" "}
-              {printing ? "Đang tạo PDF..." : "Xuất PDF"}
+              <FaFilePdf className="btn-icon" /> Xuất PDF
             </button>
           </div>
-          {message && <div className="message">{message}</div>}
         </div>
         <div className="credit">
           Cảm ơn bạn đã quan tâm đến dịch vụ - Chúng tôi sẽ liên hệ sớm nhất với
           bạn!
         </div>
       </div>
+
+      {/* Loading Modal hiển thị khi gửi email hoặc tạo PDF */}
+      <LoadingModal
+        open={sendingEmail}
+        message="Đang gửi email..."
+        icon="FaEnvelope"
+      />
+      <LoadingModal
+        open={printing}
+        message="Đang tạo file PDF..."
+        icon="FaFilePdf"
+      />
     </div>
   );
 }
