@@ -1,18 +1,13 @@
 import React from "react";
 import "./Toast.css";
 
-const Toast = ({ toasts, removeToast }) => {
+const Toast = ({ toasts }) => {
   return (
     <div className="toast-container">
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`toast ${toast.type} ${toast.exiting ? "exiting" : ""}`}
-          onAnimationEnd={() => {
-            if (toast.exiting) {
-              removeToast(toast.id);
-            }
-          }}
+          className={`toast ${toast.type === "error" ? "error" : "success"}`}
         >
           <span className="toast-icon">
             {toast.type === "error" ? "⚠️" : "✅"}
@@ -20,7 +15,7 @@ const Toast = ({ toasts, removeToast }) => {
           <span className="toast-message">{toast.message}</span>
 
           {/* Progress bar */}
-          {!toast.exiting && <div className="toast-progress" />}
+          <div className="toast-progress" />
         </div>
       ))}
     </div>

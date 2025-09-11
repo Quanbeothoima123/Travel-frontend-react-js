@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import Toast from "../components/common/Toast";
+import Toast from "../components/common/Toast/index";
 
 const ToastContext = createContext();
 
@@ -8,28 +8,22 @@ export const ToastProvider = ({ children }) => {
 
   const showToast = (message, type = "success") => {
     const id = Date.now();
+    setToasts((prev) => [...prev, { id, message, type }]);
 
-    // Thêm toast mới
-    setToasts((prev) => [...prev, { id, message, type, exiting: false }]);
-
-    // Sau 4.7s đổi trạng thái sang "exiting"
     setTimeout(() => {
-      setToasts((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, exiting: true } : t))
-      );
-    }, 4700);
-  };
-
-  const removeToast = (id) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 5000);
   };
 
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <Toast toasts={toasts} removeToast={removeToast} />
+      {/* Toast UI luôn được render global */}
+      <Toast toasts={toasts} />
     </ToastContext.Provider>
   );
 };
 
-export const useToast = () => useContext(ToastContext);
+export const useToast = () => {
+  return useContext(ToastContext);
+};
