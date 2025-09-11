@@ -19,6 +19,7 @@ import "./TourInfo.css";
 const TourInfo = ({ tourDetail }) => {
   const [phone, setPhone] = useState("");
   const { showToast } = useToast();
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 
   if (!tourDetail) return null;
 
@@ -58,17 +59,14 @@ const TourInfo = ({ tourDetail }) => {
     }
 
     try {
-      const res = await fetch(
-        "http://localhost:5000/api/v1/customer-consolation",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ phoneNumber: phone, tourId }),
-        }
-      );
+      const res = await fetch(`${API_BASE}/api/v1/customer-consolation`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ phoneNumber: phone, tourId }),
+      });
       const data = await res.json();
-      if (data.code === 200) {
+      if (data.success) {
         showToast("Chúng tôi sẽ sớm liên hệ với bạn!", "success");
         setPhone("");
       } else {
