@@ -20,13 +20,32 @@
   animation: fadeIn 0.2s ease-in-out;
 }
 
-.spinner {
-  width: 40px;
-  height: 40px;
+.spinner-wrapper {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.center-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--brand);
+  z-index: 2;
+}
+
+.spinner-ring {
+  width: 100%;
+  height: 100%;
   border: 4px solid #eee;
   border-top: 4px solid var(--brand);
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
 
 .loading-box p {
