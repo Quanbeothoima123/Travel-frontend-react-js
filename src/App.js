@@ -108,11 +108,11 @@ function AppContent() {
 function App() {
   return (
     <Router>
-      <ToastProvider>
-        <AuthProvider>
+      <AuthProvider>
+        <ToastProvider>
           <AppContent />
-        </AuthProvider>
-      </ToastProvider>
+        </ToastProvider>
+      </AuthProvider>
     </Router>
   );
 }
