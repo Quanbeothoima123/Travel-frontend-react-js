@@ -12,7 +12,7 @@
 }
 
 /* Desktop + tablet sidebar */
-.user-sidebar {
+.user-sidebar.desktop-tablet {
   width: 250px;
   background-color: #fff;
   border-right: 1px solid #ddd;
@@ -52,6 +52,7 @@
   color: #333;
   border-radius: 8px;
   transition: background 0.2s;
+  display: block; /* Đảm bảo mỗi link là block element */
 }
 
 .user-sidebar nav a.active,
@@ -87,6 +88,7 @@
   background: none;
   border: none;
   cursor: pointer;
+  color: #333;
 }
 
 .mobile-avatar {
@@ -97,7 +99,7 @@
   object-fit: cover;
 }
 
-/* Mobile sidebar */
+/* Mobile sidebar - FIXED */
 .user-sidebar-mobile {
   width: 250px;
   background-color: #fff;
@@ -111,6 +113,46 @@
   left: 0;
   z-index: 1003;
   animation: slideIn 0.3s ease forwards;
+  overflow-y: auto; /* Thêm scroll nếu cần */
+}
+
+/* Đảm bảo navigation trong mobile sidebar cũng hiển thị theo cột */
+.user-sidebar-mobile nav {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.user-sidebar-mobile nav a {
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 8px;
+  transition: background 0.2s;
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+.user-sidebar-mobile nav a.active,
+.user-sidebar-mobile nav a:hover {
+  background-color: #f0f0f0;
+}
+
+/* Avatar trong mobile sidebar */
+.user-sidebar-mobile .user-sidebar-avatar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.user-sidebar-mobile .user-sidebar-avatar img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
 }
 
 @keyframes slideIn {
@@ -135,7 +177,7 @@
 
 /* Responsive */
 @media screen and (max-width: 768px) {
-  .user-sidebar {
+  .user-sidebar.desktop-tablet {
     display: none; /* desktop sidebar ẩn trên mobile */
   }
 
