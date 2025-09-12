@@ -35,6 +35,16 @@ export default function BookingPage() {
   const [confirmAction, setConfirmAction] = useState(null); // 'cash' | 'momo'
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Handler để xử lý thay đổi province và reset ward
+  const handleProvinceChange = (newProvince) => {
+    setProvince(newProvince);
+
+    // Reset ward khi đổi province (trừ khi cùng tỉnh)
+    if (ward && (!newProvince || newProvince.code !== province?.code)) {
+      setWard(null);
+    }
+  };
+
   // Fetch tour detail
   useEffect(() => {
     const currentSlug = selectedTour?.slug || initialSlug;
@@ -441,7 +451,7 @@ export default function BookingPage() {
           onChangePhone={setPhone}
           onChangeEmail={setEmail}
           onChangeAddress={setAddress}
-          onChangeProvince={setProvince}
+          onChangeProvince={handleProvinceChange} // Sử dụng handler có logic reset ward
           onChangeWard={setWard}
           onChangeNote={setNote}
         />
