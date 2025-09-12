@@ -26,7 +26,11 @@ const UserLayout = () => {
 
   const menuItems = [
     { label: "Thông tin cá nhân", path: "/user/profile" },
-    { label: "Lịch sử giao dịch", path: "/user/transactions" },
+    { label: "Lịch sử đặt tour", path: "/user/transactions_tour" },
+    {
+      label: "Lịch sử sử dụng dịch vụ khác",
+      path: "/user/transactions_service",
+    },
     { label: "Bài viết cá nhân", path: "/user/posts" },
     { label: "Tour yêu thích", path: "/user/favorites" },
     { label: "Mã giảm giá", path: "/user/coupons" },

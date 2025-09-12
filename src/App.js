@@ -64,8 +64,14 @@ function AppContent() {
           {/* Redirect mặc định */}
           <Route index element={<Navigate to="profile" replace />} />
           <Route path="profile" element={<UserProfile />} />
-          <Route path="transactions" element={<div>Lịch sử đặt tour</div>} />
-          <Route path="services" element={<div>Lịch sử sử dụng dịch vụ</div>} />
+          <Route
+            path="transactions_tour"
+            element={<div>Lịch sử đặt tour</div>}
+          />
+          <Route
+            path="transactions_service"
+            element={<div>Lịch sử sử dụng dịch vụ</div>}
+          />
           <Route path="posts" element={<div>Bài viết cá nhân</div>} />
           <Route path="favorites" element={<div>Tour yêu thích</div>} />
           <Route path="coupons" element={<div>Mã giảm giá</div>} />
