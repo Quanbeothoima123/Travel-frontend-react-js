@@ -48,13 +48,39 @@ export default function UserProfile() {
         body: JSON.stringify(user),
       });
       const data = await res.json();
-      if (!res.ok) showToast(data?.message || "Cập nhật thất bại", "error");
-      setUser(data || user);
+      if (!res.ok) {
+        showToast(data?.message || "Cập nhật thất bại", "error");
+        return;
+      }
+
+      // Kiểm tra xem server trả về user data hay chỉ message
+      if (data && (data._id || data.id || data.email)) {
+        // Server trả về user object hoàn chỉnh
+        setUser(data);
+      } else {
+        // Server chỉ trả về message, cần fetch lại dữ liệu
+        console.log("Server không trả về user data, đang fetch lại...");
+        await refetchUserData();
+      }
+
       showToast("Cập nhật thành công", "success");
     } catch (err) {
-      showToast(err.message, "error");
+      showToast(err.message || "Có lỗi xảy ra", "error");
     } finally {
       setSaving(false);
+    }
+  };
+
+  // Function để fetch lại dữ liệu user
+  const refetchUserData = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/v1/user/profile", {
+        credentials: "include",
+      });
+      const data = res.ok ? await res.json() : null;
+      setUser(data || null);
+    } catch (err) {
+      showToast("Không thể tải lại thông tin", "error");
     }
   };
 
@@ -135,15 +161,21 @@ export default function UserProfile() {
               <label>Tỉnh/Thành phố</label>
               <ProvinceSelect
                 value={user?.province}
-                onChange={(p) => setUser({ ...user, province: p })}
+                onChange={(p) => {
+                  setUser((prev) => ({
+                    ...prev,
+                    province: p,
+                    ward: null, // Reset ward khi đổi tỉnh
+                  }));
+                }}
               />
             </div>
             <div className="form-group">
               <label>Phường/Xã</label>
               <WardSelect
-                provinceCode={user?.province}
+                provinceCode={user?.province?.code} // Chỉ truyền code (string)
                 value={user?.ward}
-                onChange={(w) => setUser({ ...user, ward: w })}
+                onChange={(w) => setUser((prev) => ({ ...prev, ward: w }))}
               />
             </div>
           </div>
