@@ -16,6 +16,7 @@ const BasicInfo = ({
   vehicles,
   frequencies,
   filters,
+  departPlaces, // ✅ nhận thêm
 }) => {
   const [slugLoading, setSlugLoading] = useState(false);
   const [slugMessage, setSlugMessage] = useState("");
@@ -121,6 +122,30 @@ const BasicInfo = ({
         }
         menuPlacement="auto"
         maxMenuHeight={200} // ~ 5 item
+      />
+
+      {/* Depart Place */}
+      <label>Điểm khởi hành</label>
+      <Select
+        options={departPlaces.map((d) => ({
+          value: d._id,
+          label: d.name,
+        }))}
+        value={
+          form.departPlaceId
+            ? {
+                value: form.departPlaceId,
+                label: departPlaces.find((d) => d._id === form.departPlaceId)
+                  ?.name,
+              }
+            : null
+        }
+        onChange={(selected) =>
+          setForm({ ...form, departPlaceId: selected.value })
+        }
+        menuPlacement="auto"
+        maxMenuHeight={200}
+        placeholder="Chọn điểm khởi hành..."
       />
 
       {/* Hotel */}
@@ -277,7 +302,7 @@ const BasicInfo = ({
                 onClick={() =>
                   setForm({
                     ...form,
-                    filter: form.filter.filter((id) => id !== fid),
+                    filterId: form.filterId.filter((id) => id !== fid),
                   })
                 }
               >

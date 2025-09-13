@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 
 import ThumbnailUploader from "../TourCreate/ThumbnailUploader";
 import ImagesUploader from "../TourCreate/ImagesUploader";
-import DepartPlacesInput from "../TourCreate/DepartPlacesInput";
 import TagsInput from "../TourCreate/TagInput";
 import AllowTypePeopleSelect from "../TourCreate/AllowTypePeopleSelect";
 import AdditionalPricesInput from "../TourCreate/AdditionalPricesEditor";
@@ -18,7 +17,7 @@ import ConfirmModal from "../../../components/common/ConfirmModal";
 import LoadingModal from "../../../components/common/LoadingModal";
 
 const TourEditPage = () => {
-  const { tourId } = useParams(); // lấy id từ URL
+  const { tourId } = useParams();
   const { showToast } = useToast();
 
   // === Form state ===
@@ -38,14 +37,14 @@ const TourEditPage = () => {
   const [personTypes, setPersonTypes] = useState([]);
   const [termOptions, setTermOptions] = useState([]);
   const [filterOptions, setFilterOptions] = useState([]);
+  const [departPlaces, setDepartPlaces] = useState([]);
 
-  // === Fetch dữ liệu ban đầu ===
+  // === Fetch data ban đầu ===
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
 
-        // fetch options song song
         const [
           travelRes,
           hotelRes,
@@ -54,6 +53,7 @@ const TourEditPage = () => {
           personRes,
           termRes,
           filterRes,
+          departRes,
           tourRes,
         ] = await Promise.all([
           fetch("http://localhost:5000/api/v1/admin/travel-time/getAll"),
@@ -63,6 +63,7 @@ const TourEditPage = () => {
           fetch("http://localhost:5000/api/v1/admin/type-of-person/getAll"),
           fetch("http://localhost:5000/api/v1/admin/term/getAll"),
           fetch("http://localhost:5000/api/v1/admin/filter/getAll"),
+          fetch("http://localhost:5000/api/v1/admin/depart-place/getAll"),
           fetch(
             `http://localhost:5000/api/v1/admin/tours/getTourById/${tourId}`
           ),
@@ -76,6 +77,7 @@ const TourEditPage = () => {
           personData,
           termData,
           filterData,
+          departData,
           tourData,
         ] = await Promise.all([
           travelRes.json(),
@@ -85,6 +87,7 @@ const TourEditPage = () => {
           personRes.json(),
           termRes.json(),
           filterRes.json(),
+          departRes.json(),
           tourRes.json(),
         ]);
 
@@ -95,9 +98,9 @@ const TourEditPage = () => {
         setPersonTypes(personData || []);
         setTermOptions(termData || []);
         setFilterOptions(filterData || []);
+        setDepartPlaces(departData || []);
 
         if (tourData) {
-          // fill dữ liệu tour vào form
           setForm({
             categoryId: tourData.categoryId?._id || "",
             title: tourData.title || "",
@@ -105,7 +108,7 @@ const TourEditPage = () => {
             images: tourData.images || [],
             travelTimeId: tourData.travelTimeId?._id || "",
             hotelId: tourData.hotelId?._id || "",
-            departPlaces: tourData.departPlaces || { place: "", googleMap: "" },
+            departPlaceId: tourData.departPlaceId?._id || "",
             position: tourData.position || 0,
             prices: tourData.prices || 0,
             discount: tourData.discount || 0,
@@ -117,11 +120,11 @@ const TourEditPage = () => {
             slug: tourData.slug || "",
             type: tourData.type || "domestic",
             active: tourData.active ?? true,
-            filterId: tourData.filter?.map((f) => f._id) || [],
+            filterId: tourData.filterId?.map((f) => f._id) || [],
             frequency: tourData.frequency?._id || "",
             specialExperience: tourData.specialExperience || "",
             additionalPrices: tourData.additionalPrices || [],
-            allowTypePeople: tourData.allowTypePeople || [],
+            allowTypePeople: tourData.allowTypePeople?.map((p) => p._id) || [],
           });
         }
       } catch (err) {
@@ -141,11 +144,11 @@ const TourEditPage = () => {
   const postForm = async (url, successMsg, failMsg) => {
     setLoadingModal(true);
     setLoadingMessage("Đang xử lý...");
-    const MIN_LOADING = 2000;
+    const MIN_LOADING = 2500;
 
     try {
       const fetchPromise = fetch(url, {
-        method: "PATCH", // 🔥 Đổi từ PUT -> PATCH
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(form),
@@ -212,6 +215,7 @@ const TourEditPage = () => {
           vehicles={vehicles}
           frequencies={frequencies}
           filters={filterOptions}
+          departPlaces={departPlaces}
         />
 
         <ThumbnailUploader
@@ -222,11 +226,6 @@ const TourEditPage = () => {
         <ImagesUploader
           images={form.images}
           setImages={(imgs) => setForm({ ...form, images: imgs })}
-        />
-
-        <DepartPlacesInput
-          departPlace={form.departPlaces}
-          setDepartPlace={(place) => setForm({ ...form, departPlaces: place })}
         />
 
         <TagsInput

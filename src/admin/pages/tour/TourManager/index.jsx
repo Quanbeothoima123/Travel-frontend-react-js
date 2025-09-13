@@ -140,12 +140,15 @@ export default function TourManager() {
   // ========================= API Calls =========================
   async function patchSingle(id, payload) {
     try {
-      const res = await fetch(`${API_BASE}/api/v1/admin/tours/update/${id}`, {
-        method: "PATCH",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(
+        `${API_BASE}/api/v1/admin/tours/update-status-single/${id}`,
+        {
+          method: "PATCH",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
       const data = await res.json();
       return data;
     } catch (e) {

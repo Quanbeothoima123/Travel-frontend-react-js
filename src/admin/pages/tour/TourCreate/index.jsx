@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ThumbnailUploader from "./ThumbnailUploader";
 import ImagesUploader from "./ImagesUploader";
-import DepartPlacesInput from "./DepartPlacesInput";
 import TagsInput from "./TagInput";
 import AllowTypePeopleSelect from "./AllowTypePeopleSelect";
 import AdditionalPricesInput from "./AdditionalPricesEditor";
@@ -25,7 +24,7 @@ const TourCreatePage = () => {
     images: [],
     travelTimeId: "",
     hotelId: "",
-    departPlaces: { place: "", googleMap: "" },
+    departPlaceId: "", // ✅ đổi lại
     position: 0,
     prices: 0,
     discount: 0,
@@ -58,6 +57,7 @@ const TourCreatePage = () => {
   const [personTypes, setPersonTypes] = useState([]);
   const [termOptions, setTermOptions] = useState([]);
   const [filterOptions, setFilterOptions] = useState([]);
+  const [departPlaces, setDepartPlaces] = useState([]); // ✅ thêm mới
 
   // === Reset form ===
   const resetForm = () => {
@@ -68,7 +68,7 @@ const TourCreatePage = () => {
       images: [],
       travelTimeId: "",
       hotelId: "",
-      departPlaces: { place: "", googleMap: "" },
+      departPlaceId: "", // ✅ reset về ""
       position: 0,
       prices: 0,
       discount: 0,
@@ -103,6 +103,7 @@ const TourCreatePage = () => {
           personRes,
           termRes,
           filterRes,
+          departRes,
         ] = await Promise.all([
           fetch("http://localhost:5000/api/v1/admin/travel-time/getAll"),
           fetch("http://localhost:5000/api/v1/admin/hotel/getAll"),
@@ -111,6 +112,7 @@ const TourCreatePage = () => {
           fetch("http://localhost:5000/api/v1/admin/type-of-person/getAll"),
           fetch("http://localhost:5000/api/v1/admin/term/getAll"),
           fetch("http://localhost:5000/api/v1/admin/filter/getAll"),
+          fetch("http://localhost:5000/api/v1/admin/depart-place/getAll"), // ✅ endpoint mới
         ]);
 
         const [
@@ -121,6 +123,7 @@ const TourCreatePage = () => {
           personData,
           termData,
           filterData,
+          departData, // ✅ thêm
         ] = await Promise.all([
           travelRes.json(),
           hotelRes.json(),
@@ -129,6 +132,7 @@ const TourCreatePage = () => {
           personRes.json(),
           termRes.json(),
           filterRes.json(),
+          departRes.json(), // ✅
         ]);
 
         setTravelTimes(travelData || []);
@@ -138,6 +142,7 @@ const TourCreatePage = () => {
         setPersonTypes(personData || []);
         setTermOptions(termData || []);
         setFilterOptions(filterData || []);
+        setDepartPlaces(departData || []); // ✅
       } catch (err) {
         console.error("Fetch data error:", err);
         showToast("Lỗi khi tải dữ liệu danh mục", "error");
@@ -234,6 +239,7 @@ const TourCreatePage = () => {
             vehicles={vehicles}
             frequencies={frequencies}
             filters={filterOptions}
+            departPlaces={departPlaces} // ✅ truyền xuống
           />
 
           <ThumbnailUploader
@@ -245,14 +251,6 @@ const TourCreatePage = () => {
             images={form.images}
             setImages={(imgs) => setForm({ ...form, images: imgs })}
           />
-
-          <DepartPlacesInput
-            departPlace={form.departPlaces}
-            setDepartPlace={(place) =>
-              setForm({ ...form, departPlaces: place })
-            }
-          />
-
           <TagsInput
             tags={form.tags}
             setTags={(tags) => setForm({ ...form, tags })}
