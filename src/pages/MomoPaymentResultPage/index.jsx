@@ -56,7 +56,7 @@ export default function MomoPaymentResultPage() {
     const fetchInvoice = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/v1/invoice/${orderId}`,
+          `http://localhost:5000/api/v1/invoice/detail/${orderId}`,
           {
             credentials: "include",
           }
