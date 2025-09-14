@@ -8,7 +8,7 @@
   background: linear-gradient(to bottom, #f4f7fa, #ffffff);
 }
 
-.tour-title {
+.tour-title-admin {
   text-align: center;
   color: #1a3c6d;
   margin-bottom: 40px;
@@ -202,7 +202,7 @@
     padding: 15px;
   }
 
-  .tour-title {
+  .tour-title-admin {
     font-size: 2.2em;
   }
 
@@ -227,7 +227,7 @@
 }
 
 @media (max-width: 480px) {
-  .tour-title {
+  .tour-title-admin {
     font-size: 1.8em;
   }
 
