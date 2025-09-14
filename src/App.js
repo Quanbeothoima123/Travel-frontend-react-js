@@ -16,6 +16,7 @@ import BookingPage from "./pages/BookingPage";
 import ReAuthFlow from "./pages/ReAuthFlow";
 import SearchPage from "./pages/SearchPage";
 import MomoPaymentResultPage from "./pages/MomoPaymentResultPage";
+import HistoryTourOrder from "./pages/HistoryTourOrder";
 import AdminLayout from "./admin/components/layout/AdminLayout";
 import TourCategory from "./admin/pages/tour-category/TourCategory";
 import { ToastProvider } from "./contexts/ToastContext";
@@ -28,6 +29,7 @@ import TourCreatePage from "./admin/pages/tour/TourCreate";
 import AdminTourDetail from "./admin/pages/tour/AdminTourDetail";
 import TourEditPage from "./admin/pages/tour/TourEdit";
 import AdminLogin from "./admin/pages/Login";
+
 import AdminPrivateRoute from "./admin/components/routes/AdminPrivateRoute";
 import UserLayout from "./components/layout/UserLayout";
 import UserProfile from "./components/common/UserProfile";
@@ -64,10 +66,7 @@ function AppContent() {
           {/* Redirect mặc định */}
           <Route index element={<Navigate to="profile" replace />} />
           <Route path="profile" element={<UserProfile />} />
-          <Route
-            path="transactions_tour"
-            element={<div>Lịch sử đặt tour</div>}
-          />
+          <Route path="transactions_tour" element={<HistoryTourOrder />} />
           <Route
             path="transactions_service"
             element={<div>Lịch sử sử dụng dịch vụ</div>}
