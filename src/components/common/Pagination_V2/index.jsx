@@ -1,11 +1,13 @@
 import React from "react";
-import "./Pagination_V2.css";
-const Pagination = ({
+import "./PaginationV2.css";
+
+const PaginationV2 = ({
   currentPage,
   totalPages,
   onPageChange,
   siblingCount = 1,
   className = "",
+  disabled = false,
 }) => {
   if (totalPages <= 1) return null;
 
@@ -38,38 +40,45 @@ const Pagination = ({
   const pages = getPageNumbers();
 
   return (
-    <div className={`pagination ${className}`}>
+    <div className={`pagination-v2 ${className}`}>
       <button
-        disabled={currentPage === 1}
+        className="pagination-v2__btn pagination-v2__prev"
+        disabled={currentPage === 1 || disabled}
         onClick={() => onPageChange(currentPage - 1)}
       >
-        Prev
+        <span className="pagination-v2__btn-text">Trước</span>
       </button>
 
-      {pages.map((page, idx) =>
-        page === "..." ? (
-          <span key={idx} className="dots">
-            ...
-          </span>
-        ) : (
-          <button
-            key={idx}
-            className={page === currentPage ? "active" : ""}
-            onClick={() => onPageChange(page)}
-          >
-            {page}
-          </button>
-        )
-      )}
+      <div className="pagination-v2__pages">
+        {pages.map((page, idx) =>
+          page === "..." ? (
+            <span key={idx} className="pagination-v2__dots">
+              ...
+            </span>
+          ) : (
+            <button
+              key={idx}
+              className={`pagination-v2__btn pagination-v2__page ${
+                page === currentPage ? "pagination-v2__page--active" : ""
+              }`}
+              onClick={() => onPageChange(page)}
+              disabled={disabled}
+            >
+              {page}
+            </button>
+          )
+        )}
+      </div>
 
       <button
-        disabled={currentPage === totalPages}
+        className="pagination-v2__btn pagination-v2__next"
+        disabled={currentPage === totalPages || disabled}
         onClick={() => onPageChange(currentPage + 1)}
       >
-        Next
+        <span className="pagination-v2__btn-text">Sau</span>
       </button>
     </div>
   );
 };
 
-export default Pagination;
+export default PaginationV2;
