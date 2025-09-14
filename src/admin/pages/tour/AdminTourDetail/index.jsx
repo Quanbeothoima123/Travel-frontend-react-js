@@ -72,7 +72,7 @@ const AdminTourDetail = () => {
 
   return (
     <div className="tour-detail-container">
-      <h1 className="tour-title">
+      <h1 className="tour-title-admin">
         <FaMapMarkerAlt /> {tour.title}
       </h1>
 
