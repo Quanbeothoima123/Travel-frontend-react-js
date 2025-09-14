@@ -1,0 +1,26 @@
+.status-dropdown {
+  margin: 10px 0;
+}
+
+.status-dropdown .dropdown-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.status-dropdown .status__control {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  min-height: 40px;
+}
+
+.status-dropdown .status__control--is-focused {
+  border-color: #28a745;
+  box-shadow: 0 0 0 1px #28a745;
+}
+
+.status-dropdown .status__option--is-selected {
+  background-color: #28a745;
+  color: white;
+}
