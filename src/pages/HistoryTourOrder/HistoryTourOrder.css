@@ -1,0 +1,242 @@
+/* HistoryTourOrder.css */
+.history-tour-order {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  padding: 2rem 1rem;
+  font-family: var(--font-base);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.history-tour-order__container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* === Page Header === */
+.history-tour-order__header {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.history-tour-order__title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-light)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.history-tour-order__description {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* === Results Info === */
+.history-tour-order__results-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.history-tour-order__results-count {
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.history-tour-order__count-text strong {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.history-tour-order__sort-options {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.history-tour-order__sort-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.history-tour-order__sort-select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.history-tour-order__sort-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(0, 119, 182, 0.1);
+}
+
+/* === Error Message === */
+.history-tour-order__error {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: #fff3cd;
+  border: 1px solid #ffecb5;
+  border-radius: var(--radius-lg);
+  color: #856404;
+  box-shadow: var(--shadow-xs);
+}
+
+.history-tour-order__error-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.history-tour-order__error-icon {
+  font-size: 1.25rem;
+}
+
+.history-tour-order__retry-button {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.history-tour-order__retry-button:hover:not(:disabled) {
+  background-color: #e6a200;
+  transform: translateY(-1px);
+}
+
+.history-tour-order__retry-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* === Loading State === */
+.history-tour-order__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  background: var(--color-card-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-xs);
+}
+
+.history-tour-order__loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top: 3px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* === Pagination === */
+.history-tour-order__pagination {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .history-tour-order {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .history-tour-order__title {
+    font-size: 1.75rem;
+  }
+
+  .history-tour-order__results-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .history-tour-order__sort-options {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* === Dark Mode === */
+[data-theme="dark"] .history-tour-order__error {
+  background: rgba(255, 193, 7, 0.15);
+  border-color: rgba(255, 193, 7, 0.3);
+  color: #ffc107;
+}
+
+[data-theme="dark"] .history-tour-order__loading-spinner {
+  border-color: var(--color-border);
+  border-top-color: var(--color-primary);
+}
+
+/* === Print === */
+@media print {
+  .history-tour-order {
+    background: #fff;
+    padding: 0;
+  }
+
+  .history-tour-order__results-info,
+  .history-tour-order__pagination,
+  .history-tour-order__sort-options {
+    display: none !important;
+  }
+
+  .history-tour-order__title {
+    color: #000;
+    background: none;
+    -webkit-text-fill-color: initial;
+  }
+}
