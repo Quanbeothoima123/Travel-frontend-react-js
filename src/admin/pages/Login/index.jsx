@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaEye, FaEyeSlash, FaUser, FaLock, FaPlane } from "react-icons/fa";
 import { useToast } from "../../../contexts/ToastContext";
 import "./Login.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 // Cat Animation Component
 const CatAnimation = ({ isWatching, isHiding, isPeeking }) => {
   return (
@@ -106,7 +106,7 @@ const AdminLogin = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/v1/admin/login", {
+      const response = await fetch(`${API_BASE}/api/v1/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

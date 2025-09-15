@@ -62,6 +62,7 @@ const MenuItem = ({ item, depth = 0, basePath, pathname }) => {
 };
 
 const Header = () => {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [menuData, setMenuData] = useState([]);
   const { user, loading, logout } = useAuth();
@@ -76,27 +77,27 @@ const Header = () => {
       try {
         const endpoints = {
           home: {
-            url: "http://localhost:5000/api/v1/homePage",
+            url: `${API_BASE}/api/v1/homePage`,
             basePath: "",
           },
           tour: {
-            url: "http://localhost:5000/api/v1/admin/tour-categories?tree=true",
+            url: `${API_BASE}/api/v1/admin/tour-categories?tree=true`,
             basePath: "search/tours",
           },
           service: {
-            url: "http://localhost:5000/api/v1/service",
+            url: `${API_BASE}/api/v1/service`,
             basePath: "service",
           },
-          news: { url: "http://localhost:5000/api/v1/news", basePath: "news" },
+          news: { url: `${API_BASE}/api/v1/news`, basePath: "news" },
           library: {
-            url: "http://localhost:5000/api/v1/library",
+            url: `${API_BASE}/api/v1/library`,
             basePath: "library",
           },
           contact: {
-            url: "http://localhost:5000/api/v1/contact",
+            url: `${API_BASE}/api/v1/contact`,
             basePath: "contact",
           },
-          about: { url: "http://localhost:5000/api/v1/info", basePath: "info" },
+          about: { url: `${API_BASE}/api/v1/info`, basePath: "info" },
         };
 
         const responses = await Promise.all(

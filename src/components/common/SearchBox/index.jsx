@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./SearchBox.css";
 
 export default function SearchBox({ setQuery }) {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [input, setInput] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -19,7 +20,7 @@ export default function SearchBox({ setQuery }) {
       setLoading(true);
       try {
         const res = await fetch(
-          `http://localhost:5000/api/v1/tours/search-combined?query=${input}`
+          `${API_BASE}/api/v1/tours/search-combined?query=${input}`
         );
         const data = await res.json();
         setResults(data.data || []);

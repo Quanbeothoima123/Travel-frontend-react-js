@@ -7,6 +7,7 @@ export default function ProvinceSelect({
   onChange,
   placeholder = "Chọn tỉnh/thành phố…",
 }) {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,7 +27,7 @@ export default function ProvinceSelect({
     (async () => {
       setLoading(true);
       try {
-        const res = await fetch("http://localhost:5000/api/v1/province", {
+        const res = await fetch(`${API_BASE}/api/v1/province`, {
           credentials: "include",
         });
         const data = await res.json();

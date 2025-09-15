@@ -6,7 +6,7 @@ export default function TourSearchSelect({
   categorySlug, // slug category đã chọn
   value, // { slug, title } | null
   onChange, // (tour) => void
-  fetchBase = "http://localhost:5000/api/v1/tour-list-by-category", // + /:slug
+  fetchBase = `${process.env.REACT_APP_DOMAIN_BACKEND}/api/v1/tour-list-by-category`, // + /:slug
   placeholder = "Chọn tour…",
 }) {
   const [open, setOpen] = useState(false);

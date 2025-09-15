@@ -13,6 +13,7 @@ import "./UserProfile.css";
 import { useToast } from "../../../contexts/ToastContext";
 
 export default function UserProfile() {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -21,7 +22,7 @@ export default function UserProfile() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/v1/user/profile", {
+        const res = await fetch(`${API_BASE}/api/v1/user/profile`, {
           credentials: "include",
         });
         const data = res.ok ? await res.json() : null;
@@ -41,7 +42,7 @@ export default function UserProfile() {
     setSaving(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/v1/user/profile", {
+      const res = await fetch(`${API_BASE}/api/v1/user/profile`, {
         method: "PATCH",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -74,7 +75,7 @@ export default function UserProfile() {
   // Function để fetch lại dữ liệu user
   const refetchUserData = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/v1/user/profile", {
+      const res = await fetch(`${API_BASE}/api/v1/user/profile`, {
         credentials: "include",
       });
       const data = res.ok ? await res.json() : null;

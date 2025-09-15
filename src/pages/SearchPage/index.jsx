@@ -7,6 +7,7 @@ import Pagination from "../../components/common/Pagination";
 import "./SearchPage.css";
 
 export default function SearchPage() {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const { categorySlug } = useParams();
   const navigate = useNavigate(); // dùng để thay đổi url
 
@@ -25,12 +26,12 @@ export default function SearchPage() {
       let url = "";
       if (categorySlug) {
         // lấy từ URL param (trường hợp lần đầu load bằng categorySlug)
-        url = `http://localhost:5000/api/v1/tour-list-by-category/${categorySlug}?page=${page}`;
+        url = `${API_BASE}/api/v1/tour-list-by-category/${categorySlug}?page=${page}`;
       } else {
         const slugParam = selectedCategory?.slug
           ? `&category=${selectedCategory.slug}`
           : "";
-        url = `http://localhost:5000/api/v1/tours/search-combined?query=${encodeURIComponent(
+        url = `${API_BASE}/api/v1/tours/search-combined?query=${encodeURIComponent(
           query
         )}&page=${page}${slugParam}`;
       }
@@ -93,7 +94,7 @@ export default function SearchPage() {
           <CategoryTreeSelect
             value={selectedCategory}
             onChange={(node) => setSelectedCategory(node)}
-            fetchUrl="http://localhost:5000/api/v1/admin/tour-categories?tree=true"
+            fetchUrl={`${API_BASE}/api/v1/admin/tour-categories?tree=true`}
             placeholder="Chọn loại tour..."
             noDataText="Không có danh mục"
           />

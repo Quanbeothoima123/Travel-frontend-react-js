@@ -9,6 +9,7 @@ import TourTerms from "../../../src/components/common/TourTerms";
 import "./DetailTour.css";
 
 const DetailTour = () => {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const { slug } = useParams(); // Lấy slug từ URL
   const [tourDetail, setTourDetail] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,7 +19,7 @@ const DetailTour = () => {
     const fetchTourDetail = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/v1/tours/tour-detail/${slug}`
+          `${API_BASE}/api/v1/tours/tour-detail/${slug}`
         );
         if (!response.ok) throw new Error("Failed to fetch tour details");
         const data = await response.json();

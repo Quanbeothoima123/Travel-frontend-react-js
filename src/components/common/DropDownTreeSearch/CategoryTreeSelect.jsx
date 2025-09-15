@@ -4,7 +4,7 @@ import "./tree-dropdown.css"; // file CSS riêng
 export default function CategoryTreeSelect({
   value,
   onChange,
-  fetchUrl = "http://localhost:5000/api/v1/admin/tour-categories?tree=true",
+  fetchUrl = `${process.env.REACT_APP_BACKEND_DOMAIN}/api/v1/admin/tour-categories?tree=true`,
   placeholder = "Chọn danh mục tour",
   noDataText = "Không có danh mục",
 }) {

@@ -18,6 +18,7 @@ const BasicInfo = ({
   filters,
   departPlaces, // ✅ nhận thêm
 }) => {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [slugLoading, setSlugLoading] = useState(false);
   const [slugMessage, setSlugMessage] = useState("");
   const { showToast } = useToast();
@@ -35,7 +36,7 @@ const BasicInfo = ({
     try {
       // --- Thử gọi AI trước ---
       const res = await fetch(
-        "http://localhost:5000/api/v1/admin/tours/generate-slug-ai",
+        `${API_BASE}/api/v1/admin/tours/generate-slug-ai`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -337,7 +338,7 @@ const BasicInfo = ({
           onClick={async () => {
             try {
               const res = await fetch(
-                "http://localhost:5000/api/v1/admin/tours/countTours"
+                `${API_BASE}/api/v1/admin/tours/countTours`
               );
               const data = await res.json();
               if (data.success) {

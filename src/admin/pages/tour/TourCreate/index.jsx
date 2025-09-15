@@ -14,6 +14,7 @@ import ConfirmModal from "../../../components/common/ConfirmModal";
 import LoadingModal from "../../../components/common/LoadingModal";
 
 const TourCreatePage = () => {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const { showToast } = useToast();
 
   // === Form state ===
@@ -105,14 +106,14 @@ const TourCreatePage = () => {
           filterRes,
           departRes,
         ] = await Promise.all([
-          fetch("http://localhost:5000/api/v1/admin/travel-time/getAll"),
-          fetch("http://localhost:5000/api/v1/admin/hotel/getAll"),
-          fetch("http://localhost:5000/api/v1/admin/vehicle/getAll"),
-          fetch("http://localhost:5000/api/v1/admin/frequency/getAll"),
-          fetch("http://localhost:5000/api/v1/admin/type-of-person/getAll"),
-          fetch("http://localhost:5000/api/v1/admin/term/getAll"),
-          fetch("http://localhost:5000/api/v1/admin/filter/getAll"),
-          fetch("http://localhost:5000/api/v1/admin/depart-place/getAll"), // ✅ endpoint mới
+          fetch(`${API_BASE}/api/v1/admin/travel-time/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/hotel/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/vehicle/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/frequency/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/type-of-person/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/term/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/filter/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/depart-place/getAll`),
         ]);
 
         const [
@@ -192,7 +193,7 @@ const TourCreatePage = () => {
 
   const handleCheck = () => {
     postForm(
-      "http://localhost:5000/api/v1/admin/tours/check-info-tour-create",
+      `${API_BASE}/api/v1/admin/tours/check-info-tour-create`,
       "Dữ liệu tour hợp lệ",
       "Thông tin không hợp lệ"
     );
@@ -201,7 +202,7 @@ const TourCreatePage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     postForm(
-      "http://localhost:5000/api/v1/admin/tours/create",
+      `${API_BASE}/api/v1/admin/tours/create`,
       "Tạo tour mới thành công",
       "Không thể tạo tour!"
     );

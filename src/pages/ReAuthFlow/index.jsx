@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./ReAuthFlow.css";
 
 const ReAuthFlow = () => {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const navigate = useNavigate();
   const { showToast } = useToast();
 
@@ -22,7 +23,7 @@ const ReAuthFlow = () => {
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/v1/user/reAuth", {
+      const res = await fetch(`${API_BASE}/api/v1/user/reAuth`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -48,7 +49,7 @@ const ReAuthFlow = () => {
     if (!userId || !email) return;
 
     try {
-      const res = await fetch("http://localhost:5000/api/v1/user/resendOtp", {
+      const res = await fetch(`${API_BASE}/api/v1/user/resendOtp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, email, type: "register" }),
@@ -72,7 +73,7 @@ const ReAuthFlow = () => {
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/v1/user/reInfo", {
+      const res = await fetch(`${API_BASE}/api/v1/user/reInfo`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, fullName, password }),

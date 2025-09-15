@@ -3,12 +3,13 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true); // chặn nháy UI khi chưa xác định
 
   const refresh = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/v1/user/me", {
+      const res = await fetch(`${API_BASE}/api/v1/user/me`, {
         credentials: "include",
       });
       if (res.ok) {
@@ -29,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (payload) => {
-    const res = await fetch("http://localhost:5000/api/v1/user/login", {
+    const res = await fetch(`${API_BASE}/api/v1/user/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -49,7 +50,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch("http://localhost:5000/api/v1/user/logout", {
+      await fetch(`${API_BASE}/api/v1/user/logout`, {
         method: "POST",
         credentials: "include",
       });

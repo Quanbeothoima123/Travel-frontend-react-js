@@ -14,6 +14,7 @@ import ConfirmModal from "../../components/common/ConfirmModal";
 import "./BookingPage.css";
 
 export default function BookingPage() {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const { slug: initialSlug } = useParams();
   const { showToast } = useToast();
 
@@ -51,7 +52,7 @@ export default function BookingPage() {
     if (!currentSlug) return;
 
     let cancelled = false;
-    fetch(`http://localhost:5000/api/v1/tours/tour-detail/${currentSlug}`, {
+    fetch(`${API_BASE}/api/v1/tours/tour-detail/${currentSlug}`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -265,15 +266,12 @@ export default function BookingPage() {
     const payload = buildPayload();
     try {
       setIsSubmitting(true);
-      const response = await fetch(
-        "http://localhost:5000/api/v1/invoice/payUsingCash",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(`${API_BASE}/api/v1/invoice/payUsingCash`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
       const data = await response.json();
 
       if (response.ok && data.success && data.invoice) {
@@ -305,15 +303,12 @@ export default function BookingPage() {
     const payload = buildPayload();
     try {
       setIsSubmitting(true);
-      const response = await fetch(
-        "http://localhost:5000/api/v1/invoice/pay-with-momo",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(`${API_BASE}/api/v1/invoice/pay-with-momo`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
       const data = await response.json();
       if (response.ok && data?.payUrl) {
         window.location.href = data.payUrl;
@@ -340,15 +335,12 @@ export default function BookingPage() {
       setIsSubmitting(true);
 
       // NOTE: sửa URL nếu backend của bạn expose createInvoice ở route khác
-      const response = await fetch(
-        "http://localhost:5000/api/v1/invoice/create",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(`${API_BASE}/api/v1/invoice/create`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
       const data = await response.json();
 

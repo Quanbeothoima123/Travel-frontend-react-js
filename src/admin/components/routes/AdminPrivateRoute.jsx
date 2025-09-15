@@ -3,16 +3,13 @@ import { Navigate } from "react-router-dom";
 
 export default function AdminPrivateRoute({ children }) {
   const [isAuth, setIsAuth] = useState(null);
-
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch(
-          "http://localhost:5000/api/v1/admin/checkAuth",
-          {
-            credentials: "include", // 👈 để gửi cookie
-          }
-        );
+        const res = await fetch(`${API_BASE}/api/v1/admin/checkAuth`, {
+          credentials: "include", // 👈 để gửi cookie
+        });
         if (res.ok) {
           setIsAuth(true);
         } else {

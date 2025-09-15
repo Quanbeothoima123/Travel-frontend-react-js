@@ -8,6 +8,7 @@ export default function WardSelect({
   onChange, // (ward) => void
   placeholder = "Chọn phường/xã…",
 }) {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,10 +32,9 @@ export default function WardSelect({
       }
       setLoading(true);
       try {
-        const res = await fetch(
-          `http://localhost:5000/api/v1/wards/${provinceCode}`,
-          { credentials: "include" }
-        );
+        const res = await fetch(`${API_BASE}/api/v1/wards/${provinceCode}`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (mounted) setWards(Array.isArray(data) ? data : []);
       } catch (e) {

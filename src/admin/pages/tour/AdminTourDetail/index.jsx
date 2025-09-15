@@ -25,7 +25,7 @@ const AdminTourDetail = () => {
   const [tour, setTour] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   // Hàm format VNĐ
   const formatCurrency = (value) => {
     if (!value && value !== 0) return "N/A";
@@ -39,7 +39,7 @@ const AdminTourDetail = () => {
     const fetchTour = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/v1/admin/tours/getTourById/${tourId}`
+          `${API_BASE}/api/v1/admin/tours/getTourById/${tourId}`
         );
         setTour(response.data);
       } catch (err) {

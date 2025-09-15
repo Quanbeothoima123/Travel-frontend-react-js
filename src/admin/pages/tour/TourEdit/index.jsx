@@ -17,6 +17,7 @@ import ConfirmModal from "../../../components/common/ConfirmModal";
 import LoadingModal from "../../../components/common/LoadingModal";
 
 const TourEditPage = () => {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const { tourId } = useParams();
   const { showToast } = useToast();
 
@@ -56,17 +57,15 @@ const TourEditPage = () => {
           departRes,
           tourRes,
         ] = await Promise.all([
-          fetch("http://localhost:5000/api/v1/admin/travel-time/getAll"),
-          fetch("http://localhost:5000/api/v1/admin/hotel/getAll"),
-          fetch("http://localhost:5000/api/v1/admin/vehicle/getAll"),
-          fetch("http://localhost:5000/api/v1/admin/frequency/getAll"),
-          fetch("http://localhost:5000/api/v1/admin/type-of-person/getAll"),
-          fetch("http://localhost:5000/api/v1/admin/term/getAll"),
-          fetch("http://localhost:5000/api/v1/admin/filter/getAll"),
-          fetch("http://localhost:5000/api/v1/admin/depart-place/getAll"),
-          fetch(
-            `http://localhost:5000/api/v1/admin/tours/getTourById/${tourId}`
-          ),
+          fetch(`${API_BASE}/api/v1/admin/travel-time/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/hotel/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/vehicle/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/frequency/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/type-of-person/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/term/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/filter/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/depart-place/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/tours/getTourById/${tourId}`),
         ]);
 
         const [
@@ -175,7 +174,7 @@ const TourEditPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     postForm(
-      `http://localhost:5000/api/v1/admin/tours/update/${tourId}`,
+      `${API_BASE}/api/v1/admin/tours/update/${tourId}`,
       "Cập nhật tour thành công",
       "Không thể cập nhật tour!"
     );

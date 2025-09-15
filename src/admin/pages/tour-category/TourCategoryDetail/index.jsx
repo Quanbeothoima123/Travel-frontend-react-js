@@ -4,6 +4,7 @@ import { FaArrowLeft, FaEdit } from "react-icons/fa";
 import "./TourCategoryDetail.css";
 
 const TourCategoryDetail = () => {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const { id } = useParams();
   const [category, setCategory] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -12,7 +13,7 @@ const TourCategoryDetail = () => {
     const fetchCategory = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/v1/admin/tour-categories/detail/${id}`
+          `${API_BASE}/api/v1/admin/tour-categories/detail/${id}`
         );
         const data = await res.json();
         setCategory(data);

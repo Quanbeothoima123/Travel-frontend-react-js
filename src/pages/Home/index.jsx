@@ -5,12 +5,13 @@ import WhyChoose from "../../../src/components/common/WhyChoose";
 import "./Home.css";
 
 const Home = () => {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [banners, setBanners] = useState([]);
   const [endpoint, setEndpoint] = useState("tour-list-domestic");
   const [activeButton, setActiveButton] = useState("tour-list-domestic");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/v1/banner-list")
+    fetch(`${API_BASE}/api/v1/banner-list`)
       .then((response) => response.json())
       .then((data) => setBanners(data))
       .catch((err) => console.error("Error fetching banners:", err));

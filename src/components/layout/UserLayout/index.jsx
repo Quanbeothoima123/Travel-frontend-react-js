@@ -4,6 +4,7 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import "./UserLayout.css";
 
 const UserLayout = () => {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userAvatar, setUserAvatar] = useState("/default-avatar.png");
 
@@ -12,7 +13,7 @@ const UserLayout = () => {
   useEffect(() => {
     const fetchAvatar = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/v1/user/profile", {
+        const res = await fetch(`${API_BASE}/api/v1/user/profile`, {
           credentials: "include",
         });
         if (res.ok) {

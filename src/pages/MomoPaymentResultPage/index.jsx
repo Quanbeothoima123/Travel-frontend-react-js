@@ -22,6 +22,7 @@ import LoadingModal from "../../admin/components/common/LoadingModal";
 import { useToast } from "../../../src/contexts/ToastContext";
 
 export default function MomoPaymentResultPage() {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const location = useLocation();
   const navigate = useNavigate();
   const invoiceRef = useRef(null);
@@ -56,7 +57,7 @@ export default function MomoPaymentResultPage() {
     const fetchInvoice = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/v1/invoice/detail/${orderId}`,
+          `${API_BASE}/api/v1/invoice/detail/${orderId}`,
           {
             credentials: "include",
           }
@@ -82,9 +83,7 @@ export default function MomoPaymentResultPage() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/v1/invoice/send-email/${encodeURIComponent(
-          orderId
-        )}`,
+        `${API_BASE}/api/v1/invoice/send-email/${encodeURIComponent(orderId)}`,
         { method: "GET", credentials: "include" }
       );
 

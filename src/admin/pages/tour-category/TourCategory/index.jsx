@@ -15,6 +15,7 @@ import {
 import "./TourCategory.css";
 
 export default function TourCategory() {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,7 +39,7 @@ export default function TourCategory() {
   const nodeRefs = useRef({});
 
   // API config
-  const API_ROOT = "http://localhost:5000/api/v1/admin/tour-categories";
+  const API_ROOT = `${API_BASE}/api/v1/admin/tour-categories`;
   const API_TREE = `${API_ROOT}?tree=true`;
 
   // load tree

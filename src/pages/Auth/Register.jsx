@@ -6,6 +6,7 @@ import "./Auth.css";
 const OTP_FLOW = "register";
 
 const Register = () => {
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [form, setForm] = useState({ fullName: "", email: "", password: "" });
   const [step, setStep] = useState("register");
   const [otp, setOtp] = useState("");
@@ -32,7 +33,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:5000/api/v1/user/register", {
+      const res = await fetch(`${API_BASE}/api/v1/user/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -60,7 +61,7 @@ const Register = () => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:5000/api/v1/user/auth", {
+      const res = await fetch(`${API_BASE}/api/v1/user/auth`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, otp, type: OTP_FLOW }),
@@ -82,7 +83,7 @@ const Register = () => {
   const handleResendOtp = async () => {
     try {
       const payload = { userId, email: regEmail, type: OTP_FLOW };
-      const res = await fetch("http://localhost:5000/api/v1/user/resendOtp", {
+      const res = await fetch(`${API_BASE}/api/v1/user/resendOtp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

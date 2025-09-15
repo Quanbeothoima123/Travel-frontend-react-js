@@ -35,6 +35,7 @@ export default function RepayPage() {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 
   // Handler để xử lý thay đổi province và reset ward
   const handleProvinceChange = (newProvince) => {
@@ -51,7 +52,7 @@ export default function RepayPage() {
     let cancelled = false;
     setIsLoadingInvoice(true);
 
-    fetch(`http://localhost:5000/api/v1/invoice/${invoiceId}`, {
+    fetch(`${API_BASE}/api/v1/invoice/detail/${invoiceId}`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -86,12 +87,9 @@ export default function RepayPage() {
     setIsLoadingTour(true);
 
     // Sử dụng slug từ invoice để fetch detail
-    fetch(
-      `http://localhost:5000/api/v1/tours/tour-detail/${invoiceData.tourId.slug}`,
-      {
-        credentials: "include",
-      }
-    )
+    fetch(`${API_BASE}/api/v1/tours/tour-detail/${invoiceData.tourId.slug}`, {
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then((data) => {
         if (cancelled) return;
@@ -379,15 +377,12 @@ export default function RepayPage() {
     const payload = buildPayload();
     try {
       setIsSubmitting(true);
-      const response = await fetch(
-        "http://localhost:5000/api/v1/invoice/payUsingCash",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(`${API_BASE}/api/v1/invoice/payUsingCash`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
       const data = await response.json();
 
       if (response.ok && data.success && data.invoice) {
@@ -417,15 +412,12 @@ export default function RepayPage() {
     const payload = buildPayload();
     try {
       setIsSubmitting(true);
-      const response = await fetch(
-        "http://localhost:5000/api/v1/invoice/pay-with-momo",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(`${API_BASE}/api/v1/invoice/pay-with-momo`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
       const data = await response.json();
       if (response.ok && data?.payUrl) {
         window.location.href = data.payUrl;
@@ -448,15 +440,12 @@ export default function RepayPage() {
 
     try {
       setIsSubmitting(true);
-      const response = await fetch(
-        "http://localhost:5000/api/v1/invoice/create",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(`${API_BASE}/api/v1/invoice/create`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
       const data = await response.json();
 

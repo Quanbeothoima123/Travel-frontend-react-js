@@ -7,7 +7,7 @@ import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch
 import "./TourCategoryUpdate.css";
 
 export default function TourCategoryUpdate({
-  apiBase = "http://localhost:5000/api/v1/admin/tour-categories",
+  apiBase = `${process.env.REACT_APP_BACKEND_DOMAIN}/api/v1/admin/tour-categories`,
   onUpdated = null,
 }) {
   const { id } = useParams();
