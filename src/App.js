@@ -13,6 +13,7 @@ import DetailTour from "./pages/DetailTour";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import BookingPage from "./pages/BookingPage";
+import RepayPage from "./pages/RePay";
 import ReAuthFlow from "./pages/ReAuthFlow";
 import SearchPage from "./pages/SearchPage";
 import MomoPaymentResultPage from "./pages/MomoPaymentResultPage";
@@ -55,6 +56,7 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/re-auth" element={<ReAuthFlow />} />
         <Route path="/booking-tour/:slug" element={<BookingPage />} />
+        <Route path="/repay/:invoiceId" element={<RepayPage />} />
         <Route path="/search/tours/:categorySlug" element={<SearchPage />} />
         <Route
           path="/payment/momo/result"
