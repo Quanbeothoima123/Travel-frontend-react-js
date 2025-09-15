@@ -7,6 +7,7 @@ export default function PaymentSection({
   onChangePayment,
   onSubmitCash,
   onSubmitMomo,
+  onSubmitCard, // Thêm prop này
   canSubmit,
   isSubmitting,
 }) {
@@ -55,6 +56,26 @@ export default function PaymentSection({
         </label>
 
         <label
+          className={`payment-card ${
+            paymentMethod === "card" ? "is-active" : ""
+          }`}
+        >
+          <input
+            type="radio"
+            name="payment"
+            value="card"
+            checked={paymentMethod === "card"}
+            onChange={() => onChangePayment("card")}
+          />
+          <span className="payment-badge payment-badge--green">
+            <FaCreditCard /> <span>Thanh toán thẻ tín dụng</span>
+          </span>
+          <span className="payment-desc">
+            Thanh toán bằng thẻ tín dụng/ghi nợ.
+          </span>
+        </label>
+
+        <label
           className={`payment-card muted ${
             paymentMethod === "bank-transfer" ? "is-active" : ""
           }`}
@@ -97,6 +118,17 @@ export default function PaymentSection({
           {isSubmitting && paymentMethod === "momo"
             ? "Đang chuyển đến MoMo..."
             : "Thanh toán MoMo"}
+        </button>
+
+        <button
+          type="button"
+          className="card-payment"
+          disabled={!canSubmit || paymentMethod !== "card" || isSubmitting}
+          onClick={onSubmitCard}
+        >
+          {isSubmitting && paymentMethod === "card"
+            ? "Đang xử lý..."
+            : "Thanh toán thẻ"}
         </button>
       </div>
     </>
