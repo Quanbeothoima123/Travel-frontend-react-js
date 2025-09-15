@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   FaHashtag,
   FaFileInvoiceDollar,
@@ -61,11 +62,6 @@ const InvoiceTableUser = ({ data }) => {
   const handleCancelTour = (invoiceId) => {
     console.log("Cancel tour:", invoiceId);
   };
-
-  const handlePayAgain = (invoiceId) => {
-    console.log("Pay again:", invoiceId);
-  };
-
   const handleViewDetails = (invoiceId) => {
     console.log("View details:", invoiceId);
   };
@@ -190,12 +186,12 @@ const InvoiceTableUser = ({ data }) => {
                           Hủy tour
                         </button>
                         {invoice.typeOfPayment === "momo" && (
-                          <button
+                          <Link
                             className="btn btn-pay-again"
-                            onClick={() => handlePayAgain(invoice._id)}
+                            to={`/repay/${invoice._id}`}
                           >
                             Thanh toán lại
-                          </button>
+                          </Link>
                         )}
                         <button
                           className="btn btn-details"
