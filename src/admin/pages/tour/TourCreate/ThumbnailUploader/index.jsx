@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ImageUploader from "../ImageUploader";
-import ImageLoadingModal from "../../../../../admin/components/common/ImageLoadingModal";
+import LoadingModal from "../../../../../admin/components/common/LoadingModal";
 import "./ThumbnailUploader.css";
 
 const ThumbnailUploader = ({ value, onChange }) => {
@@ -69,7 +69,7 @@ const ThumbnailUploader = ({ value, onChange }) => {
         </div>
       )}
 
-      {loading && <ImageLoadingModal />}
+      <LoadingModal open={loading} message="Đang gửi email..." icon="FaImage" />
 
       {/* Preview ảnh */}
       {value && (

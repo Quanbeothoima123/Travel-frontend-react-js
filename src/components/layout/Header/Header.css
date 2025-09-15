@@ -210,7 +210,7 @@
   background: var(--color-border);
 }
 .user-menu .menu-item.danger {
-  color: var(--color-danger);
+  color: var(--color-error);
 }
 
 /* =========================

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import TinyEditor from "../../TinyEditor";
 import ImageUploader from "../ImageUploader";
-import ImageLoadingModal from "../../../../../admin/components/common/ImageLoadingModal";
+import LoadingModal from "../../../../../admin/components/common/LoadingModal";
 import "./DescriptionEditor.css";
 
 const DescriptionEditor = ({ descriptions, setDescriptions }) => {
@@ -164,7 +164,11 @@ const DescriptionEditor = ({ descriptions, setDescriptions }) => {
             </div>
           )}
 
-          {loading && <ImageLoadingModal />}
+          <LoadingModal
+            open={loading}
+            message="Đang gửi email..."
+            icon="FaImage"
+          />
 
           {/* Nếu ĐÃ có ảnh: hiển thị preview + nút xóa */}
           {hasImage && (

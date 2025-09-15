@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ImageUploader from "../ImageUploader";
-import ImageLoadingModal from "../../../../../admin/components/common/ImageLoadingModal";
+import LoadingModal from "../../../../../admin/components/common/LoadingModal";
 import {
   DndContext,
   closestCenter,
@@ -110,7 +110,7 @@ const ImagesUploader = ({ images, setImages }) => {
         </div>
       </div>
 
-      {loading && <ImageLoadingModal />}
+      <LoadingModal open={loading} message="Đang gửi email..." icon="FaImage" />
 
       <DndContext
         sensors={sensors}

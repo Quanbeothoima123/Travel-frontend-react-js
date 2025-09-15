@@ -20,7 +20,7 @@
   position: absolute;
   top: 12px;
   left: -30px;
-  background-color: var(--color-danger);
+  background-color: var(--color-error);
   color: #fff;
   padding: 4px 30px;
   transform: rotate(-45deg);
@@ -80,7 +80,7 @@
 }
 
 .tour-card .discounted-price {
-  color: var(--color-danger);
+  color: var(--color-error);
   font-size: 20px;
   font-weight: 700;
 }
