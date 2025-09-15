@@ -3,7 +3,7 @@ import InvoiceSearchFilterUser from "../../components/common/InvoiceSearchFilter
 import InvoiceTableUser from "../../components/common/InvoiceTableUser";
 import "./HistoryTourOrder.css";
 import PaginationV2 from "../../components/common/Pagination_V2";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 const HistoryTourOrder = () => {
   const [filters, setFilters] = useState({
     search: "",
@@ -26,9 +26,6 @@ const HistoryTourOrder = () => {
   const [invoiceData, setInvoiceData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const API_BASE =
-    process.env.REACT_APP_DOMAIN_BACKEND || "http://localhost:5000";
 
   const buildQueryString = useCallback((filterParams) => {
     const params = new URLSearchParams();
@@ -72,12 +69,12 @@ const HistoryTourOrder = () => {
         setLoading(false);
       }
     },
-    [filters, buildQueryString, API_BASE]
+    [filters, buildQueryString]
   );
 
   useEffect(() => {
     fetchInvoices();
-  }, []);
+  }, [fetchInvoices]);
 
   const handleFiltersChange = useCallback((newFilters) => {
     setFilters((prev) => ({ ...prev, ...newFilters, page: 1 }));

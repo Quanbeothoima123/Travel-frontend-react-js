@@ -1,14 +1,13 @@
 // src/components/booking/WardSelect.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./tree-dropdown.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export default function WardSelect({
   provinceCode, // code của province đã chọn
   value, // { code, name_with_type } | null
   onChange, // (ward) => void
   placeholder = "Chọn phường/xã…",
 }) {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);

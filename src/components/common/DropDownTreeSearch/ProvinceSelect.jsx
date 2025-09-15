@@ -1,13 +1,12 @@
 // src/components/booking/ProvinceSelect.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./tree-dropdown.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export default function ProvinceSelect({
   value,
   onChange,
   placeholder = "Chọn tỉnh/thành phố…",
 }) {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);

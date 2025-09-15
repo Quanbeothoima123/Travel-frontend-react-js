@@ -2,9 +2,8 @@ import { Outlet, NavLink } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import "./UserLayout.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 const UserLayout = () => {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userAvatar, setUserAvatar] = useState("/default-avatar.png");
 

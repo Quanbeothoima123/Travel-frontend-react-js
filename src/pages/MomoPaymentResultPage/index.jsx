@@ -20,9 +20,8 @@ import html2canvas from "html2canvas";
 import "./MomoPaymentResultPage.css";
 import LoadingModal from "../../admin/components/common/LoadingModal";
 import { useToast } from "../../../src/contexts/ToastContext";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export default function MomoPaymentResultPage() {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const location = useLocation();
   const navigate = useNavigate();
   const invoiceRef = useRef(null);

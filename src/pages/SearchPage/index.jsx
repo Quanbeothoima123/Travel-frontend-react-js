@@ -5,9 +5,8 @@ import CategoryTreeSelect from "../../components/common/DropDownTreeSearch/Categ
 import TourCard from "../../components/common/TourCard";
 import Pagination from "../../components/common/Pagination";
 import "./SearchPage.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export default function SearchPage() {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const { categorySlug } = useParams();
   const navigate = useNavigate(); // dùng để thay đổi url
 
@@ -18,45 +17,43 @@ export default function SearchPage() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [query, setQuery] = useState("");
 
-  // fetch tour
-  const fetchTours = async () => {
-    try {
-      setLoading(true);
-
-      let url = "";
-      if (categorySlug) {
-        // lấy từ URL param (trường hợp lần đầu load bằng categorySlug)
-        url = `${API_BASE}/api/v1/tour-list-by-category/${categorySlug}?page=${page}`;
-      } else {
-        const slugParam = selectedCategory?.slug
-          ? `&category=${selectedCategory.slug}`
-          : "";
-        url = `${API_BASE}/api/v1/tours/search-combined?query=${encodeURIComponent(
-          query
-        )}&page=${page}${slugParam}`;
-      }
-      console.log("Fetch URL:", url);
-
-      const res = await fetch(url);
-      const data = await res.json();
-
-      if (Array.isArray(data)) {
-        setTours(data);
-        setTotalPages(1);
-      } else {
-        setTours(data.data || []);
-        setTotalPages(data.totalPages || 1);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchTours = async () => {
+      try {
+        setLoading(true);
+
+        let url = "";
+        if (categorySlug) {
+          url = `${API_BASE}/api/v1/tour-list-by-category/${categorySlug}?page=${page}`;
+        } else {
+          const slugParam = selectedCategory?.slug
+            ? `&category=${selectedCategory.slug}`
+            : "";
+          url = `${API_BASE}/api/v1/tours/search-combined?query=${encodeURIComponent(
+            query
+          )}&page=${page}${slugParam}`;
+        }
+        console.log("Fetch URL:", url);
+
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          setTours(data);
+          setTotalPages(1);
+        } else {
+          setTours(data.data || []);
+          setTotalPages(data.totalPages || 1);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchTours();
-  }, [categorySlug, page]);
+  }, [categorySlug, page, query, selectedCategory]);
 
   // xử lý nút tìm kiếm
   const handleSearch = (e) => {

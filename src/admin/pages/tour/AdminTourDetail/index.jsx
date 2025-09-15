@@ -19,13 +19,12 @@ import {
   FaExternalLinkAlt,
 } from "react-icons/fa";
 import "./AdminTourDetail.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 const AdminTourDetail = () => {
   const { tourId } = useParams();
   const [tour, setTour] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   // Hàm format VNĐ
   const formatCurrency = (value) => {
     if (!value && value !== 0) return "N/A";

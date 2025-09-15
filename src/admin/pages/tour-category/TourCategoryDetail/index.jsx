@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FaArrowLeft, FaEdit } from "react-icons/fa";
 import "./TourCategoryDetail.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 const TourCategoryDetail = () => {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const { id } = useParams();
   const [category, setCategory] = useState(null);
   const [loading, setLoading] = useState(true);

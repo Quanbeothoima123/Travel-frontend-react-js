@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export default function AdminPrivateRoute({ children }) {
   const [isAuth, setIsAuth] = useState(null);
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   useEffect(() => {
     const checkAuth = async () => {
       try {

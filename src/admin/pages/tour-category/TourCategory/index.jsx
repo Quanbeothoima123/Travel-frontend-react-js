@@ -13,9 +13,8 @@ import {
   FaPlusCircle,
 } from "react-icons/fa";
 import "./TourCategory.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export default function TourCategory() {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,16 +37,14 @@ export default function TourCategory() {
   // refs for nodes
   const nodeRefs = useRef({});
 
-  // API config
-  const API_ROOT = `${API_BASE}/api/v1/admin/tour-categories`;
-  const API_TREE = `${API_ROOT}?tree=true`;
-
   // load tree
   useEffect(() => {
     async function load() {
       setLoading(true);
       try {
-        const res = await fetch(API_TREE);
+        const res = await fetch(
+          `${API_BASE}/api/v1/admin/tour-categories?tree=true`
+        );
         if (!res.ok) throw new Error("API error");
         const json = await res.json();
         setCategories(json);
@@ -208,14 +205,19 @@ export default function TourCategory() {
     if (!id) return setConfirmDelete({ show: false, id: null, title: "" });
 
     try {
-      const res = await fetch(`${API_ROOT}/delete/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${API_BASE}/api/v1/admin/tour-categories/delete/${id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
       if (!res.ok) throw new Error("Delete failed");
 
       // refetch tree
-      const refreshed = await fetch(API_TREE);
+      const refreshed = await fetch(
+        `${API_BASE}/api/v1/admin/tour-categories?tree=true`
+      );
       const json = await refreshed.json();
       setCategories(json);
     } catch (err) {
@@ -265,7 +267,9 @@ export default function TourCategory() {
   // fetch the latest item (created or updated) and navigate to it
   const fetchLatestAndOpen = async (type = "updated") => {
     try {
-      const res = await fetch(`${API_ROOT}/recent?type=${type}&limit=1`);
+      const res = await fetch(
+        `${API_BASE}/api/v1/admin/tour-categories/recent?type=${type}&limit=1`
+      );
       if (!res.ok) throw new Error("Recent API error");
       const json = await res.json();
 
@@ -284,7 +288,9 @@ export default function TourCategory() {
 
       // if the item is not present in current map, refetch tree and then expand
       if (!mapById[item._id]) {
-        const refreshed = await fetch(API_TREE);
+        const refreshed = await fetch(
+          `${API_BASE}/api/v1/admin/tour-categories?tree=true`
+        );
         const all = await refreshed.json();
         setCategories(all);
         // slight delay to let categories state update then expand

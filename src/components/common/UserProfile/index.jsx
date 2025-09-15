@@ -11,9 +11,8 @@ import WardSelect from "../DropDownTreeSearch/WardSelect";
 import ImageUploader from "../../../admin/pages/tour/TourCreate/ImageUploader";
 import "./UserProfile.css";
 import { useToast } from "../../../contexts/ToastContext";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export default function UserProfile() {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

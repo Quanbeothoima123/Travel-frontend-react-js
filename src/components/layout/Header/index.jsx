@@ -11,11 +11,10 @@ import {
 import Sidebar from "../Sidebar";
 import { useAuth } from "../../../contexts/AuthContext";
 import "./Header.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 // MenuItem đệ quy
 const MenuItem = ({ item, depth = 0, basePath, pathname }) => {
   const hasChildren = Array.isArray(item.children) && item.children.length > 0;
-
   // Tạo link chính xác
   let linkTo = "/";
   if (basePath && item.slug) {
@@ -62,7 +61,6 @@ const MenuItem = ({ item, depth = 0, basePath, pathname }) => {
 };
 
 const Header = () => {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [menuData, setMenuData] = useState([]);
   const { user, loading, logout } = useAuth();

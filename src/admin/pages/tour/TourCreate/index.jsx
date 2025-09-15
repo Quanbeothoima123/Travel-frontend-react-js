@@ -12,9 +12,8 @@ import "./TourCreatePage.css";
 import { useToast } from "../../../../contexts/ToastContext";
 import ConfirmModal from "../../../components/common/ConfirmModal";
 import LoadingModal from "../../../components/common/LoadingModal";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 const TourCreatePage = () => {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const { showToast } = useToast();
 
   // === Form state ===
@@ -25,7 +24,7 @@ const TourCreatePage = () => {
     images: [],
     travelTimeId: "",
     hotelId: "",
-    departPlaceId: "", // ✅ đổi lại
+    departPlaceId: "",
     position: 0,
     prices: 0,
     discount: 0,

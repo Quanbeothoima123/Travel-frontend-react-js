@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export default function DepartPlaceDropDownSearch({
   handleChangeValue,
   apiUrl = "/api/v1/depart-place/getAll",
@@ -9,7 +10,7 @@ export default function DepartPlaceDropDownSearch({
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(null);
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
+
   useEffect(() => {
     const fetchDepartPlaces = async () => {
       setLoading(true);

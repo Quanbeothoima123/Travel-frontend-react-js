@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./SearchBox.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export default function SearchBox({ setQuery }) {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [input, setInput] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);

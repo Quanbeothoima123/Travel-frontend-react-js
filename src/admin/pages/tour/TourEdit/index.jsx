@@ -11,13 +11,11 @@ import DescriptionEditor from "../TourCreate/DescriptionEditor";
 import SpecialExperienceEditor from "../TourCreate/SpecialExperienceEditor";
 import BasicInfo from "../TourCreate/BasicInfo";
 import "../TourCreate/TourCreatePage.css";
-
 import { useToast } from "../../../../contexts/ToastContext";
 import ConfirmModal from "../../../components/common/ConfirmModal";
 import LoadingModal from "../../../components/common/LoadingModal";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 const TourEditPage = () => {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const { tourId } = useParams();
   const { showToast } = useToast();
 

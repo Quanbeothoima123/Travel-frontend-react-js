@@ -10,7 +10,7 @@ import { usePeopleLogicWithInit } from "./usePeopleLogicWithInit";
 import { validateForm } from "../BookingPage/Validate";
 import ConfirmModal from "../../components/common/ConfirmModal";
 import "../BookingPage/BookingPage.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export default function RepayPage() {
   const { invoiceId } = useParams(); // Nhận invoice_id từ URL
   const { showToast } = useToast();
@@ -31,11 +31,9 @@ export default function RepayPage() {
   const [ward, setWard] = useState(null);
   const [note, setNote] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cash");
-
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 
   // Handler để xử lý thay đổi province và reset ward
   const handleProvinceChange = (newProvince) => {

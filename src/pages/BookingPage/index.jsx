@@ -12,9 +12,8 @@ import CategoryTreeSelect from "../../components/common/DropDownTreeSearch/Categ
 import TourSearchSelect from "../../components/common/DropDownTreeSearch/TourSearchSelect";
 import ConfirmModal from "../../components/common/ConfirmModal";
 import "./BookingPage.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export default function BookingPage() {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const { slug: initialSlug } = useParams();
   const { showToast } = useToast();
 

@@ -7,9 +7,8 @@ import TourExperience from "../../../src/components/common/TourExperience";
 import TourSchedule from "../../../src/components/common/TourSchedule";
 import TourTerms from "../../../src/components/common/TourTerms";
 import "./DetailTour.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 const DetailTour = () => {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const { slug } = useParams(); // Lấy slug từ URL
   const [tourDetail, setTourDetail] = useState(null);
   const [loading, setLoading] = useState(true);

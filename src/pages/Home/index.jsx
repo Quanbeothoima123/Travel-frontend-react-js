@@ -3,9 +3,8 @@ import TourList from "../../../src/components/common/TourList";
 import BannerComponent from "../../../src/components/common/Banner";
 import WhyChoose from "../../../src/components/common/WhyChoose";
 import "./Home.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 const Home = () => {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [banners, setBanners] = useState([]);
   const [endpoint, setEndpoint] = useState("tour-list-domestic");
   const [activeButton, setActiveButton] = useState("tour-list-domestic");

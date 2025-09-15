@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import TourCard from "../TourCard";
 import "./TourList.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 const TourList = ({ endpoint }) => {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [tours, setTours] = useState([]);
 
   useEffect(() => {
