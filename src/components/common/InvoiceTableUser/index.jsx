@@ -74,64 +74,65 @@ const InvoiceTableUser = ({ data }) => {
     <div className="invoice-table-container">
       <div className="invoice-table-wrapper">
         <table className="invoice-table">
-          <thead>
+          <thead className="table-header-invoice-user">
             <tr>
               <th>
-                <span className="th-icon">
-                  <FaHashtag />
+                <span className="th-content">
+                  <FaHashtag className="th-icon" />
+                  STT
                 </span>
-                STT
               </th>
               <th>
-                <span className="th-icon">
-                  <FaFileInvoiceDollar />
+                <span className="th-content">
+                  <FaFileInvoiceDollar className="th-icon" />
+                  Mã thanh toán
                 </span>
-                Mã thanh toán
               </th>
               <th>
-                <span className="th-icon">
-                  <FaMapMarkedAlt />
+                <span className="th-content">
+                  <FaMapMarkedAlt className="th-icon" />
+                  Tên tour
                 </span>
-                Tên tour
               </th>
               <th>
-                <span className="th-icon">
-                  <FaCalendarAlt />
+                <span className="th-content">
+                  <FaCalendarAlt className="th-icon" />
+                  Ngày đặt
                 </span>
-                Ngày đặt
               </th>
               <th>
-                <span className="th-icon">
-                  <FaUsers />
+                <span className="th-content">
+                  <FaUsers className="th-icon" />
+                  Số lượng ghế
                 </span>
-                Số lượng ghế
               </th>
               <th>
-                <span className="th-icon">
-                  <FaMoneyBillWave />
+                <span className="th-content">
+                  <FaMoneyBillWave className="th-icon" />
+                  Tổng tiền
                 </span>
-                Tổng tiền
               </th>
               <th>
-                <span className="th-icon">
-                  <FaGlobe />
+                <span className="th-content">
+                  <FaGlobe className="th-icon" />
+                  Loại tour
                 </span>
-                Loại tour
               </th>
               <th>
-                <span className="th-icon">
-                  <FaInfoCircle />
+                <span className="th-content">
+                  <FaInfoCircle className="th-icon" />
+                  Trạng thái
                 </span>
-                Trạng thái
               </th>
               <th>
-                <span className="th-icon">
-                  <FaCogs />
+                <span className="th-content">
+                  <FaCogs className="th-icon" />
+                  Hành động
                 </span>
-                Hành động
               </th>
             </tr>
           </thead>
+
           <tbody>
             {data.invoices.map((invoice, index) => (
               <tr key={invoice._id}>
