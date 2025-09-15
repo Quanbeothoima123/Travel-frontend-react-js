@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./tree-dropdown.css"; // file CSS riêng
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export default function CategoryTreeSelect({
   value,
   onChange,
-  fetchUrl = `${process.env.REACT_APP_BACKEND_DOMAIN}/api/v1/admin/tour-categories?tree=true`,
+  fetchUrl = `${API_BASE}/api/v1/admin/tour-categories?tree=true`,
   placeholder = "Chọn danh mục tour",
   noDataText = "Không có danh mục",
 }) {
