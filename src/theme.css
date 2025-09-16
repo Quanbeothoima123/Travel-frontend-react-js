@@ -24,29 +24,29 @@
 :root {
   --font-base: "Roboto", sans-serif;
 
-  /* Background colors */
+  /* Background colors - LIGHT MODE */
   --color-bg: #ffffff;
   --color-bg-secondary: #f8f9fa;
   --color-bg-card: #ffffff;
 
-  /* Text colors */
+  /* Text colors - LIGHT MODE */
   --color-text: #212529;
   --color-text-secondary: #6c757d;
   --color-text-muted: #868e96;
 
-  /* Border colors */
-  --color-border: black;
-  --color-border-light: black;
+  /* Border colors - LIGHT MODE */
+  --color-border: #dee2e6;
+  --color-border-light: #e9ecef;
 
   /* Interactive elements */
-  --color-primary: #4c84d8;
-  --color-primary-hover: blue;
+  --color-primary: #0d6efd;
+  --color-primary-hover: #0b5ed7;
   --color-button-bg: transparent;
-  --color-button-border: black;
-  --color-button-text: black;
-  --color-button-hover-bg: #4c84d8;
+  --color-button-border: #6c757d;
+  --color-button-text: #6c757d;
+  --color-button-hover-bg: #0d6efd;
   --color-button-hover-text: #ffffff;
-  --color-button-hover-border: #4c84d8;
+  --color-button-hover-border: #0d6efd;
 
   /* State colors */
   --color-success: #198754;
@@ -77,23 +77,23 @@
    Dark Mode Variables
    ========================= */
 [data-theme="dark"] {
-  /* Background colors */
+  /* Background colors - DARK MODE */
   --color-bg: #1a1a1a;
   --color-bg-secondary: #2d2d2d;
   --color-bg-card: #242424;
 
-  /* Text colors */
+  /* Text colors - DARK MODE */
   --color-text: #e9ecef;
   --color-text-secondary: #adb5bd;
   --color-text-muted: #868e96;
 
-  /* Border colors */
+  /* Border colors - DARK MODE */
   --color-border: #495057;
   --color-border-light: #343a40;
 
   /* Interactive elements */
   --color-primary: #0d6efd;
-  --color-primary-hover: blue;
+  --color-primary-hover: #3d8bfd;
   --color-button-bg: transparent;
   --color-button-border: #adb5bd;
   --color-button-text: #adb5bd;
