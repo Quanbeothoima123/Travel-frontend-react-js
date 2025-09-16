@@ -5,52 +5,53 @@ import "./TourCard.css";
 
 const TourCard = ({ tour }) => {
   const originalPrice = tour.prices;
-  const discountedPrice = tour.discount
-    ? tour.prices * (1 - tour.discount / 100)
-    : null;
+  const discountedPrice =
+    tour.discount && tour.discount > 0
+      ? tour.prices * (1 - tour.discount / 100)
+      : null;
 
   return (
-    <div className="tour-card">
+    <div className="tc-card">
       {tour.discount > 0 && (
-        <span className="discount-badge">-{tour.discount}%</span>
+        <span className="tc-discount-badge">-{tour.discount}%</span>
       )}
 
       {/* Thumbnail */}
-      <div className="image-wrapper">
+      <div className="tc-image-wrapper">
         <img src={tour.thumbnail} alt={tour.title} />
       </div>
 
       {/* Title */}
-      <h3>{tour.title}</h3>
+      <h3 className="tc-title">{tour.title}</h3>
 
       {/* Info */}
-      <p>
+      <p className="tc-info">
         <FaBed /> {tour.day} Ngày {tour.night} Đêm
       </p>
-      <p>
-        <FaCarSide /> {tour.vehicle[0]}
+      <p className="tc-info">
+        <FaCarSide /> {tour.vehicle?.[0]}
       </p>
-      <p>
+      <p className="tc-info">
         <FaHotel /> Khách sạn {tour.hotelStar} sao
       </p>
-      <p>
+      <p className="tc-info">
         <FaUsers /> Số chỗ: {tour.seats}
       </p>
 
       {/* Price */}
-      <p className="price">
+      <div className="tc-price">
         {discountedPrice && (
-          <span className="original-price">
+          <span className="tc-original-price">
             {originalPrice.toLocaleString()} VNĐ
           </span>
         )}
-        <span className={discountedPrice ? "discounted-price" : ""}>
+        <span className={discountedPrice ? "tc-discounted-price" : ""}>
           {(discountedPrice || originalPrice).toLocaleString()} VNĐ
         </span>
-      </p>
+      </div>
 
       {/* Link */}
-      <Link to={`/tour/${tour.slug}`} className="details-link">
+      <Link to={`/tour/${tour.slug}`} className="tc-details-link">
         Xem chi tiết
       </Link>
     </div>

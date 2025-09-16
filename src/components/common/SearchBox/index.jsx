@@ -1,7 +1,10 @@
+// SearchBox.jsx
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./SearchBox.css";
+
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
+
 export default function SearchBox({ setQuery }) {
   const [input, setInput] = useState("");
   const [results, setResults] = useState([]);
@@ -36,33 +39,39 @@ export default function SearchBox({ setQuery }) {
   }, [input, setQuery]);
 
   return (
-    <div className="search-box">
+    <div className="sb-box">
       <input
         type="text"
-        className="search-input"
+        className="sb-input"
         placeholder="Tìm tour..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onFocus={() => results.length > 0 && setShowDropdown(true)}
-        onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // delay nhỏ để kịp click
+        onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
       />
 
       <ul
-        className={`search-dropdown ${
-          showDropdown && results.length > 0 ? "show" : ""
+        className={`sb-dropdown ${
+          showDropdown && results.length > 0 ? "sb-dropdown--show" : ""
         }`}
       >
-        {loading && <li className="search-item">Đang tìm kiếm...</li>}
+        {loading &&
+          Array.from({ length: 4 }).map((_, idx) => (
+            <li key={idx} className="sb-item sb-skeleton">
+              <div className="sb-skel-thumb" />
+              <div className="sb-skel-text" />
+            </li>
+          ))}
         {!loading &&
           results.map((tour) => (
-            <li key={tour.slug} className="search-item">
-              <Link to={`/tour/${tour.slug}`} className="search-link">
+            <li key={tour.slug} className="sb-item">
+              <Link to={`/tour/${tour.slug}`} className="sb-link">
                 <img
                   src={tour.thumbnail}
                   alt={tour.title}
-                  className="search-thumb"
+                  className="sb-thumb"
                 />
-                <span className="search-title">{tour.title}</span>
+                <span className="sb-title">{tour.title}</span>
               </Link>
             </li>
           ))}

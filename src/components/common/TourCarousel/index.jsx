@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import Slider from "react-slick";
+import Lightbox from "yet-another-react-lightbox";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "yet-another-react-lightbox/styles.css";
 import "./TourCarousel.css";
 
 const TourCarousel = ({ thumbnail, images }) => {
@@ -11,7 +14,10 @@ const TourCarousel = ({ thumbnail, images }) => {
   const slider2 = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Combine thumbnail + images
+  // Lightbox state
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  // Gộp thumbnail + images, đảm bảo sắp xếp theo index
   const fullImages = [{ url: thumbnail, index: 0 }, ...images].sort(
     (a, b) => a.index - b.index
   );
@@ -47,28 +53,36 @@ const TourCarousel = ({ thumbnail, images }) => {
   };
 
   return (
-    <div className="TourCarousel">
-      {/* Main slider */}
+    <div className="tcr-carousel">
+      {/* Slider chính */}
       <Slider {...mainSettings}>
         {fullImages.map((img, idx) => (
           <div key={idx}>
-            <img src={img.url} alt={`Tour ${idx}`} className="main-image" />
+            <img
+              src={img.url}
+              alt={`Tour ${idx}`}
+              className="tcr-main-image"
+              onClick={() => {
+                setActiveIndex(idx);
+                setLightboxOpen(true);
+              }}
+            />
           </div>
         ))}
       </Slider>
 
-      {/* Gap */}
+      {/* Khoảng cách */}
       <div style={{ height: "20px" }} />
 
-      {/* Thumbnail slider */}
+      {/* Slider thumbnail */}
       <Slider {...thumbSettings}>
         {fullImages.map((img, idx) => (
           <div key={idx}>
             <img
               src={img.url}
               alt={`Thumb ${idx}`}
-              className={`thumb-image ${
-                idx === activeIndex ? "active-thumb" : ""
+              className={`tcr-thumb-image ${
+                idx === activeIndex ? "tcr-active-thumb" : ""
               }`}
               onClick={() => {
                 slider1.current.slickGoTo(idx);
@@ -78,6 +92,17 @@ const TourCarousel = ({ thumbnail, images }) => {
           </div>
         ))}
       </Slider>
+
+      {/* Lightbox với Zoom plugin */}
+      {lightboxOpen && (
+        <Lightbox
+          open={lightboxOpen}
+          close={() => setLightboxOpen(false)}
+          index={activeIndex}
+          slides={fullImages.map((img) => ({ src: img.url }))}
+          plugins={[Zoom]}
+        />
+      )}
     </div>
   );
 };

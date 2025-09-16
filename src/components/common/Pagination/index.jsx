@@ -1,4 +1,4 @@
-// Pagination.js
+// Pagination.jsx
 import React from "react";
 import "./Pagination.css";
 
@@ -18,40 +18,36 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     const right = Math.min(totalPages - 1, currentPage + delta);
 
     pages.push(1);
-
     if (left > 2) pages.push("...");
-
     for (let i = left; i <= right; i++) {
       pages.push(i);
     }
-
     if (right < totalPages - 1) pages.push("...");
-
     if (totalPages > 1) pages.push(totalPages);
 
     return pages;
   };
 
   return (
-    <nav className="custom-pagination">
+    <nav className="pg-pagination">
       <button
-        className="page-btn"
+        className="pg-btn"
         disabled={currentPage === 1}
         onClick={() => handleClick(currentPage - 1)}
       >
         ◀
       </button>
 
-      <div className="page-list">
+      <div className="pg-list">
         {getPageNumbers().map((page, idx) =>
           page === "..." ? (
-            <span key={idx} className="page-ellipsis">
+            <span key={idx} className="pg-ellipsis">
               …
             </span>
           ) : (
             <button
               key={idx}
-              className={`page-btn ${page === currentPage ? "active" : ""}`}
+              className={`pg-btn ${page === currentPage ? "active" : ""}`}
               onClick={() => handleClick(page)}
             >
               {page}
@@ -61,7 +57,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       </div>
 
       <button
-        className="page-btn"
+        className="pg-btn"
         disabled={currentPage === totalPages}
         onClick={() => handleClick(currentPage + 1)}
       >

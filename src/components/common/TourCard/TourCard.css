@@ -1,5 +1,5 @@
-.tour-card {
-  background-color: var(--color-card-bg);
+.tc-card {
+  background-color: var(--color-bg-card);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   overflow: hidden;
@@ -10,17 +10,17 @@
   position: relative;
 }
 
-.tour-card:hover {
+.tc-card:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-lg);
 }
 
 /* Discount badge */
-.tour-card .discount-badge {
+.tc-discount-badge {
   position: absolute;
   top: 12px;
   left: -30px;
-  background-color: var(--color-error);
+  background-color: var(--color-danger);
   color: #fff;
   padding: 4px 30px;
   transform: rotate(-45deg);
@@ -29,23 +29,23 @@
 }
 
 /* Image */
-.tour-card .image-wrapper {
+.tc-image-wrapper {
   overflow: hidden;
 }
 
-.tour-card img {
+.tc-image-wrapper img {
   width: 100%;
   height: 200px;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.tour-card img:hover {
+.tc-image-wrapper img:hover {
   transform: scale(1.1);
 }
 
 /* Title */
-.tour-card h3 {
+.tc-title {
   font-size: 18px;
   font-weight: 600;
   margin: 12px 0 6px;
@@ -56,7 +56,7 @@
 }
 
 /* Info */
-.tour-card p {
+.tc-info {
   font-size: 14px;
   color: var(--color-text-muted);
   margin: 4px 0;
@@ -66,27 +66,28 @@
   gap: 6px;
 }
 
-.tour-card .price {
+/* Price */
+.tc-price {
   margin: 10px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.tour-card .original-price {
+.tc-original-price {
   text-decoration: line-through;
   color: var(--color-text-muted);
   font-size: 14px;
 }
 
-.tour-card .discounted-price {
-  color: var(--color-error);
+.tc-discounted-price {
+  color: var(--color-danger);
   font-size: 20px;
   font-weight: 700;
 }
 
 /* Link */
-.tour-card .details-link {
+.tc-details-link {
   display: inline-block;
   margin: 12px 0 16px;
   padding: 8px 16px;
@@ -99,30 +100,34 @@
   transition: background-color 0.3s ease;
 }
 
+.tc-details-link:hover {
+  background-color: var(--color-primary-hover, #2563eb);
+}
+
 /* Responsive */
 @media (max-width: 992px) {
-  .tour-card {
+  .tc-card {
     max-width: 300px;
   }
-  .tour-card img {
+  .tc-image-wrapper img {
     height: 180px;
   }
 }
 
 @media (max-width: 768px) {
-  .tour-card {
+  .tc-card {
     max-width: 100%;
   }
-  .tour-card img {
+  .tc-image-wrapper img {
     height: 220px;
   }
-  .tour-card h3 {
+  .tc-title {
     font-size: 20px;
   }
-  .tour-card p {
+  .tc-info {
     font-size: 15px;
   }
-  .tour-card .discounted-price {
+  .tc-discounted-price {
     font-size: 22px;
   }
 }

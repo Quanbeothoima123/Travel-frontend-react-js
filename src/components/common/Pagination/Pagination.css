@@ -1,7 +1,7 @@
 /* =========================
    Pagination
    ========================= */
-.custom-pagination {
+.pg-pagination {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,11 +10,11 @@
   flex-wrap: wrap;
 }
 
-.page-btn {
-  background: var(--color-bg, #fff);
-  border: 1px solid var(--color-border, #ddd);
+.pg-btn {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
   padding: 8px 14px;
-  border-radius: var(--radius-full, 50%);
+  border-radius: var(--radius-full);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -24,43 +24,43 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-text, #1a1a1a);
+  color: var(--color-text);
 }
 
-.page-btn:hover {
-  background: var(--color-card-bg, #f3f4f6);
-  border-color: var(--color-text-muted, #bbb);
+.pg-btn:hover {
+  background: var(--color-card-bg);
+  border-color: var(--color-text-muted);
 }
 
-.page-btn.active {
-  background: var(--color-primary, #3b82f6);
+.pg-btn.active {
+  background: var(--color-primary);
   color: #fff;
-  border-color: var(--color-primary, #3b82f6);
+  border-color: var(--color-primary);
   font-weight: bold;
 }
 
-.page-btn:disabled {
+.pg-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.page-ellipsis {
+.pg-ellipsis {
   padding: 0 6px;
-  color: var(--color-text-muted, #888);
+  color: var(--color-text-muted);
   font-size: 16px;
   user-select: none;
 }
 
 /* 📱 Responsive: mobile chỉ hiển thị Prev, current, Next */
 @media (max-width: 576px) {
-  .page-list {
+  .pg-list {
     display: flex;
     gap: 4px;
   }
-  .page-list button:not(.active) {
+  .pg-list button:not(.active) {
     display: none;
   }
-  .page-ellipsis {
+  .pg-ellipsis {
     display: none;
   }
 }

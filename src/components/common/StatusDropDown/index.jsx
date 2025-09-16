@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import Select from "react-select";
+import "./StatusDropDown.css";
 
 const statusOptions = [
+  { value: "", label: "-- Chọn trạng thái (tất cả) --" }, // placeholder/không lọc
   { value: "pending", label: "Chờ thanh toán" },
   { value: "paid", label: "Đã thanh toán" },
   { value: "canceled", label: "Đã hủy" },
@@ -10,30 +11,28 @@ const statusOptions = [
 
 export default function StatusDropDown({
   handleChangeValue,
-  placeholder = "-- Chọn trạng thái --",
-  defaultValue = null,
+  defaultValue = "",
 }) {
   const [selected, setSelected] = useState(defaultValue);
 
-  const handleChange = (selectedOption) => {
-    setSelected(selectedOption);
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setSelected(value);
     if (handleChangeValue) {
-      handleChangeValue(selectedOption ? selectedOption.value : null);
+      handleChangeValue(value || null); // nếu rỗng thì trả về null
     }
   };
 
   return (
-    <div className="status-dropdown">
-      <label className="dropdown-label">Trạng thái</label>
-      <Select
-        className="dropdown-select"
-        classNamePrefix="status"
-        options={statusOptions}
-        value={selected}
-        onChange={handleChange}
-        isClearable
-        placeholder={placeholder}
-      />
+    <div className="sdd-container">
+      <label className="sdd-label">Trạng thái</label>
+      <select className="sdd-select" value={selected} onChange={handleChange}>
+        {statusOptions.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
