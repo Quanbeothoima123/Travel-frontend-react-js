@@ -13,6 +13,7 @@
     "@tinymce/tinymce-react": "^6.3.0",
     "axios": "^1.11.0",
     "bootstrap": "^4.5.2",
+    "dompurify": "^3.2.6",
     "dotenv": "^17.2.1",
     "html2canvas": "^1.4.1",
     "jquery": "^3.7.1",

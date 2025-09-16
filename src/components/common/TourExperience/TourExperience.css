@@ -1,7 +1,7 @@
 /* =========================
    Tour Experience Wrapper
    ========================= */
-.tour-experience {
+.tex-wrapper {
   max-width: 100%;
   margin: 20px auto 0;
   padding: 20px;
@@ -13,7 +13,7 @@
 }
 
 /* Heading */
-.tour-experience h2 {
+.tex-heading {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 15px;
@@ -22,7 +22,7 @@
 }
 
 /* Content text */
-.experience-content {
+.tex-content {
   line-height: 1.6;
   overflow-wrap: break-word;
   word-break: break-word;
@@ -31,7 +31,7 @@
 }
 
 /* Images */
-.experience-content img {
+.tex-content img {
   max-width: 100%;
   height: auto;
   display: block;
@@ -42,9 +42,9 @@
 }
 
 /* Video, iframe, embed */
-.experience-content iframe,
-.experience-content embed,
-.experience-content video {
+.tex-content iframe,
+.tex-content embed,
+.tex-content video {
   max-width: 100%;
   height: auto;
   display: block;
@@ -54,15 +54,15 @@
 }
 
 /* Video wrapper 16:9 */
-.experience-content .video-wrapper {
+.tex-content .video-wrapper {
   position: relative;
   padding-bottom: 56.25%; /* 16:9 */
   height: 0;
   overflow: hidden;
   margin: 15px 0;
 }
-.experience-content .video-wrapper iframe,
-.experience-content .video-wrapper video {
+.tex-content .video-wrapper iframe,
+.tex-content .video-wrapper video {
   position: absolute;
   top: 0;
   left: 0;
@@ -71,7 +71,7 @@
 }
 
 /* Tables scrollable */
-.experience-content table {
+.tex-content table {
   width: 100%;
   border-collapse: collapse;
   display: block;
@@ -81,24 +81,24 @@
 }
 
 /* Table styling */
-.experience-content table th,
-.experience-content table td {
+.tex-content table th,
+.tex-content table td {
   border: 1px solid var(--color-border);
   padding: 8px 12px;
   text-align: left;
 }
 
-.experience-content table th {
+.tex-content table th {
   background: var(--color-bg);
   font-weight: 600;
 }
 
-.experience-content table tr:nth-child(even) {
+.tex-content table tr:nth-child(even) {
   background: var(--color-card-bg);
 }
 
 /* Code block / pre */
-.experience-content pre {
+.tex-content pre {
   background: var(--color-code-bg, #272822);
   color: var(--color-code-text, #f8f8f2);
   padding: 10px;
@@ -107,7 +107,7 @@
   font-size: 0.875rem;
   margin: 10px 0;
 }
-.experience-content code {
+.tex-content code {
   font-family: Consolas, Monaco, "Courier New", monospace;
 }
 
@@ -115,23 +115,23 @@
    Responsive
    ========================= */
 @media (max-width: 768px) {
-  .tour-experience {
+  .tex-wrapper {
     padding: 15px;
     max-width: 95%; /* cho thoáng trên tablet */
   }
 
-  .tour-experience h2 {
+  .tex-heading {
     font-size: 1.125rem;
   }
 }
 
 @media (max-width: 480px) {
-  .tour-experience {
+  .tex-wrapper {
     padding: 10px;
     max-width: 100%;
   }
 
-  .tour-experience h2 {
+  .tex-heading {
     font-size: 1rem;
   }
 }

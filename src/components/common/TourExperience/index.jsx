@@ -1,16 +1,14 @@
 import React from "react";
+import SafeHTML from "../SafeHTML";
 import "./TourExperience.css";
 
 const TourExperience = ({ tour }) => {
   const specialExperience = tour?.specialExperience || "";
 
   return (
-    <div className="tour-experience">
-      <h2>Trải nghiệm thú vị trong tour</h2>
-      <div
-        className="experience-content"
-        dangerouslySetInnerHTML={{ __html: specialExperience }}
-      />
+    <div className="tex-wrapper">
+      <h2 className="tex-heading">Trải nghiệm thú vị trong tour</h2>
+      <SafeHTML html={specialExperience} className="tex-content" />
     </div>
   );
 };
