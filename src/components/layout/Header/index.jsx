@@ -11,40 +11,37 @@ import {
 import Sidebar from "../Sidebar";
 import { useAuth } from "../../../contexts/AuthContext";
 import "./Header.css";
+
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
-// MenuItem đệ quy
+
 const MenuItem = ({ item, depth = 0, basePath, pathname }) => {
   const hasChildren = Array.isArray(item.children) && item.children.length > 0;
-  // Tạo link chính xác
-  let linkTo = "/";
-  if (basePath && item.slug) {
-    linkTo = `/${basePath}/${item.slug}`;
-  } else if (basePath && !item.slug) {
-    linkTo = `/${basePath}`;
-  }
 
-  // Check active
+  let linkTo = "/";
+  if (basePath && item.slug) linkTo = `/${basePath}/${item.slug}`;
+  else if (basePath && !item.slug) linkTo = `/${basePath}`;
+
   const isActive =
     depth === 0 &&
     (pathname === linkTo || pathname.startsWith(`/${basePath}/`));
 
   return (
     <li
-      className={`menu-item ${hasChildren ? "has-children" : ""} ${
-        isActive ? "active" : ""
-      }`}
+      className={`hd-header__menu-item ${
+        hasChildren ? "hd-header__menu-item--has-children" : ""
+      } ${isActive ? "hd-header__menu-item--active" : ""}`}
     >
-      <Link to={linkTo} className="menu-link">
+      <Link to={linkTo} className="hd-header__menu-link">
         {item.title}
         {hasChildren &&
           (depth === 0 ? (
-            <FaCaretDown className="icon-caret" />
+            <FaCaretDown className="hd-header__icon-caret" />
           ) : (
-            <FaAngleRight className="icon-caret" />
+            <FaAngleRight className="hd-header__icon-caret" />
           ))}
       </Link>
       {hasChildren && (
-        <ul className="submenu">
+        <ul className="hd-header__submenu">
           {item.children.map((child) => (
             <MenuItem
               key={child._id}
@@ -74,27 +71,15 @@ const Header = () => {
     const fetchMenus = async () => {
       try {
         const endpoints = {
-          home: {
-            url: `${API_BASE}/api/v1/homePage`,
-            basePath: "",
-          },
+          home: { url: `${API_BASE}/api/v1/homePage`, basePath: "" },
           tour: {
             url: `${API_BASE}/api/v1/admin/tour-categories?tree=true`,
             basePath: "search/tours",
           },
-          service: {
-            url: `${API_BASE}/api/v1/service`,
-            basePath: "service",
-          },
+          service: { url: `${API_BASE}/api/v1/service`, basePath: "service" },
           news: { url: `${API_BASE}/api/v1/news`, basePath: "news" },
-          library: {
-            url: `${API_BASE}/api/v1/library`,
-            basePath: "library",
-          },
-          contact: {
-            url: `${API_BASE}/api/v1/contact`,
-            basePath: "contact",
-          },
+          library: { url: `${API_BASE}/api/v1/library`, basePath: "library" },
+          contact: { url: `${API_BASE}/api/v1/contact`, basePath: "contact" },
           about: { url: `${API_BASE}/api/v1/info`, basePath: "info" },
         };
 
@@ -116,10 +101,8 @@ const Header = () => {
     fetchMenus();
   }, []);
 
-  // Toggle mobile sidebar
   const toggleSidebar = () => setIsSidebarOpen((s) => !s);
 
-  // đóng user dropdown khi click ngoài
   useEffect(() => {
     const onDocClick = (e) => {
       if (!userMenuRef.current) return;
@@ -136,22 +119,22 @@ const Header = () => {
   };
 
   return (
-    <header className="header shadow-sm">
-      <div className="container header-inner">
+    <header className="hd-header">
+      <div className="hd-header__inner container">
         {/* Logo */}
-        <div className="logo">
+        <div className="hd-header__logo">
           <Link to="/">
             <img
               src="/assets/images/logo.jpg"
               alt="Logo"
-              className="logo-img"
+              className="hd-header__logo-img"
             />
           </Link>
         </div>
 
         {/* Hamburger (mobile) */}
         <button
-          className="menu-toggle mobile-only"
+          className="hd-header__menu-toggle hd-header__mobile-only"
           onClick={toggleSidebar}
           aria-label="Toggle sidebar"
         >
@@ -159,8 +142,8 @@ const Header = () => {
         </button>
 
         {/* Menu desktop */}
-        <nav className="main-nav desktop-only">
-          <ul className="menu">
+        <nav className="hd-header__nav hd-header__desktop-only">
+          <ul className="hd-header__menu">
             {menuData.map((item) => (
               <MenuItem
                 key={item._id}
@@ -172,8 +155,8 @@ const Header = () => {
           </ul>
         </nav>
 
-        {/* Auth section */}
-        <div className="auth-section">
+        {/* Auth */}
+        <div className="hd-header__auth">
           {loading ? null : !user ? (
             <>
               <Link to="/login" className="btn btn-outline-sm">
@@ -186,27 +169,35 @@ const Header = () => {
           ) : (
             <div
               ref={userMenuRef}
-              className={`user-dropdown ${isUserMenuOpen ? "open" : ""}`}
+              className={`hd-header__user-dropdown ${
+                isUserMenuOpen ? "hd-header__user-dropdown--open" : ""
+              }`}
             >
               <button
-                className="user-toggle"
+                className="hd-header__user-toggle"
                 type="button"
                 onClick={handleToggleUserMenu}
               >
-                <FaUser className="avatar" />
-                <span className="user-name">{user.fullName || user.name}</span>
-                <FaCaretDown className="caret" />
+                <FaUser className="hd-header__avatar" />
+                <span className="hd-header__user-name">
+                  {user.fullName || user.name}
+                </span>
+                <FaCaretDown className="hd-header__caret" />
               </button>
-              <div className="user-menu">
+              <div className="hd-header__user-menu">
                 <Link
                   to="/user/profile"
-                  className="menu-item"
+                  className="hd-header__user-menu-item"
                   onClick={() => setIsUserMenuOpen(false)}
                 >
                   <FaUserEdit />
                   <span>Thông tin cá nhân</span>
                 </Link>
-                <Link to="/" className="menu-item" onClick={handleLogout}>
+                <Link
+                  to="/"
+                  className="hd-header__user-menu-item hd-header__user-menu-item--danger"
+                  onClick={handleLogout}
+                >
                   <FaSignOutAlt />
                   <span>Đăng xuất</span>
                 </Link>

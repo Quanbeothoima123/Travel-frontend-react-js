@@ -1,192 +1,194 @@
-/* Reset */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-.user-layout {
+/* UserLayout - prefix ul */
+/* Layout base */
+.ul-layout {
   display: flex;
   min-height: 100vh;
-  background-color: #f9f9f9;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
-/* Desktop + tablet sidebar */
-.user-sidebar.desktop-tablet {
-  width: 250px;
-  background-color: #fff;
-  border-right: 1px solid #ddd;
+/* Sidebar common */
+.ul-sidebar {
+  background: var(--color-bg-card); /* panel background from theme */
+  border-right: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  padding: 20px 10px;
+  padding: 20px 12px;
+  z-index: 1002;
+  color: var(--color-text);
+  border-radius: 0; /* full height panel */
+}
+
+/* Desktop sidebar */
+.ul-sidebar--desktop {
+  width: 250px;
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
-  z-index: 1002;
 }
 
-.user-sidebar-avatar {
+/* Mobile sidebar */
+.ul-sidebar--mobile {
+  width: 280px;
+  max-width: 92vw;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+  animation: ul-slide-in 0.28s ease forwards;
+  z-index: 1004;
+  background: var(--color-bg-card); /* ensure not transparent */
+}
+
+/* Close button inside mobile sidebar */
+.ul-sidebar__close-mobile {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-text);
+  padding: 6px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease,
+    transform 0.12s ease;
+}
+.ul-sidebar__close-mobile:hover {
+  color: var(--color-primary);
+  background-color: rgba(13, 110, 253, 0.04);
+  border-color: var(--color-border);
+  transform: rotate(90deg);
+}
+
+/* Avatar */
+.ul-sidebar__avatar {
   display: flex;
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
-
-.user-sidebar-avatar img {
+.ul-sidebar__avatar img {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #ddd;
+  border: 2px solid var(--color-border);
 }
 
-.user-sidebar nav {
+/* Nav */
+.ul-sidebar__nav {
   display: flex;
   flex-direction: column;
 }
 
-.user-sidebar nav a {
-  padding: 12px 15px;
+/* Link */
+.ul-sidebar__link {
+  padding: 12px 14px;
   margin-bottom: 8px;
   text-decoration: none;
-  color: #333;
-  border-radius: 8px;
-  transition: background 0.2s;
-  display: block; /* Đảm bảo mỗi link là block element */
+  color: var(--color-text); /* ensure black-ish text from theme */
+  border-radius: var(--radius-md);
+  transition: background-color 0.18s ease, color 0.18s ease,
+    border-color 0.18s ease;
+  display: block;
+  border: 1px solid transparent;
 }
 
-.user-sidebar nav a.active,
-.user-sidebar nav a:hover {
-  background-color: #f0f0f0;
+/* Hover: visible background (not transparent) */
+.ul-sidebar__link:hover {
+  background-color: var(--color-bg); /* page background (white in light) */
+  color: var(--color-primary);
+  border-color: var(--color-border);
 }
 
-/* Main content (desktop) */
-.main-content {
+/* Active */
+.ul-sidebar__link--active {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+/* Main content area */
+.ul-main {
   flex: 1;
   margin-left: 250px;
   padding: 20px;
-  transition: margin-left 0.3s ease-in-out;
+  transition: margin-left 0.28s ease;
+  background: transparent;
 }
 
-/* Mobile topbar */
-.mobile-topbar {
+/* Topbar for mobile */
+.ul-topbar {
   display: none;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 60px;
-  background-color: #fff;
-  border-bottom: 1px solid #ddd;
+  background: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border);
   align-items: center;
   padding: 0 15px;
   z-index: 1001;
 }
-
-.menu-btn {
-  font-size: 1.5rem;
-  background: none;
+.ul-topbar__menu-btn {
+  font-size: 1.4rem;
+  background: transparent;
   border: none;
+  color: var(--color-text);
   cursor: pointer;
-  color: #333;
+  padding: 8px;
+  border-radius: var(--radius-md);
 }
-
-.mobile-avatar {
+.ul-topbar__menu-btn:hover {
+  background-color: rgba(13, 110, 253, 0.04);
+  color: var(--color-primary);
+}
+.ul-topbar__avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   margin-left: auto;
   object-fit: cover;
+  border: 1px solid var(--color-border);
 }
 
-/* Mobile sidebar - FIXED */
-.user-sidebar-mobile {
-  width: 250px;
-  background-color: #fff;
-  border-right: 1px solid #ddd;
-  display: flex;
-  flex-direction: column;
-  padding: 20px 10px;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1003;
-  animation: slideIn 0.3s ease forwards;
-  overflow-y: auto; /* Thêm scroll nếu cần */
-}
-
-/* Đảm bảo navigation trong mobile sidebar cũng hiển thị theo cột */
-.user-sidebar-mobile nav {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.user-sidebar-mobile nav a {
-  padding: 12px 15px;
-  margin-bottom: 8px;
-  text-decoration: none;
-  color: #333;
-  border-radius: 8px;
-  transition: background 0.2s;
-  display: block;
-  width: 100%;
-  text-align: left;
-}
-
-.user-sidebar-mobile nav a.active,
-.user-sidebar-mobile nav a:hover {
-  background-color: #f0f0f0;
-}
-
-/* Avatar trong mobile sidebar */
-.user-sidebar-mobile .user-sidebar-avatar {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 30px;
-}
-
-.user-sidebar-mobile .user-sidebar-avatar img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #ddd;
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-/* Overlay (mobile) */
-.overlay {
+/* Overlay when mobile sidebar open */
+.ul-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.35);
   z-index: 1000;
 }
 
-/* Responsive */
-@media screen and (max-width: 768px) {
-  .user-sidebar.desktop-tablet {
-    display: none; /* desktop sidebar ẩn trên mobile */
+/* Animations */
+@keyframes ul-slide-in {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
   }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
 
-  .mobile-topbar {
+/* Responsive behavior */
+@media screen and (max-width: 768px) {
+  .ul-sidebar--desktop {
+    display: none;
+  }
+  .ul-topbar {
     display: flex;
   }
-
-  .main-content {
+  .ul-main {
     margin-left: 0;
-    padding-top: 70px; /* tránh topbar che nội dung */
+    padding-top: 72px; /* avoid topbar */
   }
 }

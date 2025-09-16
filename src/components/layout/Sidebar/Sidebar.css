@@ -1,151 +1,209 @@
-/* ========== SIDEBAR ========== */
-.sidebar {
+/* ====== SIDEBAR (BEM: prefix sb) ====== */
+
+/* container */
+.sb-sidebar {
   position: fixed;
   top: 0;
-  left: -260px;
-  width: 260px;
-  height: 100%;
-  background: var(--color-card-bg); /* nền sidebar */
-  padding: 20px 15px;
-  box-shadow: var(--shadow-md);
-  transition: left 0.35s ease;
+  left: -320px; /* hidden by default */
+  width: 320px;
+  max-width: 86vw;
+  height: 100vh;
+  background-color: var(--color-bg-card); /* card bg from theme */
+  border-right: 1px solid var(--color-border);
+  padding: 1rem; /* comfortable padding */
+  box-shadow: var(--shadow-lg);
+  transition: left 0.32s ease;
   z-index: 1000;
   overflow-y: auto;
 }
 
-.sidebar.open {
+/* open state */
+.sb-sidebar--open {
   left: 0;
 }
 
-/* Nút đóng */
-.close-btn {
+/* close button */
+.sb-sidebar__close {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  border: none;
-  background: none;
-  font-size: 1.6rem;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: 1px solid transparent;
   color: var(--color-text);
-  cursor: pointer;
-  transition: transform 0.2s ease, color 0.3s ease;
-}
-.close-btn:hover {
-  color: var(--color-primary);
-  transform: rotate(90deg);
-}
-
-/* Menu list */
-.sidebar-menu {
-  list-style: none;
-  padding: 0;
-  margin-top: 50px;
-}
-
-/* Item */
-.sidebar-item {
-  margin-bottom: 6px;
-}
-
-/* Link chính */
-.sidebar-link {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 14px;
+  font-size: 1.4rem;
+  line-height: 1;
+  padding: 6px 8px;
   border-radius: var(--radius-md);
   cursor: pointer;
-  color: var(--color-text);
-  font-weight: 500;
-  font-size: 15px;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: color 0.16s ease, transform 0.16s ease,
+    background-color 0.16s ease;
 }
-
-.sidebar-link:hover {
-  background: var(--color-secondary);
+.sb-sidebar__close:hover {
   color: var(--color-primary);
+  transform: rotate(90deg);
+  background-color: rgba(13, 110, 253, 0.04);
+  border-color: var(--color-border);
 }
 
-.sidebar-link.active {
-  background: var(--color-primary);
-  color: #fff;
+/* nav wrapper */
+.sb-sidebar__nav {
+  margin-top: 2.4rem; /* leave space under close */
 }
 
-/* Khi mở rộng menu cha */
-.sidebar-item.open > .sidebar-link {
-  background: var(--color-border);
+/* top-level menu list */
+.sb-sidebar__menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* item */
+.sb-sidebar__item {
+  margin-bottom: 0.5rem;
+}
+
+/* row: contains link and optional toggle button */
+.sb-sidebar__row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* link (title) */
+.sb-sidebar__link {
+  display: block;
+  flex: 1 1 auto;
+  text-decoration: none;
+  color: var(--color-text);
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  transition: background-color 0.18s ease, color 0.18s ease,
+    border-color 0.18s ease;
+  font-weight: 500;
+}
+
+/* ensure anchor inner spans inherit color */
+.sb-sidebar__link .sb-sidebar__link-title,
+.sb-sidebar__link > span,
+.sb-sidebar__link,
+.sb-sidebar__link:link,
+.sb-sidebar__link:visited {
+  color: inherit;
+}
+
+/* hover: visible white/card bg and subtle border */
+.sb-sidebar__link:hover {
+  background-color: var(--color-bg-card); /* explicit, not transparent */
+  color: var(--color-primary);
+  border-color: var(--color-border);
+}
+
+/* active top-level */
+.sb-sidebar__item--active > .sb-sidebar__row > .sb-sidebar__link {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+}
+
+/* open parent */
+.sb-sidebar__item--open > .sb-sidebar__row > .sb-sidebar__link {
+  background-color: var(--color-bg-card);
+  border-color: var(--color-border);
   color: var(--color-primary);
   font-weight: 600;
 }
 
-/* Icon toggle */
-.toggle-icon {
-  font-size: 0.9rem;
-  margin-left: 8px;
-  transition: transform 0.3s ease, color 0.3s ease;
-  color: var(--color-text-muted);
-}
-.sidebar-link:hover .toggle-icon {
-  color: var(--color-primary);
-}
-.sidebar-item.open .toggle-icon {
-  transform: rotate(90deg);
-  color: var(--color-primary);
-}
-
-/* Submenu */
-.sidebar-submenu {
-  list-style: none;
-  padding-left: 18px;
-  margin-top: 4px;
-  display: none;
-}
-.sidebar-item.open .sidebar-submenu {
-  display: block;
-  animation: fadeSlide 0.3s ease;
-}
-
-/* Submenu item */
-.sidebar-submenu .sidebar-link {
-  padding: 10px 12px;
-  font-size: 14px;
-  border-radius: var(--radius-sm);
-  color: var(--color-text);
+/* toggle button (chevron) */
+.sb-sidebar__toggle {
   background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: transform 0.18s ease, color 0.18s ease,
+    background-color 0.12s ease;
 }
-.sidebar-submenu .sidebar-link:hover {
-  background: var(--color-border);
+.sb-sidebar__toggle:hover {
+  color: var(--color-primary);
+  background-color: rgba(13, 110, 253, 0.04);
+}
+
+/* rotate when open */
+.sb-sidebar__item--open > .sb-sidebar__row > .sb-sidebar__toggle {
+  transform: rotate(3deg);
   color: var(--color-primary);
 }
-/* Active item */
-.sidebar-item.active > .sidebar-link {
-  background: var(--color-primary);
-  color: #fff;
-  border-radius: 8px;
-}
-.sidebar-item.active > .sidebar-link a {
-  color: #fff;
+
+/* submenu */
+.sb-sidebar__submenu {
+  list-style: none;
+  margin: 0.35rem 0 0 0;
+  padding: 0.25rem 0 0.25rem 0;
+  display: none;
+  transition: all 0.18s ease;
 }
 
-/* Active submenu item */
-.sidebar-submenu .sidebar-item.active > .sidebar-link {
-  background: var(--color-primary-light);
-  color: #fff;
+/* show when open */
+.sb-sidebar__item--open > .sb-sidebar__submenu {
+  display: block;
+  animation: sb-fade-slide 0.22s ease;
 }
 
-/* Scrollbar */
-.sidebar::-webkit-scrollbar {
-  width: 6px;
+/* submenu items use same link style but slightly smaller and indented */
+.sb-sidebar__submenu .sb-sidebar__item {
+  margin: 0 0 0.25rem 0;
 }
-.sidebar::-webkit-scrollbar-thumb {
+.sb-sidebar__submenu .sb-sidebar__link {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  margin-left: 0.2rem;
+}
+
+/* hover submenu item: solid card bg, primary text */
+.sb-sidebar__submenu .sb-sidebar__link:hover {
+  background-color: var(--color-bg-card);
+  color: var(--color-primary);
+  border-color: var(--color-border);
+}
+
+/* active submenu item */
+.sb-sidebar__submenu
+  .sb-sidebar__item--active
+  > .sb-sidebar__row
+  > .sb-sidebar__link {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+/* custom scrollbar (subtle) */
+.sb-sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+.sb-sidebar::-webkit-scrollbar-thumb {
   background: var(--color-border);
-  border-radius: 4px;
+  border-radius: 6px;
 }
-.sidebar::-webkit-scrollbar-thumb:hover {
-  background: var(--color-secondary);
+.sb-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
 }
 
-/* Animation */
-@keyframes fadeSlide {
+/* hide on large viewport if you want (keep same behavior as before) */
+@media (min-width: 1024px) {
+  .sb-sidebar {
+    display: none;
+  }
+}
+
+/* small animation */
+@keyframes sb-fade-slide {
   from {
     opacity: 0;
     transform: translateY(-6px);
@@ -153,12 +211,5 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-/* Ẩn sidebar trên desktop */
-@media (min-width: 1024px) {
-  .sidebar {
-    display: none;
   }
 }

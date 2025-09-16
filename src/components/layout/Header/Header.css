@@ -1,237 +1,232 @@
-/* =========================
-   Header wrapper
-   ========================= */
-.header {
+/* Header - dùng biến thực tế từ theme.css */
+.hd-header {
   background-color: var(--color-bg);
   box-shadow: var(--shadow-sm);
   position: relative;
   z-index: 1001;
 }
 
-.header-inner {
+/* inner container (container là lớp chung của theme.css) */
+.hd-header__inner {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 2rem;
+  gap: 1rem; /* rộng hơn để các phần không sát nhau */
   padding: 0.75rem 0;
 }
 
-/* =========================
-   Logo
-   ========================= */
-.logo-img {
-  height: 40px;
+/* Logo */
+.hd-header__logo-img {
+  height: 48px;
   width: auto;
   display: block;
+  border-radius: var(--radius-md);
 }
 
-/* =========================
-   Main menu
-   ========================= */
-.main-nav .menu {
+/* Main menu */
+.hd-header__menu {
   display: flex;
-  gap: 0.5rem;
-  cursor: pointer;
+  gap: 1rem; /* tăng gap giữa item */
+  align-items: center;
 }
 
-.menu-item {
+.hd-header__menu-item {
   position: relative;
 }
 
-.menu-link {
+/* menu link */
+.hd-header__menu-link {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 5px 20px;
-  color: var(--color-text);
-  border-radius: var(--radius-sm);
+  gap: 0.5rem;
+  padding: 0.5rem 1rem; /* đủ padding để không sát nhau */
+  color: var(--color-text); /* màu chữ chính, không xám */
+  background: transparent;
+  border-radius: var(--radius-md); /* bo mềm */
   font-weight: 500;
-  transition: all 0.25s ease;
+  border: 2px solid transparent;
+  transition: background-color 0.18s ease, color 0.18s ease,
+    border-color 0.18s ease;
 }
 
-.menu-link:hover,
-.menu-item:hover > .menu-link {
-  background: var(--color-secondary);
+/* hover rõ nền (không trong suốt) và border mềm */
+.hd-header__menu-link:hover,
+.hd-header__menu-item:hover > .hd-header__menu-link {
+  background-color: var(--color-bg-card); /* trắng ở light, phù hợp dark */
   color: var(--color-primary);
+  border-color: var(--color-border);
 }
 
-.menu-item.active > .menu-link {
+/* trạng thái active */
+.hd-header__menu-item--active > .hd-header__menu-link {
   background-color: var(--color-primary);
   color: #fff;
-  border-radius: 6px;
+  border-color: var(--color-primary);
 }
 
-/* =========================
-   Submenu (fix giật)
-   ========================= */
-.submenu {
+/* Submenu */
+.hd-header__submenu {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 0rem);
   left: 0;
-  background: var(--color-card-bg);
-  box-shadow: var(--shadow-md);
+  background-color: var(--color-bg-card);
+  border: 2px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 6px 0;
-  min-width: 220px;
-  z-index: 1000;
+  box-shadow: var(--shadow-md);
+  padding: 0.25rem 0;
+  min-width: 240px;
+  z-index: 1200;
 
-  /* fix giật: luôn hiển thị, ẩn bằng opacity */
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(8px);
   pointer-events: none;
-  transition: all 0.25s ease;
+  transition: opacity 0.18s ease, transform 0.18s ease;
 }
 
-.menu-item:hover > .submenu {
+.hd-header__menu-item:hover > .hd-header__submenu {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
 }
 
-.submenu .menu-link {
-  padding: 8px 14px;
-  font-size: 0.9rem;
+/* item trong submenu */
+.hd-header__submenu .hd-header__menu-link {
+  padding: 0.5rem 0.85rem;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  background: transparent;
+  border-radius: 6px;
+  display: block;
 }
 
-/* submenu cấp 2 */
-.submenu .menu-item:hover > .submenu {
+/* hover item trong submenu: nền rõ, chữ primary */
+.hd-header__submenu .hd-header__menu-link:hover {
+  background-color: var(--color-bg-card);
+  color: var(--color-primary);
+  border-color: var(--color-border);
+}
+
+/* submenu cấp 2 (đẩy sang phải) */
+.hd-header__submenu .hd-header__menu-item:hover > .hd-header__submenu {
   left: 100%;
   top: 0;
 }
 
-/* caret */
-.icon-caret {
+/* caret/icon */
+.hd-header__icon-caret {
   margin-left: auto;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--color-text-muted);
 }
 
-/* =========================
-   Auth section
-   ========================= */
-.auth-section {
+/* Auth / right area */
+.hd-header__auth {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.75rem;
 }
 
-.btn {
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
-  font-size: 0.85rem;
-  font-weight: 500;
-  text-decoration: none;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-/* Nút đăng nhập: bỏ background */
-.btn-primary-sm {
-  background: transparent;
-  color: var(--color-primary);
-}
-.btn-primary-sm:hover {
-  color: var(--color-primary-hover);
-  background: transparent;
-}
-
-/* Nút đăng ký */
-.btn-outline-sm {
-  border: 1px solid var(--color-primary);
-  color: var(--color-primary);
-  background: transparent;
-}
-.btn-outline-sm:hover {
-  background: var(--color-primary);
-  color: #fff;
-}
-
-/* =========================
-   User dropdown
-   ========================= */
-.user-dropdown {
+/* User dropdown */
+.hd-header__user-dropdown {
   position: relative;
 }
-.user-toggle {
+
+.hd-header__user-toggle {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: var(--color-card-bg);
-  border-radius: var(--radius-full);
-  padding: 6px 12px;
+  gap: 0.6rem;
+  padding: 0.45rem 0.85rem;
+  background-color: var(--color-bg-card);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  box-shadow: var(--shadow-xs);
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.15s ease, transform 0.12s ease;
+  color: var(--color-text);
 }
-.user-toggle:hover {
-  background: var(--color-border);
+
+/* hover user toggle: nền rõ */
+.hd-header__user-toggle:hover {
+  transform: translateY(-1px);
 }
-.user-toggle .avatar {
-  color: var(--color-primary);
+
+/* avatar & caret */
+.hd-header__caret {
+  transition: transform 0.18s ease;
 }
-.user-toggle .caret {
-  transition: transform 0.2s;
-}
-.user-dropdown.open .caret {
+.hd-header__user-dropdown--open .hd-header__caret {
   transform: rotate(180deg);
 }
 
-/* user menu (giảm khoảng cách top) */
-.user-menu {
+/* user menu popup */
+.hd-header__user-menu {
   position: absolute;
-  top: calc(100% + 4px); /* trước là 8px → chỉnh lại gần hơn */
+  top: calc(100% + 0.35rem);
   right: 0;
-  background: var(--color-card-bg);
+  background-color: var(--color-bg-card);
+  border: 2px solid var(--color-border);
   border-radius: var(--radius-md);
-  min-width: 200px;
-  padding: 6px 0;
   box-shadow: var(--shadow-lg);
+  min-width: 220px;
+  padding: 0.25rem 0;
+  z-index: 1300;
 
   opacity: 0;
-  transform: translateY(6px);
+  transform: translateY(8px);
   pointer-events: none;
-  transition: all 0.2s ease;
+  transition: opacity 0.18s ease, transform 0.18s ease;
 }
-.user-dropdown.open .user-menu {
+
+.hd-header__user-dropdown--open .hd-header__user-menu {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
 }
 
-.user-menu .menu-item {
-  padding: 10px 14px;
-  gap: 10px;
-  color: var(--color-text);
+/* items trong user menu */
+.hd-header__user-menu-item {
   display: flex;
   align-items: center;
-}
-.user-menu .menu-item:hover {
-  background: var(--color-border);
-}
-.user-menu .menu-item.danger {
-  color: var(--color-error);
+  gap: 0.6rem;
+  padding: 0.6rem 0.9rem;
+  color: var(--color-text);
+  border-radius: var(--radius-md);
+  transition: background-color 0.12s ease, color 0.12s ease;
 }
 
-/* =========================
-   Responsive
-   ========================= */
-.mobile-only {
+.hd-header__user-menu-item:hover {
+  background-color: var(--color-bg-card);
+  color: var(--color-primary);
+}
+/* danger action trong user menu */
+.hd-header__user-menu-item--danger {
+  color: var(--color-danger);
+}
+
+/* Responsive controls */
+.hd-header__mobile-only {
   display: none;
 }
-.desktop-only {
+.hd-header__desktop-only {
   display: block;
 }
+
 @media (max-width: 991px) {
-  .desktop-only {
+  .hd-header__desktop-only {
     display: none;
   }
-  .mobile-only {
-    display: block;
-    font-size: 1.4rem;
+  .hd-header__mobile-only {
+    display: inline-flex;
+    font-size: 1.3rem;
     background: none;
     border: none;
     cursor: pointer;
     color: var(--color-text);
+    padding: 0.4rem;
+  }
+
+  /* giảm gap để phù hợp mobile */
+  .hd-header__inner {
+    gap: 0.5rem;
   }
 }

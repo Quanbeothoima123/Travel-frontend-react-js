@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import "./UserLayout.css";
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
+
 const UserLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userAvatar, setUserAvatar] = useState("/default-avatar.png");
@@ -40,18 +41,22 @@ const UserLayout = () => {
   ];
 
   return (
-    <div className="user-layout">
-      {/* Desktop + tablet sidebar */}
-      <aside className="user-sidebar desktop-tablet">
-        <div className="user-sidebar-avatar">
+    <div className="ul-layout">
+      {/* Desktop sidebar */}
+      <aside className="ul-sidebar ul-sidebar--desktop" aria-hidden="false">
+        <div className="ul-sidebar__avatar">
           <img src={userAvatar} alt="avatar" />
         </div>
-        <nav>
+        <nav className="ul-sidebar__nav">
           {menuItems.map((item, idx) => (
             <NavLink
               key={idx}
               to={item.path}
-              className={({ isActive }) => (isActive ? "active" : "")}
+              className={({ isActive }) =>
+                isActive
+                  ? "ul-sidebar__link ul-sidebar__link--active"
+                  : "ul-sidebar__link"
+              }
             >
               {item.label}
             </NavLink>
@@ -60,37 +65,59 @@ const UserLayout = () => {
       </aside>
 
       {/* Mobile topbar */}
-      <div className="mobile-topbar">
-        <button className="menu-btn" onClick={toggleSidebar}>
+      <div className="ul-topbar">
+        <button
+          className="ul-topbar__menu-btn"
+          onClick={toggleSidebar}
+          aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+        >
           {sidebarOpen ? <FaTimes /> : <FaBars />}
         </button>
-        <img src={userAvatar} alt="avatar" className="mobile-avatar" />
+        <img src={userAvatar} alt="avatar" className="ul-topbar__avatar" />
       </div>
 
-      {/* Mobile sidebar */}
+      {/* Mobile sidebar (mounted when open for simpler DOM) */}
       {sidebarOpen && (
-        <aside className="user-sidebar-mobile">
-          <div className="user-sidebar-avatar">
-            <img src={userAvatar} alt="avatar" />
-          </div>
-          <nav>
-            {menuItems.map((item, idx) => (
-              <NavLink
-                key={idx}
-                to={item.path}
-                className={({ isActive }) => (isActive ? "active" : "")}
-                onClick={() => setSidebarOpen(false)}
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
-        </aside>
+        <>
+          <aside
+            className="ul-sidebar ul-sidebar--mobile"
+            aria-hidden={!sidebarOpen}
+          >
+            <button
+              className="ul-sidebar__close-mobile"
+              aria-label="Close sidebar"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <FaTimes />
+            </button>
+
+            <div className="ul-sidebar__avatar">
+              <img src={userAvatar} alt="avatar" />
+            </div>
+
+            <nav className="ul-sidebar__nav">
+              {menuItems.map((item, idx) => (
+                <NavLink
+                  key={idx}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "ul-sidebar__link ul-sidebar__link--active"
+                      : "ul-sidebar__link"
+                  }
+                  onClick={() => setSidebarOpen(false)}
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
+          </aside>
+
+          <div className="ul-overlay" onClick={toggleSidebar} />
+        </>
       )}
 
-      {sidebarOpen && <div className="overlay" onClick={toggleSidebar}></div>}
-
-      <main className="main-content">
+      <main className="ul-main">
         <Outlet />
       </main>
     </div>

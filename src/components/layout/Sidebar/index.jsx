@@ -4,48 +4,59 @@ import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 import "./Sidebar.css";
 
 const SidebarItem = ({ item, pathname, parentBasePath = "" }) => {
-  const hasChildren = item.children && item.children.length > 0;
+  const hasChildren = Array.isArray(item.children) && item.children.length > 0;
 
-  // Xác định đường dẫn đầy đủ
   let linkTo = "/";
-  if (parentBasePath && item.slug) {
-    linkTo = `/${parentBasePath}/${item.slug}`;
-  } else if (parentBasePath && !item.slug) {
-    linkTo = `/${parentBasePath}`;
-  } else if (item.slug) {
-    linkTo = `/${item.slug}`;
-  }
+  if (parentBasePath && item.slug) linkTo = `/${parentBasePath}/${item.slug}`;
+  else if (parentBasePath && !item.slug) linkTo = `/${parentBasePath}`;
+  else if (item.slug) linkTo = `/${item.slug}`;
 
-  // Active nếu URL hiện tại khớp hoặc nằm trong subtree
   const isActive =
     pathname === linkTo || (hasChildren && pathname.startsWith(linkTo));
 
   const [isOpen, setIsOpen] = useState(isActive);
 
-  // Khi pathname thay đổi, tự mở node nếu active
   useEffect(() => {
     if (isActive) setIsOpen(true);
-  }, [pathname, isActive]);
+  }, [isActive, pathname]);
 
   return (
     <li
-      className={`sidebar-item ${hasChildren ? "has-children" : ""} ${
-        isActive ? "active" : ""
-      } ${isOpen ? "open" : ""}`}
+      className={[
+        "sb-sidebar__item",
+        hasChildren ? "sb-sidebar__item--has-children" : "",
+        isActive ? "sb-sidebar__item--active" : "",
+        isOpen ? "sb-sidebar__item--open" : "",
+      ].join(" ")}
     >
-      <div
-        className="sidebar-link"
-        onClick={() => hasChildren && setIsOpen(!isOpen)}
-      >
-        <Link to={linkTo}>{item.title}</Link>
+      <div className="sb-sidebar__row">
+        <Link
+          to={linkTo}
+          className="sb-sidebar__link"
+          onClick={() => {
+            /* link navigates normally */
+          }}
+        >
+          <span className="sb-sidebar__link-title">{item.title}</span>
+        </Link>
+
         {hasChildren && (
-          <span className="toggle-icon">
+          <button
+            type="button"
+            className="sb-sidebar__toggle"
+            aria-expanded={isOpen}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen((s) => !s);
+            }}
+          >
             {isOpen ? <FaChevronDown /> : <FaChevronRight />}
-          </span>
+          </button>
         )}
       </div>
+
       {hasChildren && isOpen && (
-        <ul className="sidebar-submenu">
+        <ul className="sb-sidebar__submenu">
           {item.children.map((child) => (
             <SidebarItem
               key={child._id}
@@ -60,27 +71,36 @@ const SidebarItem = ({ item, pathname, parentBasePath = "" }) => {
   );
 };
 
-const Sidebar = ({ menuItems, isOpen, onToggle }) => {
+const Sidebar = ({ menuItems = [], isOpen, onToggle }) => {
   const location = useLocation();
   const pathname = location.pathname;
 
   return (
-    <div className={`sidebar ${isOpen ? "open" : ""}`}>
-      <button className="close-btn" onClick={onToggle}>
+    <aside
+      className={`sb-sidebar ${isOpen ? "sb-sidebar--open" : ""}`}
+      aria-hidden={!isOpen}
+    >
+      <button
+        className="sb-sidebar__close"
+        aria-label="Close sidebar"
+        onClick={onToggle}
+      >
         &times;
       </button>
 
-      <ul className="sidebar-menu">
-        {menuItems.map((item) => (
-          <SidebarItem
-            key={item._id}
-            item={item}
-            pathname={pathname}
-            parentBasePath={item.basePath || ""}
-          />
-        ))}
-      </ul>
-    </div>
+      <nav className="sb-sidebar__nav" aria-label="Primary">
+        <ul className="sb-sidebar__menu">
+          {menuItems.map((item) => (
+            <SidebarItem
+              key={item._id}
+              item={item}
+              pathname={pathname}
+              parentBasePath={item.basePath || ""}
+            />
+          ))}
+        </ul>
+      </nav>
+    </aside>
   );
 };
 
