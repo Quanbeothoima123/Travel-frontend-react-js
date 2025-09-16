@@ -1,7 +1,7 @@
 /* InvoiceSearchFilterUser.css */
 
-.invoice-search-filter {
-  width: 100%; /* full width theo container cha */
+.isu-invoice-search-filter {
+  width: 100%;
   background-color: var(--color-card-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -11,24 +11,24 @@
   box-sizing: border-box;
 }
 
-.filter-header {
+.isu-filter-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--color-border);
-  flex-wrap: wrap; /* để khi hẹp xuống thì không bị vỡ layout */
+  flex-wrap: wrap;
 }
 
-.filter-header h3 {
+.isu-filter-header h3 {
   margin: 0;
   color: var(--color-text);
   font-size: 1.25rem;
   font-weight: 600;
 }
 
-.btn-reset {
+.isu-btn-reset {
   background-color: transparent;
   color: var(--color-text-muted);
   border: 1px solid var(--color-border);
@@ -41,53 +41,50 @@
   flex-shrink: 0;
 }
 
-.btn-reset:hover:not(:disabled) {
+.isu-btn-reset:hover:not(:disabled) {
   color: var(--color-primary);
   border-color: var(--color-primary);
   background-color: var(--color-bg);
 }
 
-.btn-reset:disabled {
+.isu-btn-reset:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.filter-content {
+.isu-filter-content {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   width: 100%;
 }
 
-.filter-row {
+.isu-filter-row {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(250px, 1fr)
-  ); /* auto responsive */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
   width: 100%;
 }
 
-.filter-row .full-width {
+.isu-full-width {
   grid-column: 1 / -1;
 }
 
-.filter-group {
+.isu-filter-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
 }
 
-.filter-label {
+.isu-filter-label {
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--color-text);
   margin-bottom: 0.25rem;
 }
 
-.filter-input {
+.isu-filter-input {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid var(--color-border);
@@ -100,94 +97,21 @@
   box-sizing: border-box;
 }
 
-.filter-input:focus {
+.isu-filter-input:focus {
   outline: none;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
 }
 
-.filter-input::placeholder {
+.isu-filter-input::placeholder {
   color: var(--color-text-muted);
 }
 
-.price-input {
+.isu-price-input {
   text-align: right;
 }
 
-/* React Select Styling */
-.filter-select .tour-type__control,
-.filter-select .payment-type__control {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  min-height: 46px;
-  background-color: var(--color-bg);
-  box-shadow: none;
-  transition: all 0.2s ease;
-}
-
-.filter-select .tour-type__control:hover,
-.filter-select .payment-type__control:hover {
-  border-color: var(--color-primary);
-}
-
-.filter-select .tour-type__control--is-focused,
-.filter-select .payment-type__control--is-focused {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
-}
-
-.filter-select .tour-type__single-value,
-.filter-select .payment-type__single-value {
-  color: var(--color-text);
-}
-
-.filter-select .tour-type__placeholder,
-.filter-select .payment-type__placeholder {
-  color: var(--color-text-muted);
-}
-
-.filter-select .tour-type__menu,
-.filter-select .payment-type__menu {
-  background-color: var(--color-card-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  z-index: 1000;
-}
-
-.filter-select .tour-type__option,
-.filter-select .payment-type__option {
-  padding: 0.75rem;
-  color: var(--color-text);
-  background-color: transparent;
-  cursor: pointer;
-}
-
-.filter-select .tour-type__option:hover,
-.filter-select .payment-type__option:hover {
-  background-color: var(--color-secondary);
-}
-
-.filter-select .tour-type__option--is-selected,
-.filter-select .payment-type__option--is-selected {
-  background-color: var(--color-primary);
-  color: white;
-}
-
-.filter-select .tour-type__option--is-focused,
-.filter-select .payment-type__option--is-focused {
-  background-color: var(--color-secondary);
-}
-
-/* Custom third-party component wrappers */
-.filter-group .tdp-field,
-.filter-group .depart-place-dropdown,
-.filter-group .status-dropdown {
-  width: 100%;
-}
-
-/* Action Buttons */
-.filter-actions {
+.isu-filter-actions {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
@@ -197,7 +121,7 @@
   flex-wrap: wrap;
 }
 
-.btn-search {
+.isu-btn-search {
   padding: 0.75rem 2rem;
   border: none;
   border-radius: var(--radius-md);
@@ -210,68 +134,49 @@
   letter-spacing: 0.5px;
 }
 
-.btn-search.primary {
+.isu-btn-search.isu-primary {
   background-color: var(--color-primary);
   color: white;
 }
 
-.btn-search.primary:hover:not(:disabled) {
-  background-color: var(--color-primary-hover);
+.isu-btn-search.isu-primary:hover:not(:disabled) {
+  background-color: var(--color-primary);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
 
-.btn-search:disabled {
+.isu-btn-search:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-  .invoice-search-filter {
+  .isu-invoice-search-filter {
     padding: 1rem;
   }
 
-  .filter-actions {
+  .isu-filter-actions {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .btn-search {
+  .isu-btn-search {
     width: 100%;
   }
 }
 
 @media (max-width: 480px) {
-  .invoice-search-filter {
+  .isu-invoice-search-filter {
     padding: 0.75rem;
   }
 
-  .filter-input {
+  .isu-filter-input {
     padding: 0.625rem;
     font-size: 0.8rem;
   }
 
-  .filter-label {
+  .isu-filter-label {
     font-size: 0.8rem;
   }
-}
-
-/* Dark Mode Adjustments */
-[data-theme="dark"] .filter-select .tour-type__control,
-[data-theme="dark"] .filter-select .payment-type__control {
-  background-color: var(--color-bg);
-  border-color: var(--color-border);
-}
-
-[data-theme="dark"] .filter-select .tour-type__menu,
-[data-theme="dark"] .filter-select .payment-type__menu {
-  background-color: var(--color-card-bg);
-  border-color: var(--color-border);
-}
-
-[data-theme="dark"] .filter-select .tour-type__option:hover,
-[data-theme="dark"] .filter-select .payment-type__option:hover {
-  background-color: rgba(72, 202, 228, 0.1);
 }

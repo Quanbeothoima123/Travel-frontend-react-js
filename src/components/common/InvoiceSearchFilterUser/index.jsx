@@ -1,21 +1,29 @@
 import React from "react";
-import Select from "react-select";
 import CategoryTreeSelect from "../DropDownTreeSearch/CategoryTreeSelect";
 import DepartPlaceDropDownSearch from "../DepartPlaceDropDownSearch";
-import StatusDropDown from "../StatusDropDown";
 import "./InvoiceSearchFilterUser.css";
 
 // Tour type options
 const tourTypeOptions = [
+  { value: "", label: "Tất cả loại tour (không lọc)" },
   { value: "aboard", label: "Nước ngoài" },
   { value: "domestic", label: "Trong nước" },
 ];
 
 // Payment type options
 const paymentTypeOptions = [
+  { value: "", label: "Tất cả phương thức (không lọc)" },
   { value: "cash", label: "Tiền mặt" },
   { value: "momo", label: "MoMo" },
   { value: "bank_transfer", label: "Chuyển khoản" },
+];
+
+// Status options
+const statusOptions = [
+  { value: "", label: "Tất cả trạng thái (không lọc)" },
+  { value: "pending", label: "Chờ xử lý" },
+  { value: "paid", label: "Đã thanh toán" },
+  { value: "canceled", label: "Đã hủy" },
 ];
 
 const InvoiceSearchFilterUser = ({
@@ -40,7 +48,6 @@ const InvoiceSearchFilterUser = ({
   };
 
   const handlePriceChange = (field, value) => {
-    // Convert to number if not empty
     const numValue = value === "" ? "" : Number(value);
     onFiltersChange({
       ...filters,
@@ -62,27 +69,6 @@ const InvoiceSearchFilterUser = ({
     });
   };
 
-  const handleStatusChange = (status) => {
-    onFiltersChange({
-      ...filters,
-      status,
-    });
-  };
-
-  const handleTourTypeChange = (selectedOption) => {
-    onFiltersChange({
-      ...filters,
-      tourType: selectedOption ? selectedOption.value : null,
-    });
-  };
-
-  const handlePaymentTypeChange = (selectedOption) => {
-    onFiltersChange({
-      ...filters,
-      typeOfPayment: selectedOption ? selectedOption.value : null,
-    });
-  };
-
   const handleReset = () => {
     onReset();
   };
@@ -96,12 +82,12 @@ const InvoiceSearchFilterUser = ({
   };
 
   return (
-    <div className="invoice-search-filter">
-      <div className="filter-header">
+    <div className="isu-invoice-search-filter">
+      <div className="isu-filter-header">
         <h3>Bộ lọc tìm kiếm</h3>
         <button
           type="button"
-          className="btn-reset"
+          className="isu-btn-reset"
           onClick={handleReset}
           disabled={isLoading}
         >
@@ -109,14 +95,14 @@ const InvoiceSearchFilterUser = ({
         </button>
       </div>
 
-      <div className="filter-content">
+      <div className="isu-filter-content">
         {/* Search Input */}
-        <div className="filter-row">
-          <div className="filter-group full-width">
-            <label className="filter-label">Tìm kiếm</label>
+        <div className="isu-filter-row">
+          <div className="isu-filter-group isu-full-width">
+            <label className="isu-filter-label">Tìm kiếm</label>
             <input
               type="text"
-              className="filter-input"
+              className="isu-filter-input"
               placeholder="Tìm theo mã hóa đơn, tên, email..."
               value={filters.search || ""}
               onChange={(e) => handleInputChange("search", e.target.value)}
@@ -125,12 +111,12 @@ const InvoiceSearchFilterUser = ({
         </div>
 
         {/* Search Tour Input */}
-        <div className="filter-row">
-          <div className="filter-group full-width">
-            <label className="filter-label">Tìm kiếm tour</label>
+        <div className="isu-filter-row">
+          <div className="isu-filter-group isu-full-width">
+            <label className="isu-filter-label">Tìm kiếm tour</label>
             <input
               type="text"
-              className="filter-input"
+              className="isu-filter-input"
               placeholder="Tìm theo tên tour..."
               value={filters.searchTour || ""}
               onChange={(e) => handleInputChange("searchTour", e.target.value)}
@@ -139,9 +125,9 @@ const InvoiceSearchFilterUser = ({
         </div>
 
         {/* Category and Depart Place */}
-        <div className="filter-row">
-          <div className="filter-group">
-            <label className="filter-label">Danh mục tour</label>
+        <div className="isu-filter-row">
+          <div className="isu-filter-group">
+            <label className="isu-filter-label">Danh mục tour</label>
             <CategoryTreeSelect
               value={filters.categoryId ? { _id: filters.categoryId } : null}
               onChange={handleCategoryChange}
@@ -149,7 +135,7 @@ const InvoiceSearchFilterUser = ({
             />
           </div>
 
-          <div className="filter-group">
+          <div className="isu-filter-group">
             <DepartPlaceDropDownSearch
               handleChangeValue={handleDepartPlaceChange}
               defaultValue={
@@ -160,59 +146,65 @@ const InvoiceSearchFilterUser = ({
         </div>
 
         {/* Tour Type and Status */}
-        <div className="filter-row">
-          <div className="filter-group">
-            <label className="filter-label">Loại tour</label>
-            <Select
-              className="filter-select"
-              classNamePrefix="tour-type"
-              options={tourTypeOptions}
-              value={
-                tourTypeOptions.find(
-                  (option) => option.value === filters.tourType
-                ) || null
-              }
-              onChange={handleTourTypeChange}
-              isClearable
-              placeholder="Chọn loại tour"
-            />
+        <div className="isu-filter-row">
+          <div className="isu-filter-group">
+            <label className="isu-filter-label">Loại tour</label>
+            <select
+              className="isu-filter-input"
+              value={filters.tourType || ""}
+              onChange={(e) => handleInputChange("tourType", e.target.value)}
+            >
+              {tourTypeOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <div className="filter-group">
-            <StatusDropDown
-              handleChangeValue={handleStatusChange}
-              defaultValue={filters.status ? { value: filters.status } : null}
-            />
+          <div className="isu-filter-group">
+            <label className="isu-filter-label">Trạng thái</label>
+            <select
+              className="isu-filter-input"
+              value={filters.status || ""}
+              onChange={(e) => handleInputChange("status", e.target.value)}
+            >
+              {statusOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
         {/* Payment Type */}
-        <div className="filter-row">
-          <div className="filter-group">
-            <label className="filter-label">Phương thức thanh toán</label>
-            <Select
-              className="filter-select"
-              classNamePrefix="payment-type"
-              options={paymentTypeOptions}
-              value={
-                paymentTypeOptions.find(
-                  (option) => option.value === filters.typeOfPayment
-                ) || null
+        <div className="isu-filter-row">
+          <div className="isu-filter-group">
+            <label className="isu-filter-label">Phương thức thanh toán</label>
+            <select
+              className="isu-filter-input"
+              value={filters.typeOfPayment || ""}
+              onChange={(e) =>
+                handleInputChange("typeOfPayment", e.target.value)
               }
-              onChange={handlePaymentTypeChange}
-              isClearable
-              placeholder="Chọn phương thức thanh toán"
-            />
+            >
+              {paymentTypeOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
         {/* Price Range */}
-        <div className="filter-row">
-          <div className="filter-group">
-            <label className="filter-label">Giá từ (VNĐ)</label>
+        <div className="isu-filter-row">
+          <div className="isu-filter-group">
+            <label className="isu-filter-label">Giá từ (VNĐ)</label>
             <input
               type="text"
-              className="filter-input price-input"
+              className="isu-filter-input isu-price-input"
               placeholder="0"
               value={formatPrice(filters.minPrice)}
               onChange={(e) =>
@@ -221,11 +213,11 @@ const InvoiceSearchFilterUser = ({
             />
           </div>
 
-          <div className="filter-group">
-            <label className="filter-label">Giá đến (VNĐ)</label>
+          <div className="isu-filter-group">
+            <label className="isu-filter-label">Giá đến (VNĐ)</label>
             <input
               type="text"
-              className="filter-input price-input"
+              className="isu-filter-input isu-price-input"
               placeholder="0"
               value={formatPrice(filters.maxPrice)}
               onChange={(e) =>
@@ -236,22 +228,22 @@ const InvoiceSearchFilterUser = ({
         </div>
 
         {/* Date Range */}
-        <div className="filter-row">
-          <div className="filter-group">
-            <label className="filter-label">Từ ngày</label>
+        <div className="isu-filter-row">
+          <div className="isu-filter-group">
+            <label className="isu-filter-label">Từ ngày</label>
             <input
               type="date"
-              className="filter-input"
+              className="isu-filter-input"
               value={filters.startDate || ""}
               onChange={(e) => handleDateChange("startDate", e.target.value)}
             />
           </div>
 
-          <div className="filter-group">
-            <label className="filter-label">Đến ngày</label>
+          <div className="isu-filter-group">
+            <label className="isu-filter-label">Đến ngày</label>
             <input
               type="date"
-              className="filter-input"
+              className="isu-filter-input"
               value={filters.endDate || ""}
               onChange={(e) => handleDateChange("endDate", e.target.value)}
             />
@@ -259,10 +251,10 @@ const InvoiceSearchFilterUser = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="filter-actions">
+        <div className="isu-filter-actions">
           <button
             type="button"
-            className="btn-search primary"
+            className="isu-btn-search isu-primary"
             onClick={onSearch}
             disabled={isLoading}
           >

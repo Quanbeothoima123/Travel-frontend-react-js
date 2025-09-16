@@ -16,7 +16,7 @@ import "./InvoiceTableUser.css";
 const InvoiceTableUser = ({ data }) => {
   if (!data || !data.invoices || data.invoices.length === 0) {
     return (
-      <div className="invoice-table-empty">
+      <div className="itu-table-empty">
         <p>Không có hóa đơn nào được tìm thấy</p>
       </div>
     );
@@ -65,68 +65,67 @@ const InvoiceTableUser = ({ data }) => {
   const handleViewDetails = (invoiceId) => {
     console.log("View details:", invoiceId);
   };
-
   const handleContact = (invoiceId) => {
     console.log("Contact support:", invoiceId);
   };
 
   return (
-    <div className="invoice-table-container">
-      <div className="invoice-table-wrapper">
-        <table className="invoice-table">
-          <thead className="table-header-invoice-user">
+    <div className="itu-container">
+      <div className="itu-wrapper">
+        <table className="itu-table">
+          <thead className="itu-thead">
             <tr>
               <th>
-                <span className="th-content">
-                  <FaHashtag className="th-icon" />
+                <span className="itu-th-content">
+                  <FaHashtag className="itu-th-icon" />
                   STT
                 </span>
               </th>
               <th>
-                <span className="th-content">
-                  <FaFileInvoiceDollar className="th-icon" />
+                <span className="itu-th-content">
+                  <FaFileInvoiceDollar className="itu-th-icon" />
                   Mã thanh toán
                 </span>
               </th>
               <th>
-                <span className="th-content">
-                  <FaMapMarkedAlt className="th-icon" />
+                <span className="itu-th-content">
+                  <FaMapMarkedAlt className="itu-th-icon" />
                   Tên tour
                 </span>
               </th>
               <th>
-                <span className="th-content">
-                  <FaCalendarAlt className="th-icon" />
+                <span className="itu-th-content">
+                  <FaCalendarAlt className="itu-th-icon" />
                   Ngày đặt
                 </span>
               </th>
               <th>
-                <span className="th-content">
-                  <FaUsers className="th-icon" />
+                <span className="itu-th-content">
+                  <FaUsers className="itu-th-icon" />
                   Số lượng ghế
                 </span>
               </th>
               <th>
-                <span className="th-content">
-                  <FaMoneyBillWave className="th-icon" />
+                <span className="itu-th-content">
+                  <FaMoneyBillWave className="itu-th-icon" />
                   Tổng tiền
                 </span>
               </th>
               <th>
-                <span className="th-content">
-                  <FaGlobe className="th-icon" />
+                <span className="itu-th-content">
+                  <FaGlobe className="itu-th-icon" />
                   Loại tour
                 </span>
               </th>
               <th>
-                <span className="th-content">
-                  <FaInfoCircle className="th-icon" />
+                <span className="itu-th-content">
+                  <FaInfoCircle className="itu-th-icon" />
                   Trạng thái
                 </span>
               </th>
               <th>
-                <span className="th-content">
-                  <FaCogs className="th-icon" />
+                <span className="itu-th-content">
+                  <FaCogs className="itu-th-icon" />
                   Hành động
                 </span>
               </th>
@@ -141,61 +140,63 @@ const InvoiceTableUser = ({ data }) => {
                     1 +
                     (data.pagination.currentPage - 1) * data.pagination.limit}
                 </td>
-                <td className="invoice-code">{invoice.invoiceCode}</td>
-                <td className="invoice-tour-info">
+                <td className="itu-code">{invoice.invoiceCode}</td>
+                <td className="itu-tour-info">
                   <a
                     href={`/tour/${invoice.tourId.slug}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="tour-link"
+                    className="itu-tour-link"
                   >
-                    <div className="tour-content">
+                    <div className="itu-tour-content">
                       <img
                         src={invoice.tourId.thumbnail}
                         alt={invoice.tourId.title}
-                        className="tour-thumbnail"
+                        className="itu-tour-thumbnail"
                       />
-                      <span className="tour-title">{invoice.tourId.title}</span>
+                      <span className="itu-tour-title">
+                        {invoice.tourId.title}
+                      </span>
                     </div>
                   </a>
                 </td>
                 <td>{formatDate(invoice.createdAt)}</td>
-                <td className="text-center">{invoice.totalPeople}</td>
-                <td className="total-price">
+                <td className="itu-text-center">{invoice.totalPeople}</td>
+                <td className="itu-total-price">
                   {formatPrice(invoice.totalPrice)}
                 </td>
                 <td>
                   <span
-                    className={`tour-type tour-type-${invoice.tourId.type}`}
+                    className={`itu-tour-type itu-tour-type-${invoice.tourId.type}`}
                   >
                     {getTourTypeText(invoice.tourId.type)}
                   </span>
                 </td>
                 <td>
-                  <span className={`status status-${invoice.status}`}>
+                  <span className={`itu-status itu-status-${invoice.status}`}>
                     {getStatusText(invoice.status)}
                   </span>
                 </td>
                 <td>
-                  <div className="invoice-actions">
+                  <div className="itu-actions">
                     {invoice.status === "pending" && (
                       <>
                         <button
-                          className="btn btn-cancel"
+                          className="itu-btn itu-btn-cancel"
                           onClick={() => handleCancelTour(invoice._id)}
                         >
                           Hủy tour
                         </button>
                         {invoice.typeOfPayment === "momo" && (
                           <Link
-                            className="btn btn-pay-again"
+                            className="itu-btn itu-btn-pay-again"
                             to={`/repay/${invoice._id}`}
                           >
                             Thanh toán lại
                           </Link>
                         )}
                         <button
-                          className="btn btn-details"
+                          className="itu-btn itu-btn-details"
                           onClick={() => handleViewDetails(invoice._id)}
                         >
                           Chi tiết
@@ -206,13 +207,13 @@ const InvoiceTableUser = ({ data }) => {
                     {invoice.status === "paid" && (
                       <>
                         <button
-                          className="btn btn-cancel"
+                          className="itu-btn itu-btn-cancel"
                           onClick={() => handleCancelTour(invoice._id)}
                         >
                           Hủy
                         </button>
                         <button
-                          className="btn btn-details"
+                          className="itu-btn itu-btn-details"
                           onClick={() => handleViewDetails(invoice._id)}
                         >
                           Chi tiết
@@ -223,13 +224,13 @@ const InvoiceTableUser = ({ data }) => {
                     {invoice.status === "refunded" && (
                       <>
                         <button
-                          className="btn btn-details"
+                          className="itu-btn itu-btn-details"
                           onClick={() => handleViewDetails(invoice._id)}
                         >
                           Chi tiết
                         </button>
                         <button
-                          className="btn btn-contact"
+                          className="itu-btn itu-btn-contact"
                           onClick={() => handleContact(invoice._id)}
                         >
                           Liên hệ
@@ -245,7 +246,7 @@ const InvoiceTableUser = ({ data }) => {
       </div>
 
       {data.pagination && (
-        <div className="invoice-pagination-info">
+        <div className="itu-pagination">
           <p>
             Hiển thị {data.invoices.length} trên{" "}
             {data.pagination.totalDocuments} kết quả (Trang{" "}

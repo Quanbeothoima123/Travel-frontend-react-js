@@ -55,7 +55,8 @@
   --color-warning-hover: #ffca2c;
   --color-danger: #dc3545;
   --color-danger-hover: #bb2d3b;
-
+  /* Table hover color */
+  --color-table-row-hover: #eee9d9;
   /* Radius */
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -102,7 +103,7 @@
   --color-button-hover-border: #0d6efd;
 
   /* State colors */
-  --color-success: #198754;
+  --color-success: #0ba05a;
   --color-success-hover: #20c997;
   --color-warning: #ffc107;
   --color-warning-hover: #ffcd39;

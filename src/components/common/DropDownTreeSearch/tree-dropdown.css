@@ -142,9 +142,8 @@
 .tdp-row {
   display: flex;
   align-items: center;
-  gap: 8px;
   /* left padding = base 12px + depth * 16px */
-  padding: 8px 12px 8px calc(12px + (var(--tdp-depth, 0) * 16px));
+  padding: 0px 12px 0px calc(12px + (var(--tdp-depth, 0) * 16px));
   border-radius: var(--radius-sm);
   justify-content: flex-start;
   transition: background 0.18s ease, color 0.18s ease;
@@ -156,7 +155,7 @@
 
 /* hover: background visible, text stays readable */
 .tdp-row:hover {
-  background: var(--color-bg-secondary);
+  background: var(--color-primary);
   color: var(--color-text);
 }
 
@@ -168,7 +167,7 @@
 
 /* ensure children list sits flush */
 .tdp-li > .tdp-ul {
-  margin-top: 4px;
+  /* margin-top: 4px; */
   margin-left: 0;
 }
 
@@ -247,7 +246,6 @@
   border: none;
   background: none;
   cursor: pointer;
-  padding: 5px 5px;
   margin: 0;
   border-radius: var(--radius-sm);
   white-space: nowrap;
