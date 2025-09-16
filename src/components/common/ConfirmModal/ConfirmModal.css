@@ -1,76 +1,81 @@
-.modal-overlay {
+/* ConfirmModal - prefix cm */
+
+.cm-modal__overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1100;
 }
 
-.modal-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
+.cm-modal__content {
+  background: var(--color-bg-card);
+  padding: 24px 20px;
+  border-radius: var(--radius-lg);
   width: 100%;
-  max-width: 380px; /* Giới hạn chiều rộng tối đa */
+  max-width: 400px;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.25s ease-in-out;
+  box-shadow: var(--shadow-lg);
+  animation: cm-fade-in 0.25s ease-in-out;
+  border: 1px solid var(--color-border);
 }
 
-.modal-content h3 {
-  font-size: 18px;
+.cm-modal__title {
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #222;
-  margin-bottom: 15px;
+  color: var(--color-text);
+  margin-bottom: 14px;
 }
 
-.modal-content p {
-  font-size: 14px;
-  color: #475569;
-  margin-bottom: 20px;
+.cm-modal__message {
+  font-size: 0.95rem;
+  color: var(--color-text-muted, #475569);
+  margin-bottom: 22px;
+  line-height: 1.5;
 }
 
-.modal-actions {
+.cm-modal__actions {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 16px;
 }
 
-.modal-btn {
+.cm-modal__btn {
   padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
 }
 
-.modal-btn.cancel {
-  background: #e5e7eb;
-  color: #475569;
+/* Cancel button */
+.cm-modal__btn--cancel {
+  background: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+.cm-modal__btn--cancel:hover {
+  background: var(--color-border);
+  color: var(--color-primary);
 }
 
-.modal-btn.cancel:hover {
-  background: #d1d5db;
-}
-
-.modal-btn.confirm {
-  background: #be123c;
+/* Confirm button */
+.cm-modal__btn--confirm {
+  background: var(--color-primary);
   color: #fff;
+  border-color: var(--color-primary);
+}
+.cm-modal__btn--confirm:hover {
+  background: var(--color-primary-hover, #0a58ca);
+  border-color: var(--color-primary-hover, #0a58ca);
 }
 
-.modal-btn.confirm:hover {
-  background: #991b1b;
-}
-
-/* Thêm hiệu ứng mượt mà */
-@keyframes fadeIn {
+/* Smooth animation */
+@keyframes cm-fade-in {
   from {
     opacity: 0;
     transform: scale(0.9);

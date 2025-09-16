@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
+import "./DepartPlaceDropDownSearch.css";
+
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
+
 export default function DepartPlaceDropDownSearch({
   handleChangeValue,
   apiUrl = "/api/v1/depart-place/getAll",
@@ -44,11 +47,11 @@ export default function DepartPlaceDropDownSearch({
   };
 
   return (
-    <div className="depart-place-dropdown">
-      <label className="dropdown-label">Điểm khởi hành</label>
+    <div className="dpd-dropdown">
+      <label className="dpd-dropdown__label">Điểm khởi hành</label>
       <Select
-        className="dropdown-select"
-        classNamePrefix="depart-place"
+        className="dpd-dropdown__select"
+        classNamePrefix="dpd"
         options={options}
         value={selected || defaultValue}
         onChange={handleChange}

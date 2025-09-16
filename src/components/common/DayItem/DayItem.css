@@ -1,30 +1,40 @@
-.day-item {
-  background: var(--color-card-bg);
+/* DayItem - prefix di */
+
+.di-day-item {
+  background: var(--color-bg-card);
   border-radius: var(--radius-md);
-  margin-bottom: 10px;
-  padding: 15px;
+  margin-bottom: 12px;
+  padding: 16px;
   cursor: pointer;
   box-shadow: var(--shadow-sm);
   width: 100%;
   overflow: hidden;
   transition: all 0.3s ease;
+  border: 1px solid var(--color-border);
 }
 
-.day-header {
+.di-day-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Header */
+.di-day-item__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 }
 
-.day-thumbnail {
+.di-day-item__thumbnail {
   width: 100px;
   height: 60px;
   object-fit: cover;
   border-radius: var(--radius-sm);
-  margin-right: 15px;
+  flex-shrink: 0;
 }
 
-.day-title {
+.di-day-item__title {
   flex: 1;
   transition: margin-left 0.3s ease;
   overflow: hidden;
@@ -32,40 +42,46 @@
   white-space: nowrap;
 }
 
-.day-title.expanded {
+.di-day-item__title--expanded {
   margin-left: 0;
   white-space: normal;
   text-overflow: clip;
 }
 
-.day-title span {
-  font-size: 0.875rem;
+.di-day-item__day {
+  font-size: 0.85rem;
   color: var(--color-text-muted);
+  display: block;
 }
 
-.day-title h5 {
+.di-day-item__heading {
   font-size: 1rem;
-  margin: 5px 0 0;
+  margin-top: 4px;
+  font-weight: 600;
+  color: var(--color-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--color-text);
 }
 
-.dropdown-icon {
-  font-size: 0.75rem;
+/* Icon */
+.di-day-item__icon {
+  font-size: 0.8rem;
   transition: transform 0.3s ease;
+  color: var(--color-text-muted);
 }
 
-.dropdown-icon.open {
+.di-day-item__icon--open {
   transform: rotate(180deg);
+  color: var(--color-primary);
 }
 
-.day-content {
-  margin-top: 15px;
-  font-size: 0.875rem;
+/* Content */
+.di-day-item__content {
+  margin-top: 14px;
+  font-size: 0.9rem;
   line-height: 1.6;
-  animation: fadeIn 0.3s ease;
+  animation: di-fade-in 0.3s ease;
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 100%;
@@ -73,7 +89,7 @@
   color: var(--color-text);
 }
 
-.day-content img {
+.di-day-item__content img {
   max-width: 100%;
   height: auto;
   border-radius: var(--radius-sm);
@@ -81,7 +97,38 @@
   display: block;
 }
 
-@keyframes fadeIn {
+/* Wrapper có transition */
+.di-day-item__content-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.di-day-item__content-wrapper.open {
+  opacity: 1;
+}
+
+/* Nội dung */
+.di-day-item__content {
+  padding-top: 14px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.di-day-item__content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  margin-top: 10px;
+  display: block;
+}
+
+/* Animation */
+@keyframes di-fade-in {
   from {
     opacity: 0;
   }
@@ -92,16 +139,16 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .day-thumbnail {
+  .di-day-item__thumbnail {
     width: 80px;
     height: 50px;
   }
 
-  .day-title h5 {
-    font-size: 0.875rem;
+  .di-day-item__heading {
+    font-size: 0.9rem;
   }
 
-  .day-title span {
+  .di-day-item__day {
     font-size: 0.75rem;
   }
 }

@@ -1,26 +1,49 @@
-.depart-place-dropdown {
-  margin: 10px 0;
+.dpd-dropdown {
+  margin: 10px 0; /* dùng spacing hệ thống: mb-4 nếu cần utility */
 }
 
-.depart-place-dropdown .dropdown-label {
+.dpd-dropdown__label {
   display: block;
   font-weight: 600;
-  margin-bottom: 6px;
-  color: #333;
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
 }
 
-.depart-place-dropdown .depart-place__control {
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  min-height: 40px;
+/* react-select control */
+.dpd__control {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  min-height: 42px;
+  background: var(--color-bg); /* nền trắng sáng (light) hoặc tối (dark) */
+  transition: all 0.2s ease;
 }
 
-.depart-place-dropdown .depart-place__control--is-focused {
-  border-color: #007bff;
-  box-shadow: 0 0 0 1px #007bff;
+.dpd__control--is-focused {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(76, 132, 216, 0.25); /* primary nhạt */
 }
 
-.depart-place-dropdown .depart-place__option--is-selected {
-  background-color: #007bff;
-  color: white;
+/* option */
+.dpd__option {
+  font-size: 0.95rem;
+  padding: 8px 12px;
+  cursor: pointer;
+  background: var(--color-bg); /* mặc định nền theo theme */
+  color: var(--color-text);
+}
+
+.dpd__option--is-focused {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-primary);
+}
+
+.dpd__option--is-selected {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+/* placeholder */
+.dpd__placeholder {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
 }

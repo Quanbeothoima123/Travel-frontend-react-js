@@ -1,28 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./DayItem.css";
 
 const DayItem = ({ day, title, image, description, isOpen }) => {
   const [open, setOpen] = useState(false);
+  const expanded = open || isOpen;
+  const contentRef = useRef(null);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      if (expanded) {
+        contentRef.current.style.maxHeight =
+          contentRef.current.scrollHeight + "px";
+      } else {
+        contentRef.current.style.maxHeight = "0px";
+      }
+    }
+  }, [expanded]);
 
   return (
-    <div className="day-item" onClick={() => setOpen(!open)}>
-      <div className="day-header">
-        {!open && !isOpen && (
-          <img src={image} alt={`Day ${day}`} className="day-thumbnail" />
+    <div className="di-day-item" onClick={() => setOpen(!open)}>
+      <div className="di-day-item__header">
+        {!expanded && (
+          <img
+            src={image}
+            alt={`Day ${day}`}
+            className="di-day-item__thumbnail"
+          />
         )}
-        <div className={`day-title ${open || isOpen ? "expanded" : ""}`}>
-          <span>Ngày {day}</span>
-          <h5>{title}</h5>
+        <div
+          className={`di-day-item__title ${
+            expanded ? "di-day-item__title--expanded" : ""
+          }`}
+        >
+          <span className="di-day-item__day">Ngày {day}</span>
+          <h5 className="di-day-item__heading">{title}</h5>
         </div>
-        <span className={`dropdown-icon ${open || isOpen ? "open" : ""}`}>
+        <span
+          className={`di-day-item__icon ${
+            expanded ? "di-day-item__icon--open" : ""
+          }`}
+        >
           ▼
         </span>
       </div>
-      {(open || isOpen) && (
-        <div className="day-content">
+
+      <div
+        ref={contentRef}
+        className={`di-day-item__content-wrapper ${expanded ? "open" : ""}`}
+      >
+        <div className="di-day-item__content">
           <div dangerouslySetInnerHTML={{ __html: description }} />
         </div>
-      )}
+      </div>
     </div>
   );
 };

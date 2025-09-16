@@ -1,63 +1,73 @@
-/* =========================
-   Field wrapper
-   ========================= */
+/* tree-dropdown.css - fix layout, caret, hover, selected; uses theme.css vars */
+
+/* ========== Wrapper ========== */
 .tdp-field {
   position: relative;
   width: 100%;
   font-size: 14px;
   font-family: var(--font-base);
+  color: var(--color-text);
 }
 
-/* =========================
-   Control
-   ========================= */
+/* ========== Control (select box) ========== */
 .tdp-control {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: 10px 12px;
-  background: var(--color-card-bg);
+  background: var(--color-bg-card);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.12s;
+  box-shadow: var(--shadow-sm);
 }
-
+.tdp-control:hover {
+  border-color: var(--color-border-light);
+}
 .tdp-control.is-open {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 0 3px rgba(76, 132, 216, 0.12);
 }
 
+/* placeholder text inside control */
 .tdp-placeholder {
   color: var(--color-text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0; /* allow ellipsis */
 }
-
 .tdp-placeholder.has-value {
   color: var(--color-text);
+  font-weight: 500;
 }
 
-/* Caret */
+/* caret on the control */
 .tdp-caret {
-  margin-left: 10px; /* tạo khoảng cách với chữ */
-  color: var(--color-text-muted);
-  font-size: 0.85em;
+  margin-left: 10px;
+  color: var(--color-text-secondary);
+  font-size: 0.95em;
+  line-height: 1;
+  pointer-events: none;
+  transition: transform 0.18s ease;
+}
+.tdp-control.is-open .tdp-caret {
+  transform: rotate(180deg);
 }
 
-/* =========================
-   Menu
-   ========================= */
+/* ========== Menu (dropdown) ========== */
+/* base */
 .tdp-menu {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 6px);
   left: 0;
   right: 0;
-  z-index: 50;
-  margin-top: 6px;
-  background: var(--color-card-bg);
+  z-index: 60;
+  margin: 0;
+  background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
@@ -65,12 +75,22 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: max-height 0.28s ease, opacity 0.22s ease;
+  opacity: 1;
 }
 
-/* Search input */
+/* slide control: use .is-open when you toggle mount/class */
+.tdp-menu.is-closed {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* search bar inside menu */
 .tdp-search {
   padding: 8px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border-light);
+  background: var(--color-bg-card);
 }
 .tdp-search input {
   width: 100%;
@@ -81,16 +101,21 @@
   font-size: 14px;
   background: var(--color-bg);
   color: var(--color-text);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.tdp-search input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(76, 132, 216, 0.08);
 }
 
-/* List wrapper */
+/* list wrapper */
 .tdp-list {
   overflow: auto;
-  flex: 1;
+  flex: 1 1 auto;
   padding: 4px 0;
 }
 
-/* Empty message */
+/* empty / loading */
 .tdp-empty {
   padding: 14px;
   color: var(--color-text-muted);
@@ -98,9 +123,7 @@
   font-size: 14px;
 }
 
-/* =========================
-   Tree nodes
-   ========================= */
+/* ========== Tree nodes ========== */
 .tdp-ul {
   list-style: none;
   margin: 0;
@@ -111,90 +134,160 @@
   margin: 0;
 }
 
+/*
+  row layout:
+  - padding-left increases by depth via --tdp-depth (number)
+  - uses calc to ensure child rows take full width
+*/
 .tdp-row {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: 8px;
+  /* left padding = base 12px + depth * 16px */
+  padding: 8px 12px 8px calc(12px + (var(--tdp-depth, 0) * 16px));
   border-radius: var(--radius-sm);
   justify-content: flex-start;
-  transition: background 0.2s;
-}
-
-.tdp-row:hover {
-  background: var(--color-secondary);
-}
-
-/* Toggle for tree */
-.tdp-toggle {
-  width: 18px;
-  height: 18px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-card-bg);
-  position: relative;
+  transition: background 0.18s ease, color 0.18s ease;
   cursor: pointer;
-  flex-shrink: 0;
-  margin-right: 6px; /* cách chữ */
+  color: var(--color-text);
+  min-height: 40px;
+  box-sizing: border-box;
 }
 
+/* hover: background visible, text stays readable */
+.tdp-row:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text);
+}
+
+/* selected (explicit) */
+.tdp-row.is-selected {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+/* ensure children list sits flush */
+.tdp-li > .tdp-ul {
+  margin-top: 4px;
+  margin-left: 0;
+}
+
+/* ========== Toggle (expand/collapse) ========== */
+.tdp-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-right: 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  transition: background 0.14s ease, border-color 0.14s ease,
+    transform 0.14s ease;
+}
+.tdp-toggle:hover {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-border-light);
+}
+.tdp-toggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(76, 132, 216, 0.08);
+}
+
+/* arrow made with borders */
 .tdp-toggle::after {
   content: "";
   position: absolute;
+  width: 6px;
+  height: 6px;
   top: 50%;
   left: 50%;
-  width: 0.375rem;
-  height: 0.375rem;
-  border-right: 2px solid var(--color-text-muted);
-  border-bottom: 2px solid var(--color-text-muted);
   transform: translate(-50%, -50%) rotate(-45deg);
-  transition: transform 0.15s;
+  border-right: 2px solid var(--color-text-secondary);
+  border-bottom: 2px solid var(--color-text-secondary);
+  transition: transform 0.15s ease, border-color 0.15s ease;
 }
-
 .tdp-toggle.open::after {
   transform: translate(-50%, -50%) rotate(45deg);
+  border-color: var(--color-primary);
 }
 
-/* Bullet for leaf nodes */
+/* when whole row is selected, make toggle conform */
+.tdp-row.is-selected .tdp-toggle {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.tdp-row.is-selected .tdp-toggle::after {
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+}
+
+/* ========== Bullet for leaf nodes ========== */
 .tdp-bullet {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
   margin-right: 6px;
+  border-radius: 3px;
+  background: transparent;
 }
 
-/* Label button */
+/* ========== Label/button ========== */
 .tdp-label {
+  display: block;
+  flex: 1 1 auto; /* occupies remaining width */
+  width: 100%;
+  text-align: left; /* ensure left-aligned */
   appearance: none;
   border: none;
   background: none;
-  text-align: left;
   cursor: pointer;
-  padding: 4px 0;
+  padding: 5px 5px;
+  margin: 0;
   border-radius: var(--radius-sm);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--color-text);
+  color: inherit; /* follow parent's color */
   font-size: 14px;
+  text-decoration: none;
 }
 
-.tdp-label:hover {
-  color: var(--color-primary);
+/* label hover: keep contrast (do not set text to same color as bg) */
+.tdp-row:hover .tdp-label {
+  color: var(--color-bg);
+  font-weight: 500;
 }
 
-/* =========================
-   Flat list (ProvinceSelect)
-   ========================= */
+/* selected label */
+.tdp-row.is-selected .tdp-label {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ========== Flat list variant ========== */
 .tdp-flat li button.tdp-label {
   padding: 6px 12px;
   width: 100%;
   display: block;
 }
 
-/* Responsive */
+/* ========== Accessibility / utilities ========== */
+.tdp-toggle[aria-expanded="true"] {
+  transform: rotate(0deg);
+}
+
+/* ========== Responsive ========== */
 @media (max-width: 768px) {
   .tdp-menu {
     max-height: 250px;
+  }
+  .tdp-row {
+    padding: 8px 10px 8px calc(10px + (var(--tdp-depth, 0) * 14px));
   }
 }
