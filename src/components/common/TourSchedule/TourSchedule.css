@@ -2,9 +2,9 @@
   max-width: 100%;
   margin: 20px auto;
   padding: 20px;
-  background: var(--color-card-bg);
+  background: var(--color-bg-card);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-lg);
   color: var(--color-text);
   font-family: inherit;
 }
@@ -28,7 +28,7 @@
   color: #fff;
   border: none;
   padding: 5px 10px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: background-color 0.3s;
 }

@@ -5,12 +5,6 @@ const WhyChoose = () => {
   return (
     <div className="why-choose">
       <h2>TẠI SAO BẠN CHỌN CHÚNG TÔI</h2>
-      <p>
-        Vietnam Travel Group với thông điệp mang đam mê của chúng tôi gửi đến
-        bạn qua những chuyến đi và chất lượng luôn được đắt lên hàng đầu
-        <br />
-        và mang đến cho du khách những trải nghiệm tuyệt vời nhất
-      </p>
       <div className="features">
         <div className="feature-card">
           <img

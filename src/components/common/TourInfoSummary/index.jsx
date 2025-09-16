@@ -2,15 +2,19 @@ import React from "react";
 import "./TourInfoSummary.css";
 
 export default function TourInfoSummary({ tourDetail, totalPrice }) {
-  if (!tourDetail) return <div>Đang tải...</div>;
+  if (!tourDetail) return <div className="tis-loading">Đang tải...</div>;
 
   const formatVND = (n) =>
     (n || 0).toLocaleString("vi-VN", { style: "currency", currency: "VND" });
 
   return (
-    <div className="tour-info-summary">
-      <h3>Thông tin đặt tour</h3>
-      <img src={tourDetail.thumbnail} alt={tourDetail.title} />
+    <div className="tis-summary">
+      <h3 className="tis-title">Thông tin đặt tour</h3>
+      <img
+        src={tourDetail.thumbnail}
+        alt={tourDetail.title}
+        className="tis-thumbnail"
+      />
       <p>
         <strong>Tên:</strong> {tourDetail.title}
       </p>
@@ -29,7 +33,7 @@ export default function TourInfoSummary({ tourDetail, totalPrice }) {
       </p>
       <p>
         <strong>Tổng tiền:</strong>{" "}
-        <span className="price-highlight">{formatVND(totalPrice)}</span>
+        <span className="tis-price">{formatVND(totalPrice)}</span>
       </p>
     </div>
   );

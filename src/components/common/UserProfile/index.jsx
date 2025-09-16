@@ -11,7 +11,9 @@ import WardSelect from "../DropDownTreeSearch/WardSelect";
 import ImageUploader from "../../../admin/pages/tour/TourCreate/ImageUploader";
 import "./UserProfile.css";
 import { useToast } from "../../../contexts/ToastContext";
+
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
+
 export default function UserProfile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,21 +21,22 @@ export default function UserProfile() {
   const { showToast } = useToast();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/api/v1/user/profile`, {
-          credentials: "include",
-        });
-        const data = res.ok ? await res.json() : null;
-        setUser(data || null);
-      } catch {
-        showToast("Không thể tải thông tin người dùng", "error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUser();
+    refetchUserData();
   }, []);
+
+  const refetchUserData = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/user/profile`, {
+        credentials: "include",
+      });
+      const data = res.ok ? await res.json() : null;
+      setUser(data || null);
+    } catch {
+      showToast("Không thể tải thông tin người dùng", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,19 +51,16 @@ export default function UserProfile() {
         body: JSON.stringify(user),
       });
       const data = await res.json();
+
       if (!res.ok) {
         showToast(data?.message || "Cập nhật thất bại", "error");
         return;
       }
 
-      // Kiểm tra xem server trả về user data hay chỉ message
       if (data && (data._id || data.id || data.email)) {
-        // Server trả về user object hoàn chỉnh
-        setUser(data);
+        setUser(data); // server trả user object
       } else {
-        // Server chỉ trả về message, cần fetch lại dữ liệu
-        console.log("Server không trả về user data, đang fetch lại...");
-        await refetchUserData();
+        await refetchUserData(); // server chỉ trả message
       }
 
       showToast("Cập nhật thành công", "success");
@@ -71,39 +71,26 @@ export default function UserProfile() {
     }
   };
 
-  // Function để fetch lại dữ liệu user
-  const refetchUserData = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/user/profile`, {
-        credentials: "include",
-      });
-      const data = res.ok ? await res.json() : null;
-      setUser(data || null);
-    } catch (err) {
-      showToast("Không thể tải lại thông tin", "error");
-    }
-  };
-
-  if (loading) return <div className="loading">Đang tải...</div>;
+  if (loading) return <div className="upf-loading">Đang tải...</div>;
 
   return (
-    <div className="user-profile container">
-      <div className="card profile-card">
+    <div className="upf-container">
+      <div className="upf-card">
         <h2>Thông tin cá nhân</h2>
-        <form onSubmit={handleSubmit} className="profile-form">
-          <div className="avatar-section">
+        <form onSubmit={handleSubmit} className="upf-form">
+          <div className="upf-avatar-section">
             <ImageUploader
               onUpload={(url) => setUser({ ...user, avatar: url })}
             />
             <img
               src={user?.avatar || "/default-avatar.png"}
               alt="avatar"
-              className="avatar-preview"
+              className="upf-avatar-preview"
             />
           </div>
 
-          <div className="form-grid">
-            <div className="form-group">
+          <div className="upf-form-grid">
+            <div className="upf-form-group">
               <label>
                 <FaUser /> Họ & Tên
               </label>
@@ -113,7 +100,8 @@ export default function UserProfile() {
                 onChange={(e) => setUser({ ...user, fullName: e.target.value })}
               />
             </div>
-            <div className="form-group">
+
+            <div className="upf-form-group">
               <label>
                 <FaBirthdayCake /> Ngày sinh
               </label>
@@ -123,7 +111,8 @@ export default function UserProfile() {
                 onChange={(e) => setUser({ ...user, birthDay: e.target.value })}
               />
             </div>
-            <div className="form-group">
+
+            <div className="upf-form-group">
               <label>
                 <FaVenusMars /> Giới tính
               </label>
@@ -137,7 +126,8 @@ export default function UserProfile() {
                 <option value="other">Khác</option>
               </select>
             </div>
-            <div className="form-group">
+
+            <div className="upf-form-group">
               <label>
                 <FaPhone /> Số điện thoại
               </label>
@@ -147,7 +137,8 @@ export default function UserProfile() {
                 onChange={(e) => setUser({ ...user, phone: e.target.value })}
               />
             </div>
-            <div className="form-group">
+
+            <div className="upf-form-group">
               <label>
                 <FaMapMarkerAlt /> Địa chỉ
               </label>
@@ -157,31 +148,29 @@ export default function UserProfile() {
                 onChange={(e) => setUser({ ...user, address: e.target.value })}
               />
             </div>
-            <div className="form-group">
+
+            <div className="upf-form-group">
               <label>Tỉnh/Thành phố</label>
               <ProvinceSelect
                 value={user?.province}
-                onChange={(p) => {
-                  setUser((prev) => ({
-                    ...prev,
-                    province: p,
-                    ward: null, // Reset ward khi đổi tỉnh
-                  }));
-                }}
+                onChange={(p) =>
+                  setUser((prev) => ({ ...prev, province: p, ward: null }))
+                }
               />
             </div>
-            <div className="form-group">
+
+            <div className="upf-form-group">
               <label>Phường/Xã</label>
               <WardSelect
-                provinceCode={user?.province?.code} // Chỉ truyền code (string)
+                provinceCode={user?.province?.code}
                 value={user?.ward}
                 onChange={(w) => setUser((prev) => ({ ...prev, ward: w }))}
               />
             </div>
           </div>
 
-          <div className="form-actions">
-            <button type="submit" className="btn-primary" disabled={saving}>
+          <div className="upf-actions">
+            <button type="submit" className="upf-btn-primary" disabled={saving}>
               {saving ? "Đang lưu..." : "Cập nhật"}
             </button>
           </div>

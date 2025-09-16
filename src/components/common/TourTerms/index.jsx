@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import * as FaIcons from "react-icons/fa";
+import SafeHTML from "../SafeHTML"; // nhớ import đúng path
 import "./TourTerms.css";
 
 const TourTerms = ({ terms }) => {
@@ -24,8 +25,8 @@ const TourTerms = ({ terms }) => {
   if (filteredTerms.length === 0) return null;
 
   return (
-    <div className="tour-terms">
-      <div className="tab-buttons">
+    <div className="ttr-terms">
+      <div className="ttr-tab-buttons">
         {filteredTerms.map((term, index) => {
           const Icon = getIcon(term.termId.icon);
           return (
@@ -34,7 +35,7 @@ const TourTerms = ({ terms }) => {
               className={activeTab === index ? "active" : ""}
               onClick={() => setActiveTab(index)}
             >
-              <Icon className="tab-icon" />
+              <Icon className="ttr-tab-icon" />
               <span>{term.termId.title}</span>
             </button>
           );
@@ -42,13 +43,11 @@ const TourTerms = ({ terms }) => {
       </div>
 
       {filteredTerms[activeTab] && (
-        <div className="tab-content-wrapper" style={{ maxHeight: height }}>
-          <div
+        <div className="ttr-tab-content-wrapper" style={{ maxHeight: height }}>
+          <SafeHTML
             ref={contentRef}
-            className="tab-content"
-            dangerouslySetInnerHTML={{
-              __html: filteredTerms[activeTab].description,
-            }}
+            html={filteredTerms[activeTab].description}
+            className="ttr-tab-content"
           />
         </div>
       )}

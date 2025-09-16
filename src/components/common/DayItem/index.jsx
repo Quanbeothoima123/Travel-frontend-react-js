@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./DayItem.css";
-
+import SafeHTML from "../SafeHTML";
 const DayItem = ({ day, title, image, description, isOpen }) => {
   const [open, setOpen] = useState(false);
   const expanded = open || isOpen;
@@ -48,9 +48,7 @@ const DayItem = ({ day, title, image, description, isOpen }) => {
         ref={contentRef}
         className={`di-day-item__content-wrapper ${expanded ? "open" : ""}`}
       >
-        <div className="di-day-item__content">
-          <div dangerouslySetInnerHTML={{ __html: description }} />
-        </div>
+        <SafeHTML html={description} className="di-day-item__content" />
       </div>
     </div>
   );

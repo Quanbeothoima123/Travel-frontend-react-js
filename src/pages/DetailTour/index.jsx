@@ -7,24 +7,25 @@ import TourExperience from "../../../src/components/common/TourExperience";
 import TourSchedule from "../../../src/components/common/TourSchedule";
 import TourTerms from "../../../src/components/common/TourTerms";
 import "./DetailTour.css";
+
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
+
 const DetailTour = () => {
-  const { slug } = useParams(); // Lấy slug từ URL
+  const { slug } = useParams();
   const [tourDetail, setTourDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchTourDetail = async () => {
+      setLoading(true);
       try {
-        const response = await fetch(
-          `${API_BASE}/api/v1/tours/tour-detail/${slug}`
-        );
-        if (!response.ok) throw new Error("Failed to fetch tour details");
-        const data = await response.json();
+        const res = await fetch(`${API_BASE}/api/v1/tours/tour-detail/${slug}`);
+        if (!res.ok) throw new Error("Không thể tải chi tiết tour");
+        const data = await res.json();
         setTourDetail(data.tourDetail);
       } catch (err) {
-        setError(err.message);
+        setError(err.message || "Lỗi không xác định");
       } finally {
         setLoading(false);
       }
@@ -33,13 +34,13 @@ const DetailTour = () => {
     fetchTourDetail();
   }, [slug]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="dt-loading">Đang tải...</div>;
+  if (error) return <div className="dt-error">Lỗi: {error}</div>;
 
   return (
-    <div className="detail-tour">
-      <div className="main-content">
-        <div className="left-column">
+    <div className="dt-detail-tour">
+      <div className="dt-main-content">
+        <div className="dt-left-column">
           <TourCarousel
             thumbnail={tourDetail?.thumbnail}
             images={tourDetail?.images || []}
@@ -48,7 +49,7 @@ const DetailTour = () => {
           <TourSchedule tour={tourDetail} />
           <TourTerms terms={tourDetail.term} />
         </div>
-        <div className="right-column">
+        <div className="dt-right-column">
           <TourInfo tourDetail={tourDetail} />
         </div>
       </div>

@@ -1,50 +1,58 @@
-/* DetailTour.css */
-.detail-tour {
-  max-width: 100%;
-  margin: 0 auto;
+.dt-detail-tour {
+  max-width: 1200px; /* width tối đa trên laptop/desktop */
+  margin: 0 auto; /* căn giữa màn hình */
   padding: 20px;
 }
 
-.main-content {
+.dt-main-content {
   display: flex;
   gap: 20px;
 }
 
-.left-column {
+.dt-left-column {
   flex: 1;
   max-width: 690px;
 }
 
-.right-column {
+.dt-right-column {
   flex: 0 0 504px;
 }
 
-/* Tablet: chuyển thành layout dọc, full width */
-@media (max-width: 1500px) {
-  .main-content {
+/* Tablet: layout dọc, full width */
+@media (max-width: 1024px) {
+  .dt-main-content {
     flex-direction: column;
   }
 
-  .left-column,
-  .right-column {
+  .dt-left-column,
+  .dt-right-column {
     flex: 1 1 100%;
     max-width: 100%;
   }
 }
 
-/* Mobile: thêm padding nhỏ hơn, mọi thứ full width */
-@media (max-width: 1499px) {
-  .detail-tour {
+/* Mobile: padding nhỏ hơn */
+@media (max-width: 640px) {
+  .dt-detail-tour {
     padding: 10px;
   }
 
-  .main-content {
+  .dt-main-content {
     gap: 15px;
   }
 
-  .left-column,
-  .right-column {
+  .dt-left-column,
+  .dt-right-column {
     width: 100%;
     max-width: 100%;
   }
+}
+
+/* Loading / Error */
+.dt-loading,
+.dt-error {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: var(--color-text-secondary);
 }

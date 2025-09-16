@@ -1,7 +1,7 @@
 .why-choose {
   text-align: center;
-  padding: 20px;
-  background-color: #fff;
+  padding: 30px;
+  background-color: var(--color-bg-card);
 }
 
 .why-choose h2 {
@@ -11,7 +11,7 @@
 
 .why-choose p {
   font-size: 20px;
-  color: #141313;
+  color: var(--color-text);
   margin-bottom: 20px;
 }
 
@@ -23,7 +23,10 @@
 }
 
 .feature-card {
-  border: 1px solid #007bff;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-primary);
+  align-items: center;
   border-radius: 5px;
   padding: 15px;
   width: 200px;
@@ -42,9 +45,5 @@
 
 .feature-card p {
   font-size: 12px;
-  color: #666;
-}
-
-.feature-card:hover {
-  background-color: #ffe6f0;
+  color: var(--color-text-muted);
 }
