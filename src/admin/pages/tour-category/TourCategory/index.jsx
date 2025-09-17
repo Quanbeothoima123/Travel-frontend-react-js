@@ -45,7 +45,7 @@ export default function TourCategory() {
       setLoading(true);
       try {
         const res = await fetch(
-          `${API_BASE}/api/v1/admin/tour-categories?tree=true`
+          `${API_BASE}/api/v1/admin/tour-categories/get-all-category?tree=true`
         );
         if (!res.ok) throw new Error("API error");
         const json = await res.json();
@@ -226,7 +226,7 @@ export default function TourCategory() {
 
       // refetch tree
       const refreshed = await fetch(
-        `${API_BASE}/api/v1/admin/tour-categories?tree=true`
+        `${API_BASE}/api/v1/admin/tour-categories/get-all-category?tree=true`
       );
       const json = await refreshed.json();
       setCategories(json);
@@ -299,7 +299,7 @@ export default function TourCategory() {
       // if the item is not present in current map, refetch tree and then expand
       if (!mapById[item._id]) {
         const refreshed = await fetch(
-          `${API_BASE}/api/v1/admin/tour-categories?tree=true`
+          `${API_BASE}/api/v1/admin/tour-categories/get-all-category?tree=true`
         );
         const all = await refreshed.json();
         setCategories(all);

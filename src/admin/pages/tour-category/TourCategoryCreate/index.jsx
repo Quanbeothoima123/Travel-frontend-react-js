@@ -82,7 +82,7 @@ export default function TourCategoryCreate({
           <CategoryTreeSelect
             value={parentNode ? { title: parentNode.title } : null}
             onChange={(node) => setParentNode(node)}
-            fetchUrl={`${API_BASE}/api/v1/admin/tour-categories?tree=true`}
+            fetchUrl={`${API_BASE}/api/v1/admin/tour-categories/get-all-category?tree=true`}
             placeholder="Chọn danh mục cha (nếu có)…"
             noDataText="Chưa có danh mục"
           />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import * as FaIcons from "react-icons/fa"; // để dùng icon động
+import SafeHTML from "../../../../components/common/SafeHTML";
 import {
   FaMapMarkerAlt,
   FaHotel,
@@ -17,6 +18,7 @@ import {
   FaGlobe,
   FaList,
   FaExternalLinkAlt,
+  FaExclamation,
 } from "react-icons/fa";
 import "./AdminTourDetail.css";
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
@@ -127,7 +129,7 @@ const AdminTourDetail = () => {
           </div>
           <div className="info-item">
             <label>
-              <FaList /> Vị trí:
+              <FaList /> Thứ tự:
             </label>
             <span>{tour.position}</span>
           </div>
@@ -160,7 +162,7 @@ const AdminTourDetail = () => {
               <FaList /> Bộ lọc:
             </label>
             <div className="filters">
-              {tour.filter?.map((f, idx) => (
+              {tour.filterId?.map((f, idx) => (
                 <span key={idx} className="filter">
                   {f.label} ({f.value})
                 </span>
@@ -178,15 +180,23 @@ const AdminTourDetail = () => {
               <FaMapMarkerAlt /> Điểm khởi hành:
             </label>
             <span>
-              {tour.departPlaces?.place} -{" "}
+              {tour.departPlaceId?.name} -{" "}
               <a
-                href={tour.departPlaces?.googleMap}
+                href={tour.departPlaceId?.googleDirection}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="map-link"
               >
                 Xem bản đồ <FaExternalLinkAlt style={{ marginLeft: "4px" }} />
               </a>
+            </span>
+          </div>
+          <div className="info-item full-width">
+            <label>
+              <FaExclamation /> Chú ý:
+            </label>
+            <span>
+              <span>{tour.departPlaceId?.description}</span>
             </span>
           </div>
 
@@ -202,7 +212,7 @@ const AdminTourDetail = () => {
       {/* Ảnh */}
       <section className="section images-section">
         <h2>
-          <FaImages /> Ảnh đại diện
+          <FaImages /> Ảnh giới thiệu
         </h2>
         {tour.thumbnail && (
           <img src={tour.thumbnail} alt="Thumbnail" className="thumbnail" />
@@ -242,10 +252,7 @@ const AdminTourDetail = () => {
                 className="day-image"
               />
             )}
-            <div
-              dangerouslySetInnerHTML={{ __html: dayItem.description }}
-              className="html-content"
-            />
+            <SafeHTML html={dayItem.description} className="html-content" />
           </div>
         ))}
       </section>
@@ -264,8 +271,8 @@ const AdminTourDetail = () => {
               <div key={idx} className="term-item">
                 {IconComp && <IconComp className="term-icon" />}
                 <h4>{termItem.termId?.title}</h4>
-                <div
-                  dangerouslySetInnerHTML={{ __html: termItem.description }}
+                <SafeHTML
+                  html={termItem.description}
                   className="term-description"
                 />
               </div>
@@ -317,8 +324,8 @@ const AdminTourDetail = () => {
         <h2>
           <FaStar /> Trải nghiệm đặc biệt
         </h2>
-        <div
-          dangerouslySetInnerHTML={{ __html: tour.specialExperience || "" }}
+        <SafeHTML
+          html={tour.specialExperience || ""}
           className="html-content"
         />
       </section>

@@ -5,11 +5,9 @@ import { useParams } from "react-router-dom";
 import { FaSpinner, FaCheck, FaTimes, FaTags, FaLink } from "react-icons/fa";
 import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
 import "./TourCategoryUpdate.css";
-
-export default function TourCategoryUpdate({
-  apiBase = `${process.env.REACT_APP_BACKEND_DOMAIN}/api/v1/admin/tour-categories`,
-  onUpdated = null,
-}) {
+import { useToast } from "../../../../contexts/ToastContext";
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
+export default function TourCategoryUpdate({ onUpdated = null }) {
   const { id } = useParams();
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
@@ -18,24 +16,28 @@ export default function TourCategoryUpdate({
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
-
+  const { showToast } = useToast();
   // Fetch dữ liệu chi tiết danh mục
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`${apiBase}/detail/${id}`);
+        const res = await fetch(
+          `${API_BASE}/api/v1/admin/tour-categories/detail/${id}`
+        );
         const data = await res.json();
-        if (!res.ok) throw new Error(data?.message || "Không thể tải dữ liệu");
+        console.log(data);
+        if (!res.ok)
+          showToast(data?.message || "Không thể tải dữ liệu", "error");
         setTitle(data.title || "");
         setSlug(data.slug || "");
         setParentNode(data.parent || null);
         setActive(data.active ?? true);
       } catch (err) {
-        setError("Không thể tải dữ liệu danh mục");
+        showToast("Không thể tải dữ liệu danh mục", "error");
       }
     };
     fetchData();
-  }, [id, apiBase]);
+  }, [id]);
 
   // Reset message/error sau vài giây
   useEffect(() => {
@@ -68,12 +70,15 @@ export default function TourCategoryUpdate({
 
     try {
       setSubmitting(true);
-      const res = await fetch(`${apiBase}/update/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(body),
-      });
+      const res = await fetch(
+        `${API_BASE}/api/v1/admin/tour-categories/update/${id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(body),
+        }
+      );
       const data = await res.json();
       if (!res.ok)
         throw new Error(data?.message || data?.error || "Lỗi server");
@@ -135,7 +140,7 @@ export default function TourCategoryUpdate({
                 : null
             }
             onChange={(node) => setParentNode(node)}
-            fetchUrl={`${apiBase}?tree=true`}
+            fetchUrl={`${API_BASE}/api/v1/admin/tour-categories/get-all-category?tree=true`}
             placeholder="Chọn danh mục cha (nếu có)…"
             noDataText="Chưa có danh mục"
           />

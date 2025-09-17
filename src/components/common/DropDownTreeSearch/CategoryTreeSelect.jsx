@@ -4,7 +4,7 @@ const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export default function CategoryTreeSelect({
   value,
   onChange,
-  fetchUrl = `${API_BASE}/api/v1/admin/tour-categories?tree=true`,
+  fetchUrl = `${API_BASE}/api/v1/admin/tour-categories/get-all-category?tree=true`,
   placeholder = "Chọn danh mục tour",
   noDataText = "Không có danh mục",
 }) {

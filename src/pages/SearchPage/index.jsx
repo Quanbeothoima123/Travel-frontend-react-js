@@ -91,7 +91,7 @@ export default function SearchPage() {
           <CategoryTreeSelect
             value={selectedCategory}
             onChange={(node) => setSelectedCategory(node)}
-            fetchUrl={`${API_BASE}/api/v1/admin/tour-categories?tree=true`}
+            fetchUrl={`${API_BASE}/api/v1/admin/tour-categories/get-all-category?tree=true`}
             placeholder="Chọn loại tour..."
             noDataText="Không có danh mục"
           />

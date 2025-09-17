@@ -73,7 +73,7 @@ const Header = () => {
         const endpoints = {
           home: { url: `${API_BASE}/api/v1/homePage`, basePath: "" },
           tour: {
-            url: `${API_BASE}/api/v1/admin/tour-categories?tree=true`,
+            url: `${API_BASE}/api/v1/admin/tour-categories/get-all-category?tree=true`,
             basePath: "search/tours",
           },
           service: { url: `${API_BASE}/api/v1/service`, basePath: "service" },

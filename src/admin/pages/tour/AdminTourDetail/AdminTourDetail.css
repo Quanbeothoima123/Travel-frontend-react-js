@@ -2,9 +2,10 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 30px;
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-base);
+  font-weight: 600;
   line-height: 1.7;
-  color: #2c3e50;
+  color: var(--color-primary);
   background: linear-gradient(to bottom, #f4f7fa, #ffffff);
 }
 
@@ -84,18 +85,19 @@
 
 .tag,
 .filter {
-  background: #e56f2c;
+  background: var(--color-bg-card);
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.95em;
   transition: background 0.3s ease;
-  color: white;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
 }
 
 .tag:hover,
 .filter:hover {
-  background: white;
-  color: #e56f2c;
+  background: var(--color-primary);
+  color: var(--color-bg-card);
 }
 
 .thumbnail {
@@ -143,7 +145,7 @@
 }
 
 .day-item h3 {
-  color: #3498db;
+  color: var(--color-primary);
   margin-bottom: 15px;
   font-size: 1.5em;
 }
@@ -151,15 +153,15 @@
 .html-content {
   margin-top: 15px;
   line-height: 1.9;
-  color: #4a5568;
+  color: var(--color-text);
 }
 
 .term-item {
   display: flex;
   align-items: flex-start;
   margin-bottom: 20px;
-  padding: 15px;
-  background: #ffffff;
+  padding: 10px;
+  background: var(--color-bg-card);
   border-radius: 12px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
@@ -172,7 +174,7 @@
 }
 
 .term-item h4 {
-  color: #2c3e50;
+  color: var(--color-text);
   margin-bottom: 8px;
   font-size: 1.2em;
 }
@@ -189,7 +191,7 @@
 .error {
   text-align: center;
   font-size: 1.3em;
-  color: #e74c3c;
+  color: var(--color-danger);
   display: flex;
   align-items: center;
   justify-content: center;

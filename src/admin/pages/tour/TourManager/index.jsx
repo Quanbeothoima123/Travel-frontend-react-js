@@ -276,7 +276,7 @@ export default function TourManager() {
           </div>
           <div className="tm-category">
             <CategoryTreeSelect
-              fetchUrl={`${API_BASE}/api/v1/admin/tour-categories?tree=true`}
+              fetchUrl={`${API_BASE}/api/v1/admin/tour-categories/get-all-category?tree=true`}
               value={category}
               onChange={(node) => {
                 setPage(1);
@@ -481,7 +481,7 @@ export default function TourManager() {
                             to={`/admin/tours/detail/${t._id}`}
                             className="tm-action-link"
                           >
-                            Chi tiết
+                            Xem
                           </Link>
                           <Link
                             to={`/admin/tours/edit/${t._id}`}
