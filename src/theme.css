@@ -39,14 +39,14 @@
   --color-border-light: #e9ecef;
 
   /* Interactive elements */
-  --color-primary: #006400;
-  --color-primary-hover: #1e961e;
+  --color-primary: #000080;
+  --color-primary-hover: #6580b5;
   --color-button-bg: transparent;
   --color-button-border: #6c757d;
   --color-button-text: #6c757d;
-  --color-button-hover-bg: #006400;
+  --color-button-hover-bg: #000080;
   --color-button-hover-text: #ffffff;
-  --color-button-hover-border: #1e961e;
+  --color-button-hover-border: #6580b5;
 
   /* State colors */
   --color-success: #198754;
@@ -94,14 +94,14 @@
   --color-border-light: #343a40;
 
   /* Interactive elements */
-  --color-primary: #006400;
-  --color-primary-hover: #1e961e;
+  --color-primary: #000080;
+  --color-primary-hover: #6580b5;
   --color-button-bg: transparent;
   --color-button-border: #adb5bd;
   --color-button-text: #adb5bd;
-  --color-button-hover-bg: #006400;
+  --color-button-hover-bg: #000080;
   --color-button-hover-text: #ffffff;
-  --color-button-hover-border: #1e961e;
+  --color-button-hover-border: #000080;
 
   /* State colors */
   --color-success: #0ba05a;
