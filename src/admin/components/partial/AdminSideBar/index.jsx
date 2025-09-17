@@ -17,7 +17,7 @@ const DefaultIcon = FaUserCircle;
 export default function AdminSidebar({ isOpen, onClose }) {
   const location = useLocation();
 
-  // ====== MENU DATA (bạn có thể tách file constants riêng) ======
+  // ====== MENU DATA ======
   const menuItems = useMemo(
     () => [
       {
@@ -130,7 +130,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
     <>
       <aside className={`admin-sidebar ${isOpen ? "open" : ""}`}>
         <div className="as-scroll">
-          <div className="as-logo">Quản trị</div>
+          <div className="as-logo">Quản trị viên</div>
 
           <nav className="as-nav">
             {menuItems.map((item) => {
@@ -139,11 +139,18 @@ export default function AdminSidebar({ isOpen, onClose }) {
               const hasChildren = !!item.children?.length;
               const isActiveLeaf = location.pathname === item.path;
 
+              // NEW: cha có con active
+              const isActiveParentByChild =
+                hasChildren &&
+                item.children.some((c) => location.pathname === c.path);
+
               return (
                 <div key={item.id} className="as-group">
                   {hasChildren ? (
                     <button
-                      className={`as-item ${activeParent ? "active" : ""}`}
+                      className={`as-item 
+                        ${isActiveParentByChild ? "active" : ""} 
+                        ${activeParent ? "open" : ""}`}
                       onClick={() => toggle(item.id)}
                     >
                       <span className="as-item-left">

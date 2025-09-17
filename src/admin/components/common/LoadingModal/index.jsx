@@ -1,3 +1,4 @@
+// LoadingModal.js
 import React from "react";
 import * as FaIcons from "react-icons/fa";
 import "./LoadingModal.css";
@@ -8,13 +9,13 @@ const LoadingModal = ({ open, message = "Đang xử lý...", icon }) => {
   const IconComponent = icon && FaIcons[icon] ? FaIcons[icon] : null;
 
   return (
-    <div className="loading-overlay">
-      <div className="loading-box">
-        <div className="spinner-wrapper">
-          {IconComponent && <IconComponent className="center-icon" size={24} />}
-          <div className="spinner-ring"></div>
+    <div className="lm-overlay">
+      <div className="lm-box">
+        <div className="lm-spinner">
+          {IconComponent && <IconComponent className="lm-icon" size={24} />}
+          <div className="lm-ring"></div>
         </div>
-        <p>{message}</p>
+        <p className="lm-text">{message}</p>
       </div>
     </div>
   );

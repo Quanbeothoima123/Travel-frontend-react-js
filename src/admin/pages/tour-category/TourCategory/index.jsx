@@ -13,6 +13,8 @@ import {
   FaPlusCircle,
 } from "react-icons/fa";
 import "./TourCategory.css";
+import ConfirmModal from "../../../../admin/components/common/ConfirmModal";
+import { useToast } from "../../../../contexts/ToastContext";
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export default function TourCategory() {
   const [categories, setCategories] = useState([]);
@@ -22,12 +24,10 @@ export default function TourCategory() {
   const [q, setQ] = useState("");
   const [statusFilter, setStatusFilter] = useState("all"); // all | active | inactive
   const [expandedIds, setExpandedIds] = useState(new Set());
-  const [confirmDelete, setConfirmDelete] = useState({
-    show: false,
-    id: null,
-    title: "",
-  });
-
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [selectedTourCategoryId, setSelectedTourCategoryId] = useState(null);
+  const [selectedTourCategoryName, setSelectedTourCategoryName] = useState("");
+  const [countChildren, setCountChildren] = useState(null);
   // highlight & scrolling
   const [highlightedId, setHighlightedId] = useState(null);
 
@@ -36,6 +36,8 @@ export default function TourCategory() {
 
   // refs for nodes
   const nodeRefs = useRef({});
+
+  const { showToast } = useToast();
 
   // load tree
   useEffect(() => {
@@ -191,18 +193,16 @@ export default function TourCategory() {
   // handle delete (open confirm)
   const handleDelete = (node) => {
     const descendants = collectDescendants(node._id);
-    setConfirmDelete({
-      show: true,
-      id: node._id,
-      title: node.title,
-      count: descendants.length,
-    });
+    setCountChildren(descendants.length);
+    setSelectedTourCategoryId(node._id);
+    setSelectedTourCategoryName(node.title);
+    setConfirmDelete(true);
   };
 
   // Confirm delete and refresh tree
   const handleDeleteConfirm = async () => {
-    const id = confirmDelete.id;
-    if (!id) return setConfirmDelete({ show: false, id: null, title: "" });
+    const id = selectedTourCategoryId;
+    if (!id) return setConfirmDelete(false);
 
     try {
       const res = await fetch(
@@ -212,7 +212,17 @@ export default function TourCategory() {
           credentials: "include",
         }
       );
-      if (!res.ok) throw new Error("Delete failed");
+      if (res.ok) {
+        showToast(
+          `Xóa thành công danh mục  ${selectedTourCategoryName}`,
+          "success"
+        );
+      } else {
+        showToast(
+          `Có lỗi khi xóa danh mục ${selectedTourCategoryName}!`,
+          "error"
+        );
+      }
 
       // refetch tree
       const refreshed = await fetch(
@@ -223,7 +233,7 @@ export default function TourCategory() {
     } catch (err) {
       console.error("Delete error:", err);
     } finally {
-      setConfirmDelete({ show: false, id: null, title: "" });
+      setConfirmDelete(false);
       setExpandedIds(new Set());
       setAllExpanded(false);
     }
@@ -364,25 +374,25 @@ export default function TourCategory() {
           <div className="tc-actions">
             <Link
               to={`/admin/tour-categories/detail/${node._id}`}
-              className="tc-action"
+              className="tc-action detail"
               title="Chi tiết"
             >
               <FaEye />
             </Link>
             <Link
               to={`/admin/tour-categories/update/${node._id}`}
-              className="tc-action"
+              className="tc-action edit"
               title="Sửa"
             >
               <FaEdit />
             </Link>
-            <button
+            <p
               onClick={() => handleDelete(node)}
-              className="tc-action danger"
+              className="tc-action delete"
               title="Xóa"
             >
               <FaTrash />
-            </button>
+            </p>
           </div>
         </div>
 
@@ -444,11 +454,11 @@ export default function TourCategory() {
 
           <div className="tc-expand-toggle">
             {allExpanded ? (
-              <button className="tc-btn" onClick={collapseAll}>
+              <button className="tc-btn minus-btn" onClick={collapseAll}>
                 <FaMinus /> Thu gọn
               </button>
             ) : (
-              <button className="tc-btn" onClick={expandAll}>
+              <button className="tc-btn minus-btn" onClick={expandAll}>
                 <FaPlus /> Mở rộng
               </button>
             )}
@@ -480,34 +490,15 @@ export default function TourCategory() {
       </div>
 
       {/* confirm modal */}
-      {confirmDelete.show && (
-        <div className="tc-modal-overlay">
-          <div className="tc-modal">
-            <div className="tc-modal-title">Xác nhận xóa</div>
-            <div className="tc-modal-body">
-              Bạn có chắc muốn xóa danh mục{" "}
-              <strong>{confirmDelete.title}</strong>? <br />
-              (Sẽ xóa cả {confirmDelete.count || "1"} mục con nếu có.)
-            </div>
-            <div className="tc-modal-actions">
-              <button
-                className="tc-btn tc-btn-muted"
-                onClick={() =>
-                  setConfirmDelete({ show: false, id: null, title: "" })
-                }
-              >
-                Hủy
-              </button>
-              <button
-                className="tc-btn tc-btn-danger"
-                onClick={handleDeleteConfirm}
-              >
-                Xóa &amp; Đồng ý
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmModal
+        open={confirmDelete}
+        onClose={() => setConfirmDelete(false)}
+        onConfirm={handleDeleteConfirm}
+        title="Xóa danh mục tour du lịch"
+        message={`Bạn đồng ý xóa danh mục ${selectedTourCategoryName} chứ? ${
+          countChildren - 1
+        } danh mục con cũng sẽ được xóa theo?`}
+      />
     </div>
   );
 }

@@ -1,8 +1,4 @@
 :root {
-  --brand: #e56f2c;
-  --paper: #fff;
-  --bg: #f6f7fb;
-  --ink: #1b1b1f;
   --header-h: 64px;
   --sidebar-w: 260px;
 }
@@ -17,8 +13,8 @@ body,
 }
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--ink);
+  background: var(--color-text-muted);
+  color: var(--color-text);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial,
     "Apple Color Emoji", "Segoe UI Emoji";
 }
@@ -42,7 +38,7 @@ body {
 
 /* Demo look for inner content cards (optional) */
 .admin-main > .card {
-  background: var(--paper);
+  background: var(--color-bg-card);
   border-radius: 16px;
   padding: 18px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);

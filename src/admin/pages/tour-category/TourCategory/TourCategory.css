@@ -10,8 +10,8 @@
 .tc-page {
   padding: 22px;
   min-height: calc(100vh - 64px);
-  background: var(--bg);
-  font-family: Inter, Roboto, "Segoe UI", system-ui, Arial;
+  background: var(--color-bg-secondary);
+  font-family: var(var(--font-base));
 }
 
 /* Header controls */
@@ -28,27 +28,30 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--card);
+  background: var(--color-bg-card);
   padding: 8px 12px;
   border-radius: 12px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-md);
   min-width: 240px;
+  border: 1px solid var(--color-text-muted);
 }
 .tc-icon {
-  color: var(--muted);
+  color: var(--color-border-light);
   font-size: 14px;
+  box-shadow: var(--radius-lg);
 }
 .tc-input {
   border: 0;
   outline: none;
-  font-size: 14px;
-  min-width: 160px;
+  font-size: 16px;
+  font-weight: 400;
+  min-width: 200px;
 }
 .tc-select .tc-select-el {
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1px solid #e7e7ea;
-  background: var(--card);
+  border: 1px solid var(--color-text-muted);
+  background: var(--color-bg-card);
   cursor: pointer;
 }
 
@@ -64,9 +67,9 @@
 }
 
 .tc-expand-toggle .tc-btn {
-  background: var(--card);
+  background: var(--color-bg-card);
   border-radius: 10px;
-  border: 1px solid #e7e7ea;
+  border: 1px solid var(--color-text-muted);
   padding: 8px 14px;
   cursor: pointer;
   box-shadow: var(--shadow);
@@ -74,10 +77,15 @@
   align-items: center;
   gap: 8px;
 }
+.minus-btn:hover {
+  background-color: var(--color-primary);
+  color: var(--bg);
+}
 .tc-add .tc-add-btn {
   margin-left: auto;
   background: var(--card);
-  color: var(--brand);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-text-muted);
   font-weight: 700;
   padding: 10px 16px;
   border-radius: 12px;
@@ -85,17 +93,20 @@
   display: inline-flex;
   gap: 10px;
   align-items: center;
-  box-shadow: var(--shadow);
+  box-shadow: var(--radius-lg);
+}
+.tc-add-btn:hover {
+  background-color: var(--color-primary);
+  color: var(--bg);
 }
 
 /* Panel - FIX: Thêm max-height và overflow để có scroll */
 .tc-panel {
-  background: linear-gradient(180deg, #fff, #ffffff);
+  background: var(--color-bg-card);
   border-radius: 16px;
   padding: 14px;
-  box-shadow: var(--shadow);
+  box-shadow: inset 0 4px 14px rgba(0, 0, 0, 0.08);
   margin-top: 12px;
-  /* FIX: Thêm max-height để panel không vượt quá viewport */
   max-height: calc(100vh - 200px);
   overflow: hidden;
   display: flex;
@@ -127,8 +138,6 @@
   flex-direction: column;
   gap: 8px;
   padding: 8px;
-  /* FIX: Bỏ max-height để cho phép hiển thị tất cả */
-  /* max-height: none; */
 }
 
 .tc-node {
@@ -139,15 +148,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #fbfbfd;
+  background: #f4f4f5;
   border-radius: 12px;
   padding: 10px;
-  border: 1px solid #e6e8ee;
+  border: 1px solid var(--color-text-muted);
   box-shadow: 0 6px 14px rgba(14, 18, 33, 0.04);
 }
 
 .tc-item:hover {
-  background: #e0d428;
+  border: 2px solid var(--color-primary);
   transition: background 0.3s ease;
 }
 .tc-left {
@@ -155,33 +164,39 @@
   align-items: center;
   gap: 10px;
 }
+/* Caret (mũi tên) */
 .tc-caret {
   border: 0;
   background: transparent;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+  width: 50px;
+  height: auto; /* ✅ luôn có khung */
+  border-radius: 6px;
   cursor: pointer;
-  color: var(--muted);
+  color: var(--color-text);
   transition: transform 0.18s ease, background 0.12s ease;
 }
-.tc-caret:hover {
-  background: rgba(0, 0, 0, 0.04);
-  transform: translateY(-1px);
-}
-.tc-caret.open {
-  transform: rotate(0deg);
+
+.tc-caret svg {
+  font-size: 16px;
+  pointer-events: none;
 }
 
+.tc-caret:hover {
+  border: 2px solid var(--color-text);
+}
+
+.tc-caret.open {
+  transform: rotate(2deg); /* ✅ xoay khi mở */
+}
+
+/* Placeholder caret (khi không có con) */
 .tc-caret-placeholder {
   width: 28px;
   height: 28px;
-  display: inline-block;
 }
-
 .tc-title-block {
   display: flex;
   flex-direction: column;
@@ -194,14 +209,15 @@
   align-items: center;
 }
 .tc-sub {
-  font-size: 13px;
+  font-size: 16px;
+  font-weight: 400;
   color: var(--muted);
   margin-top: 4px;
 }
 
 /* FIX: Thêm style cho level indicator */
 .tc-level-badge {
-  background: linear-gradient(135deg, var(--brand), #ff8a50);
+  background: var(--color-primary);
   color: white;
   padding: 2px 8px;
   border-radius: 12px;
@@ -209,12 +225,12 @@
   font-weight: 700;
   min-width: 45px;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(229, 111, 44, 0.3);
+  box-shadow: 0 2px 8px rgba(137, 190, 233, 0.3);
 }
 
 .tc-badge-inactive {
   background: #fff6e9;
-  color: #d46a1a;
+  color: var(--color-primary);
   padding: 4px 8px;
   border-radius: 999px;
   font-size: 12px;
@@ -228,6 +244,10 @@
   align-items: center;
 }
 .tc-action {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
   width: 36px;
   height: 36px;
   display: inline-grid;
@@ -243,20 +263,15 @@
 .tc-action:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(8, 12, 20, 0.08);
-  color: var(--brand);
+  color: var(--color-primary);
 }
-.tc-action.danger {
-  color: #d24b4b;
-  border-color: rgba(210, 75, 75, 0.12);
+p.tc-action.delete {
+  margin-bottom: 0px;
 }
-.tc-action.danger:hover {
-  color: #b72f2f;
-}
-
 /* highlight (when user clicked from recent) */
 .tc-highlight .tc-item {
-  border-left: 4px solid var(--brand);
-  background: linear-gradient(90deg, rgba(236, 240, 12, 0.6), #fff);
+  border-left: 4px solid var(--color-primary);
+  background: linear-gradient(-90deg, var(--color-primary-hover), #fff);
   transition: background 0.18s ease, transform 0.12s ease;
 }
 .tc-highlight .tc-item:hover {
@@ -312,7 +327,7 @@
 .tc-btn {
   padding: 8px 12px;
   border-radius: 10px;
-  border: 1px solid #e7e7ea;
+  border: 1px solid var(--color-text-muted);
   cursor: pointer;
   background: #fff;
 }
@@ -321,7 +336,7 @@
 }
 .tc-btn-danger {
   background: #ffebeb;
-  color: #b52b2b;
+  color: var(--color-danger);
   border-color: rgba(181, 43, 43, 0.12);
 }
 
@@ -334,7 +349,7 @@
   border-radius: 10px;
 }
 .tc-panel-inner::-webkit-scrollbar-thumb {
-  background: var(--brand);
+  background: var(--color-primary);
   border-radius: 10px;
   opacity: 0.7;
 }

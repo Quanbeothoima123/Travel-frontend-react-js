@@ -1,29 +1,19 @@
-:root {
-  --brand: #e56f2c;
-  --brand-700: #d46325;
-  --brand-800: #c4571d;
-  --ink: #1b1b1f;
-  --paper: #fff;
-  --muted: #707480;
-  --line: #e7e7ea;
-  --radius: 14px;
-  --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  --header-h: 64px;
-  --sidebar-w: 260px;
-}
+/* =========================
+   AdminHeader (ah- prefix)
+   ========================= */
 
 .admin-header {
   position: fixed;
   inset: 0 0 auto 0;
-  height: var(--header-h);
-  background: var(--brand);
-  color: #fff;
+  height: 64px; /* giữ nguyên */
+  background: var(--color-bg-card);
+  color: var(--color-primary);
   z-index: 50;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 14px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-md);
 }
 
 .ah-left {
@@ -31,8 +21,9 @@
   align-items: center;
   gap: 10px;
 }
+
 .ah-brand {
-  color: #fff;
+  color: var(--color-primary);
   font-weight: 700;
   letter-spacing: 0.2px;
   text-decoration: none;
@@ -53,28 +44,32 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: auto;
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  background: #fff;
-  color: var(--brand-800);
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary-hover);
   transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
+}
+
+.ah-icon-btn svg {
+  font-size: 30px; /* hoặc 24px tùy bạn muốn to bao nhiêu */
 }
 .ah-icon-btn:hover {
   transform: translateY(-1px);
 }
 .ah-icon-btn.active {
-  background: #ffe9dd;
+  border: 2px solid var(--color-primary);
 }
 
 .ah-badge {
   position: absolute;
   top: -4px;
   right: -4px;
-  background: #ff4757;
+  background: var(--color-danger);
   color: #fff;
   font-size: 11px;
   min-width: 18px;
@@ -83,7 +78,7 @@
   place-items: center;
   border-radius: 999px;
   padding: 0 5px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-md);
 }
 
 /* Dropdown */
@@ -95,10 +90,10 @@
   right: 0;
   top: calc(100% + 10px);
   width: min(380px, 86vw);
-  background: #fff;
-  color: var(--ink);
+  background: var(--color-bg);
+  color: var(--color-text);
   border-radius: 16px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
   transform-origin: 90% -10px;
   transform: scale(0.97) translateY(-6px);
@@ -111,11 +106,12 @@
   transform: scale(1) translateY(0);
   pointer-events: auto;
 }
+
 .ah-dd-title {
   padding: 12px 14px;
   font-weight: 700;
-  background: #fafafb;
-  border-bottom: 1px solid var(--line);
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-light);
 }
 .ah-dd-list {
   list-style: none;
@@ -126,24 +122,24 @@
 }
 .ah-dd-item {
   padding: 10px 14px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--color-border-light);
 }
 .ah-dd-item:last-child {
   border-bottom: none;
 }
 .ah-dd-item.unread {
-  background: #fff7f1;
+  background: var(--color-warning-hover);
 }
 .ah-dd-item-title {
   font-weight: 600;
 }
 .ah-dd-item-desc {
-  color: var(--muted);
+  color: var(--color-text-muted);
   font-size: 13px;
   margin-top: 2px;
 }
 .ah-dd-item-meta {
-  color: var(--muted);
+  color: var(--color-text-muted);
   font-size: 12px;
   margin-top: 4px;
 }
@@ -151,13 +147,13 @@
   display: block;
   text-align: center;
   padding: 10px 12px;
-  background: #fafafb;
-  color: var(--brand-800);
+  background: var(--color-bg-secondary);
+  color: var(--color-primary-hover);
   text-decoration: none;
   font-weight: 600;
 }
 .ah-dd-footer:hover {
-  background: #f3f3f6;
+  background: var(--color-border-light);
 }
 
 .ah-user-btn {
@@ -165,28 +161,31 @@
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
-  background: #fff;
-  color: var(--ink);
-  border: none;
+  background-color: var(--color-bg-card);
+  border: 2px solid var(--color-primary);
+  color: var(--color-text);
+  border: 2px solid var(--color-primary);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   cursor: pointer;
   transition: background 0.2s ease, transform 0.15s ease;
 }
 .ah-user-btn:hover {
   transform: translateY(-1px);
+  background-color: var(--color-text-muted);
+  /* color: var(--color-bg-card); */
 }
 .ah-avatar {
   font-size: 22px;
-  color: var(--brand-800);
+  color: var(--color-primary-hover);
 }
 .ah-avatar.lg {
   font-size: 42px;
-  color: var(--brand);
+  color: var(--color-primary);
 }
 .ah-user-name {
   font-weight: 600;
-  color: var(--ink);
+  color: var(--color-text);
 }
 .ah-caret {
   transition: transform 0.2s ease;
@@ -200,7 +199,7 @@
   gap: 10px;
   align-items: center;
   padding: 12px 14px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--color-border-light);
 }
 .ah-dd-list.compact {
   padding: 8px 10px;
@@ -213,19 +212,40 @@
 .ah-dd-link button {
   all: unset;
   cursor: pointer;
-  color: var(--ink);
+  color: var(--color-text);
   font-weight: 600;
   padding: 8px 10px;
   display: block;
   border-radius: 10px;
 }
 .ah-dd-link:hover {
-  background: #f6f6f8;
+  background: var(--color-bg-secondary);
 }
 .ah-dd-link.danger button {
-  color: #d63939;
+  color: var(--color-danger);
 }
+
+/* Mặc định ẩn nút (desktop) */
+.ah-left .ah-icon-btn {
+  display: none;
+}
+
+/* Chỉ hiện khi màn hình nhỏ hơn 1024px */
 @media (max-width: 1024px) {
+  .ah-left .ah-icon-btn {
+    display: inline-flex; /* hoặc flex/block tùy layout */
+  }
+
+  /* Ẩn brand khi ở mobile */
+  .ah-brand {
+    display: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  /* .ah-icon-btn {
+    display: none;
+  } */
   .ah-brand {
     display: none;
   }

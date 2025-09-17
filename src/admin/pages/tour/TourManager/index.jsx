@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { FaPlusCircle } from "react-icons/fa";
 import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
-import ConfirmModal from "../../../../components/common/ConfirmModal";
+import ConfirmModal from "../../../../admin/components/common/ConfirmModal";
 import LoadingModal from "../../../../admin/components/common/LoadingModal";
 import "./TourManager.css";
 import { useToast } from "../../../../contexts/ToastContext";
@@ -45,6 +45,7 @@ export default function TourManager() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const [selectedNameTour, setSelectedNameTour] = useState("");
 
   useEffect(() => {
     const params = {};
@@ -234,7 +235,6 @@ export default function TourManager() {
       }
       await fetchTours();
     } catch (e) {
-      console.error("delete error", e);
       showToast("Lỗi khi xóa tour.", "error");
     } finally {
       setUpdating(false);
@@ -492,6 +492,7 @@ export default function TourManager() {
                           <button
                             onClick={() => {
                               setSelectedId(t._id);
+                              setSelectedNameTour(t.title);
                               setIsModalOpen(true);
                             }}
                             className="tm-action-delete"
@@ -529,10 +530,11 @@ export default function TourManager() {
       </div>
 
       <ConfirmModal
-        isOpen={isModalOpen}
+        open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={confirmDelete}
-        message="Bạn có chắc chắn muốn xóa tour này?"
+        title="Xóa tour du lịch"
+        message={`Bạn đồng ý xóa tour ${selectedNameTour} chứ?`}
       />
     </div>
   );
