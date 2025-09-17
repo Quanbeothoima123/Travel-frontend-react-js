@@ -70,7 +70,7 @@
   padding: 10px 18px;
   border-radius: 8px;
   border: none;
-  background: #0b74de;
+  background: var(--color-primary);
   color: white;
   font-weight: 600;
   cursor: pointer;

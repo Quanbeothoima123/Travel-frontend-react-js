@@ -37,12 +37,13 @@
 }
 
 .depart .map-link {
-  margin-left: 10px;
+  margin-left: 5px;
   font-size: 0.8125rem; /* 13px */
   color: var(--color-primary);
   text-decoration: none;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
 }
 

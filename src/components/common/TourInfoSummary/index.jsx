@@ -3,6 +3,8 @@ import "./TourInfoSummary.css";
 
 export default function TourInfoSummary({ tourDetail, totalPrice }) {
   if (!tourDetail) return <div className="tis-loading">Đang tải...</div>;
+  console.log(tourDetail);
+  console.log(tourDetail.vehicleId);
 
   const formatVND = (n) =>
     (n || 0).toLocaleString("vi-VN", { style: "currency", currency: "VND" });
@@ -23,8 +25,10 @@ export default function TourInfoSummary({ tourDetail, totalPrice }) {
         {tourDetail.travelTimeId?.night - 1} đêm
       </p>
       <p>
-        <strong>Phương tiện:</strong> {tourDetail.vehicleId?.[0]?.name}
+        <strong>Phương tiện:</strong>{" "}
+        {tourDetail.vehicleId?.map((v) => v.name).join(" | ")}
       </p>
+
       <p>
         <strong>Lưu trú:</strong> Khách sạn {tourDetail.hotelId?.star} sao
       </p>

@@ -28,9 +28,11 @@ const TourCard = ({ tour }) => {
       <p className="tc-info">
         <FaBed /> {tour.day} Ngày {tour.night} Đêm
       </p>
+      {/* Phương tiện */}
       <p className="tc-info">
-        <FaCarSide /> {tour.vehicle?.[0]}
+        <FaCarSide /> {tour.vehicle?.join(" | ")}
       </p>
+
       <p className="tc-info">
         <FaHotel /> Khách sạn {tour.hotelStar} sao
       </p>

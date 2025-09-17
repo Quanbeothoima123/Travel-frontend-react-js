@@ -12,6 +12,7 @@ import {
   FaPhone,
   FaLinkedin,
   FaPaperPlane,
+  FaExclamation,
 } from "react-icons/fa";
 import { useToast } from "../../../contexts/ToastContext";
 import "./TourInfo.css";
@@ -30,7 +31,7 @@ const TourInfo = ({ tourDetail }) => {
     vehicleId,
     hotelId,
     frequency,
-    departPlaces,
+    departPlaceId,
     prices,
     discount,
     tags,
@@ -95,21 +96,25 @@ const TourInfo = ({ tourDetail }) => {
         <FaCalendarAlt className="icon" /> Khởi hành: {start}
       </p>
 
-      {departPlaces && (
+      {departPlaceId && (
         <p className="depart">
-          <FaPlane className="icon" /> Điểm khởi hành: {departPlaces.place}
-          {departPlaces.googleMap && (
+          <FaPlane className="icon" /> Điểm khởi hành: {departPlaceId.name}
+          {departPlaceId.googleDirection && (
             <a
-              href={departPlaces.googleMap}
+              href={departPlaceId.googleDirection}
               target="_blank"
               rel="noopener noreferrer"
               className="map-link"
             >
-              <FaMapMarkerAlt /> Xem bản đồ
+              <FaMapMarkerAlt />
+              Map
             </a>
           )}
         </p>
       )}
+      <p>
+        <FaExclamation className="icon" /> Chú ý: {departPlaceId.description}
+      </p>
 
       <div className="price">
         {discountedPrice.toLocaleString("vi-VN", {
