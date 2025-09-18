@@ -7,10 +7,13 @@
   transition: all 0.3s ease;
   background: #fafafa;
 }
-
-.image-uploader:hover {
-  border-color: #007bff;
-  background: #f0f8ff;
+.image-uploader button {
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+.image-uploader button:hover {
+  background: var(--color-primary);
+  color: var(--color-bg-card);
 }
 
 .image-uploader input {
@@ -20,7 +23,7 @@
 .image-uploader p {
   margin: 0;
   font-size: 14px;
-  color: #555;
+  color: var(--color-primary);
 }
 
 .image-uploader img {

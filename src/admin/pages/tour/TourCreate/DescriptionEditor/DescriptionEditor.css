@@ -10,7 +10,7 @@
   margin-bottom: 15px;
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-primary);
 }
 
 /* Tabs */
@@ -38,17 +38,15 @@
 }
 
 .day-tab.active {
-  background-color: #e56f2c;
-  color: #fff;
-  border-color: #e56f2c;
+  background: var(--color-primary);
+  color: var(--color-bg-card);
 }
 
 .add-day-btn {
   padding: 6px 12px;
   border-radius: 6px;
-  border: none;
-  background-color: #e56f2c;
-  color: #fff;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   cursor: pointer;
   font-size: 14px;
 }
@@ -57,7 +55,7 @@
   padding: 2px 6px;
   border-radius: 4px;
   border: none;
-  background-color: #f70509;
+  background-color: var(--color-danger);
   color: #fff;
   cursor: pointer;
   font-size: 12px;
@@ -79,8 +77,8 @@
 }
 
 .day-editor input[type="text"]:focus {
-  border-color: #e56f2c;
-  box-shadow: 0 0 0 8px rgba(229, 111, 44, 0.15);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 8px rgba(66, 130, 226, 0.15);
   outline: none;
 }
 
@@ -91,23 +89,6 @@
   border: 1px solid #ccc;
 }
 
-/* ImageUploader button màu e56f2c */
-.image-uploader button {
-  background-color: #e56f2c;
-  color: #fff;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.image-uploader button:hover {
-  background-color: #d65a1f;
-}
-
-/* ====== BỔ SUNG: Upload | Link cho ảnh ngày ====== */
-
 .thumbnail-section .thumbnail-options {
   display: flex;
   flex-direction: column;
@@ -116,10 +97,9 @@
 }
 
 .thumbnail-section .link-btn {
-  background: #1976d2;
-  color: #fff;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   padding: 6px 14px;
-  border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.2s;
@@ -127,7 +107,8 @@
 }
 
 .thumbnail-section .link-btn:hover {
-  background: #145a9e;
+  background: var(--color-primary);
+  color: var(--color-bg-card);
 }
 
 .thumbnail-section .link-input-wrapper {
@@ -145,17 +126,17 @@
 }
 
 .thumbnail-section .add-link-btn {
-  background: #2e7d32;
-  color: #fff;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   padding: 6px 12px;
-  border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .thumbnail-section .add-link-btn:hover {
-  background: #1b5e20;
+  background: var(--color-primary);
+  color: var(--color-bg-card);
 }
 
 .thumbnail-section .cancel-link-btn {
@@ -195,7 +176,7 @@
   position: absolute;
   top: 6px;
   right: 6px;
-  background: #f50004;
+  background: var(--color-danger);
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -210,5 +191,5 @@
 }
 
 .thumbnail-section .remove-btn:hover {
-  background: #e33b3b;
+  background: var(--color-danger-hover);
 }

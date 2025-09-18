@@ -35,17 +35,17 @@
 }
 
 .add-link-btn {
-  background: #2e7d32;
-  color: #fff;
+  color: var(--color-bg-card);
+  border: 2px solid var(--color-primary);
   padding: 6px 12px;
-  border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .add-link-btn:hover {
-  background: #1b5e20;
+  background: var(--color-primary);
+  color: var(--color-bg-card);
 }
 
 .images-uploader .preview-list {

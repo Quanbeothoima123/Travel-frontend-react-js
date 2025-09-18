@@ -65,15 +65,14 @@
 }
 
 .tags-input .tag-add input[type="text"]:focus {
-  border-color: #1890ff;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.15);
   outline: none;
 }
 
 .tags-input .tag-add button {
-  background-color: #e56f2c;
-  color: #fff;
-  border: none;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
@@ -81,13 +80,13 @@
 }
 
 .tags-input .tag-add button:hover {
-  background-color: #0f75d1;
+  color: var(--color-bg-card);
+  border: 2px solid var(--color-primary);
 }
 
 .tags-input .tag-add .btn-auto {
-  background-color: #1890ff;
-  color: #fff;
-  border: none;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
@@ -95,13 +94,13 @@
 }
 
 .tags-input .tag-add .btn-auto:hover {
-  background-color: #0f75d1;
+  color: var(--color-bg-card);
+  border: 2px solid var(--color-primary);
 }
 
 .tags-input .tag-add .btn-clear {
-  background-color: #ff4d4f;
-  color: #fff;
-  border: none;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
@@ -109,5 +108,6 @@
 }
 
 .tags-input .tag-add .btn-clear:hover {
-  background-color: #d9363e;
+  color: var(--color-bg-card);
+  border: 2px solid var(--color-primary);
 }

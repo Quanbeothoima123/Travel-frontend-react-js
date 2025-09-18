@@ -1,8 +1,4 @@
 :root {
-  --brand: #e56f2c;
-  --paper: #fff;
-  --bg: #f6f7fb;
-  --ink: #1b1b1f;
   --header-h: 64px;
   --sidebar-w: 260px;
 }
@@ -10,6 +6,10 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
+}
+.tour-create button {
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
 }
 
 .tour-form {
@@ -42,16 +42,16 @@
 
 .form-submit button {
   padding: 10px 16px;
-  border: none;
+  border: 2px solid var(--color-primary);
   border-radius: 6px;
-  background: var(--brand);
-  color: #fff;
+  color: var(--color-primary);
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .form-submit button:hover {
-  background: #0056b3;
+  background: var(--color-primary);
+  color: var(--color-bg-card);
 }
 
 /* nút kiểm tra */
@@ -73,14 +73,15 @@
 /* nút lưu */
 .btn-save {
   padding: 10px 16px;
-  border: none;
+  border: 2px solid var(--color-primary);
   border-radius: 6px;
-  background: var(--brand);
-  color: #fff;
+  background: var(pri);
+  color: var(--color-primary);
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .btn-save:hover {
-  background: #c85a21;
+  background: var(--color-primary);
+  color: var(--color-bg-card);
 }
