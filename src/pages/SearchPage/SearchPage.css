@@ -1,92 +1,384 @@
-.search-page {
+.sp-search-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.search-container {
+.sp-search-container {
   display: flex;
-  gap: 20px;
+  gap: 24px;
+  align-items: flex-start;
 }
 
-/* LEFT: Tour list */
-.tour-list {
-  flex: 3;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* mặc định 3 cột */
-  gap: 20px;
-}
-
-/* RIGHT: Sidebar search */
-.search-sidebar {
+/* LEFT: Tour list container */
+.sp-tour-list-container {
   flex: 1;
+  min-width: 0; /* Prevents flex item from growing beyond container */
+}
+
+/* Sort controls */
+.sp-sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: var(--color-bg-card, #ffffff);
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.sp-sort-label {
+  font-weight: 500;
+  color: var(--color-text-primary, #374151);
+  white-space: nowrap;
+}
+
+.sp-sort-select {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  min-width: 160px;
+}
+
+.sp-sort-select:focus {
+  outline: none;
+  border-color: var(--color-primary, #007bff);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+/* Tour list grid */
+.sp-tour-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+/* Loading and empty states */
+.sp-loading,
+.sp-no-tours {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--color-text-secondary, #6b7280);
+  font-size: 16px;
+  padding: 60px 20px;
+  background: var(--color-bg-card, #ffffff);
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+/* RIGHT: Sidebar search - Fixed width */
+.sp-search-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+}
+
+.sp-search-filters-container {
+  background: var(--color-bg-card, #ffffff);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+  position: sticky;
+  top: 20px;
+}
+
+.sp-sidebar-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary, #1f2937);
+  margin: 0 0 20px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--color-primary, #007bff);
+}
+
+/* Filter sections */
+.sp-filter-section {
+  margin-bottom: 20px;
+}
+
+.sp-filter-section:last-of-type {
+  margin-bottom: 24px;
+}
+
+.sp-filter-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary, #374151);
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Price range styling */
+.sp-price-range {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
-/* Nút tìm kiếm */
-.search-button {
-  background-color: #007bff; /* xanh dương Bootstrap */
-  color: #fff;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
+.sp-price-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.sp-price-input {
+  width: 100%;
+  padding: 10px 35px 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: #f9fafb;
+}
+
+.sp-price-input:focus {
+  outline: none;
+  border-color: var(--color-primary, #007bff);
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.sp-currency {
+  position: absolute;
+  right: 12px;
   font-weight: 500;
+  color: var(--color-primary, #007bff);
+  pointer-events: none;
+  font-size: 13px;
+}
+
+/* Depart place select */
+.sp-depart-place-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #f9fafb;
+  color: var(--color-text-primary, #1f2937);
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
+}
+
+.sp-depart-place-select:focus {
+  outline: none;
+  border-color: var(--color-primary, #007bff);
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+/* Checkbox styling */
+.sp-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.sp-checkbox-group::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sp-checkbox-group::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 2px;
+}
+
+.sp-checkbox-group::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+.sp-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.sp-checkbox-item:hover {
+  background: #f1f5f9;
+}
+
+.sp-checkbox-input {
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.sp-checkbox-custom {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 3px;
+  background: #ffffff;
+  position: relative;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sp-checkbox-input:checked + .sp-checkbox-custom {
+  background: var(--color-primary, #007bff);
+  border-color: var(--color-primary, #007bff);
+}
+
+.sp-checkbox-input:checked + .sp-checkbox-custom::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.sp-checkbox-input:focus + .sp-checkbox-custom {
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+.sp-checkbox-label {
+  font-size: 13px;
+  color: var(--color-text-primary, #374151);
+  line-height: 1.3;
+  user-select: none;
+}
+
+.sp-checkbox-item:hover .sp-checkbox-label {
+  color: var(--color-primary, #007bff);
+}
+
+/* Search button */
+.sp-search-button {
+  width: 100%;
+  color: white;
+  background: var(--color-primary, #007bff);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
   text-align: center;
+  margin-top: 4px;
 }
 
-.search-button:hover {
-  background-color: #0056b3; /* xanh đậm hơn */
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+.sp-search-button:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
-.search-button:active {
-  transform: translateY(0); /* nhấn xuống */
-  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.2);
+.sp-search-button:active {
+  transform: translateY(0);
 }
 
-.search-button:disabled {
-  background-color: #ccc;
+.sp-search-button:disabled {
+  background-color: #9ca3af;
   cursor: not-allowed;
+  transform: none;
   box-shadow: none;
 }
 
-/* Responsive breakpoints */
-
-/* <1200px → 3 cột */
+/* Responsive */
 @media (max-width: 1199px) {
-  .tour-list {
-    grid-template-columns: repeat(3, 1fr);
+  .sp-search-sidebar {
+    width: 280px;
+  }
+
+  .sp-search-filters-container {
+    padding: 20px;
   }
 }
 
-/* <992px → 2 cột */
 @media (max-width: 991px) {
-  .tour-list {
-    grid-template-columns: repeat(2, 1fr);
+  .sp-tour-list {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+  }
+
+  .sp-search-sidebar {
+    width: 260px;
+  }
+
+  .sp-search-filters-container {
+    padding: 18px;
+  }
+
+  .sp-checkbox-group {
+    max-height: 150px;
   }
 }
 
-/* <768px → sidebar xuống dưới */
 @media (max-width: 767px) {
-  .search-container {
+  .sp-search-container {
     flex-direction: column;
+    gap: 20px;
   }
 
-  .search-sidebar {
-    order: -1;
+  .sp-search-sidebar {
     width: 100%;
+    order: -1;
+  }
+
+  .sp-search-filters-container {
+    position: static;
+    padding: 20px;
+  }
+
+  .sp-tour-list {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+
+  .sp-sort-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .sp-sort-select {
+    min-width: auto;
+  }
+
+  .sp-checkbox-group {
+    max-height: 120px;
   }
 }
 
-/* <576px → chỉ 1 cột */
 @media (max-width: 575px) {
-  .tour-list {
+  .sp-search-page {
+    padding: 16px;
+  }
+
+  .sp-tour-list {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .sp-search-filters-container {
+    padding: 16px;
+  }
+
+  .sp-sidebar-title {
+    font-size: 16px;
+  }
+
+  .sp-sort-controls {
+    padding: 12px;
   }
 }
