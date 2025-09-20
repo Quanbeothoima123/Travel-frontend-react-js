@@ -2,7 +2,7 @@
   max-width: 700px;
   margin: 30px auto;
   padding: 20px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-base);
 }
 
 .header-actions {
@@ -17,34 +17,21 @@
   gap: 6px;
   padding: 8px 14px;
   border-radius: 6px;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
   transition: 0.2s;
 }
-
-.back-btn {
-  background: #e0e0e0;
-  color: #333;
+.btn:hover {
+  background: var(--color-primary);
+  color: var(--color-bg-card);
 }
-
-.back-btn:hover {
-  background: #d5d5d5;
-}
-
-.edit-btn {
-  background: #1976d2;
-  color: #fff;
-}
-
-.edit-btn:hover {
-  background: #1565c0;
-}
-
 .category-detail h2 {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
+  color: var(--color-text);
 }
 
 .detail-card {
