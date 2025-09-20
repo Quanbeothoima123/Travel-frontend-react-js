@@ -21,14 +21,17 @@ import MomoPaymentResultPage from "./pages/MomoPaymentResultPage";
 import HistoryTourOrder from "./pages/HistoryTourOrder";
 import AdminLayout from "./admin/components/layout/AdminLayout";
 import { AuthProvider } from "./contexts/AuthContext";
+// Quản lí danh mục tour
 import TourCategoryManager from "./admin/pages/tour-category/TourCategoryManager";
-import TourCategoryCreate from "./admin/pages/news-category/NewsCategoryCreate";
+import TourCategoryCreate from "./admin/pages/tour-category/TourCategoryCreate";
 import TourCategoryDetail from "./admin/pages/tour-category/TourCategoryDetail";
 import TourCategoryUpdate from "./admin/pages/tour-category/TourCategoryEdit";
+// Quản lí danh mục tin tức
 import NewsCategoryManager from "./admin/pages/news-category/NewsCategoryManager";
 import NewsCategoryCreate from "./admin/pages/news-category/NewsCategoryCreate";
 import NewsCategoryDetail from "./admin/pages/news-category/NewsCategoryDetail";
 import NewsCategoryEdit from "./admin/pages/news-category/NewsCategoryEdit";
+
 import TourManager from "./admin/pages/tour/TourManager";
 import TourCreatePage from "./admin/pages/tour/TourCreate";
 import AdminTourDetail from "./admin/pages/tour/AdminTourDetail";

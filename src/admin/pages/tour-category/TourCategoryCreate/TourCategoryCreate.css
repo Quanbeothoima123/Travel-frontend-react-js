@@ -1,0 +1,121 @@
+.tcat-wrap {
+  max-width: 640px;
+  margin: 16px auto;
+  padding: 12px;
+}
+
+.tcat-form {
+  display: grid;
+  gap: 14px;
+}
+.tcat-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tcat-row-inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.tcat-label {
+  font-weight: 600;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.tcat-input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+.tcat-input:focus {
+  border-color: #0b74de;
+  outline: none;
+}
+
+.tcat-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.tcat-toggle {
+  width: 40px;
+  height: 24px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+}
+.tcat-toggle.on {
+  background: #16a34a;
+}
+.tcat-toggle.off {
+  background: #6b7280;
+}
+
+.tcat-flag {
+  font-size: 0.9rem;
+}
+
+.tcat-actions {
+  margin-top: 10px;
+}
+.tcat-submit {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  background: var(--color-primary);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tcat-submit:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.tcat-notice {
+  margin-top: 12px;
+  padding: 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tcat-notice.ok {
+  background: #ecfdf5;
+  color: #065f46;
+}
+.tcat-notice.err {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .tcat-wrap {
+    padding: 8px;
+  }
+  .tcat-row-inline {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .tcat-submit {
+    width: 100%;
+  }
+}
