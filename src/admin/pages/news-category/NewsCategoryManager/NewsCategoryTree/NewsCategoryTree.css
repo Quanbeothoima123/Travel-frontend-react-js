@@ -1,0 +1,83 @@
+.nct-tree {
+  padding-left: 1rem;
+}
+
+.nct-node {
+  margin: 0.5rem 0;
+  border-left: 2px solid var(--color-primary);
+  padding-left: 0.5rem;
+}
+.nct-node-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background: #f2f4f7;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.nct-toggle {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.nct-level {
+  font-size: 0.75rem;
+  background: var(--color-border);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+
+.nct-info {
+  flex: 1;
+}
+
+.nct-meta {
+  font-size: 0.75rem;
+  color: #777;
+}
+
+.nct-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.nct-action {
+  cursor: pointer;
+  color: #333;
+  font-size: 0.9rem;
+  width: 40px;
+  height: 40px;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nct-delete {
+  color: red;
+}
+
+/* highlight phát sáng */
+.nct-highlight {
+  animation: ncm-glow 2s ease-out;
+}
+
+@keyframes ncm-glow {
+  0% {
+    background-color: var(--color-primary);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.nct-children {
+  margin-left: 1rem;
+  border-left: 1px dashed #ccc;
+  padding-left: 0.5rem;
+}

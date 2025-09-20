@@ -1,0 +1,17 @@
+.tcm-container {
+  padding: 1rem;
+}
+
+.tcm-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.tcm-tree-wrapper {
+  margin-top: 1rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #e5e5e5;
+}
