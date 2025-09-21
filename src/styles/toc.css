@@ -1,0 +1,181 @@
+/* Table of Contents Styles */
+.toc {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  max-width: 300px;
+  font-family: system-ui, -apple-system, sans-serif;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toc-title {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-bottom: 12px;
+  color: #333;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 8px;
+}
+
+.toc-list,
+.toc-sublist {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.toc-sublist {
+  padding-left: 20px;
+  margin-top: 4px;
+  border-left: 1px solid #dee2e6;
+  margin-left: 8px;
+}
+
+.toc-item {
+  margin: 4px 0;
+}
+
+.toc-link {
+  display: block;
+  color: #007bff;
+  text-decoration: none;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-size: 0.9em;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.toc-link:hover {
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  transform: translateX(2px);
+}
+
+.toc-link:focus {
+  outline: 2px solid #0056b3;
+  outline-offset: 2px;
+}
+
+/* Level-specific styling */
+.toc-level-1 .toc-link {
+  font-weight: bold;
+  font-size: 1em;
+  color: #0056b3;
+}
+
+.toc-level-2 .toc-link {
+  font-weight: 600;
+  color: #007bff;
+}
+
+.toc-level-3 .toc-link {
+  font-weight: normal;
+  opacity: 0.9;
+  color: #6c757d;
+}
+
+.toc-level-4 .toc-link,
+.toc-level-5 .toc-link,
+.toc-level-6 .toc-link {
+  font-weight: normal;
+  opacity: 0.8;
+  font-size: 0.85em;
+  color: #868e96;
+}
+
+/* Active state (có thể dùng JS để add class này) */
+.toc-link.active {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+  font-weight: 600;
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .toc {
+    background: #2d3748;
+    border-color: #4a5568;
+    color: #e2e8f0;
+  }
+
+  .toc-title {
+    color: #e2e8f0;
+    border-bottom-color: #4299e1;
+  }
+
+  .toc-sublist {
+    border-left-color: #4a5568;
+  }
+
+  .toc-link {
+    color: #4299e1;
+  }
+
+  .toc-link:hover {
+    background-color: #4299e1;
+    color: #1a202c;
+  }
+
+  .toc-level-1 .toc-link {
+    color: #63b3ed;
+  }
+
+  .toc-level-2 .toc-link {
+    color: #4299e1;
+  }
+
+  .toc-level-3 .toc-link {
+    color: #a0aec0;
+  }
+
+  .toc-level-4 .toc-link,
+  .toc-level-5 .toc-link,
+  .toc-level-6 .toc-link {
+    color: #718096;
+  }
+
+  .toc-link.active {
+    background-color: #2c5282;
+    color: #bee3f8;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .toc {
+    max-width: 100%;
+    margin: 10px 0;
+    padding: 15px;
+  }
+
+  .toc-sublist {
+    padding-left: 15px;
+    margin-left: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .toc {
+    padding: 12px;
+    margin: 8px 0;
+  }
+
+  .toc-title {
+    font-size: 1em;
+    margin-bottom: 10px;
+  }
+
+  .toc-link {
+    padding: 5px 6px;
+    font-size: 0.85em;
+  }
+
+  .toc-sublist {
+    padding-left: 12px;
+  }
+}
