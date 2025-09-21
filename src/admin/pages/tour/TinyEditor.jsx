@@ -27,19 +27,39 @@ const TinyEditor = ({ value, onChange, label }) => {
         apiKey={apiKey}
         value={value}
         init={{
-          height: 300,
-          menubar: false,
+          height: 500,
+          menubar: true,
+          language: "vi", // bật tiếng Việt
+          language_url: "/tinymce/langs/vi.js", // đường dẫn tới file vi.js trong public
+
           plugins: [
-            "advlist autolink lists link image charmap preview anchor",
-            "searchreplace visualblocks code fullscreen",
-            "insertdatetime media table code help wordcount",
+            "advlist",
+            "autolink",
+            "lists",
+            "link",
             "image",
+            "charmap",
+            "preview",
+            "anchor",
+            "searchreplace",
+            "visualblocks",
+            "code",
+            "fullscreen",
+            "insertdatetime",
+            "media",
+            "table",
+            "help",
+            "wordcount",
           ],
           toolbar: [
-            "undo redo | formatselect | bold italic backcolor",
-            "alignleft aligncenter alignright alignjustify",
-            "bullist numlist outdent indent | removeformat | help | image",
-          ].join(" | "),
+            "undo redo | styleselect fontselect fontsizeselect | " +
+              "bold italic underline strikethrough forecolor backcolor | " +
+              "alignleft aligncenter alignright alignjustify | " +
+              "bullist numlist outdent indent | " +
+              "link image media anchor | table | " +
+              "code preview visualblocks fullscreen | " +
+              "insertdatetime charmap | removeformat | wordcount help",
+          ],
           images_upload_handler: handleImageUpload,
           automatic_uploads: true,
           file_picker_types: "image",
