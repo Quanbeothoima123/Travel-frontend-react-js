@@ -24,9 +24,8 @@
 
 .toggle-btn {
   font-size: 0.875rem;
-  background-color: var(--color-primary);
-  color: #fff;
-  border: none;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   padding: 5px 10px;
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -34,7 +33,8 @@
 }
 
 .toggle-btn:hover {
-  background-color: var(--color-primary-hover, #d65a1a);
+  background: var(--color-primary);
+  color: var(--color-bg-card);
 }
 
 /* Responsive */

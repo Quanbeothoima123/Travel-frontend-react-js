@@ -10,7 +10,7 @@
 .hd-header__inner {
   display: flex;
   align-items: center;
-  gap: 1rem; /* rộng hơn để các phần không sát nhau */
+  gap: 0.5rem; /* rộng hơn để các phần không sát nhau */
   padding: 0.75rem 0;
 }
 
@@ -92,17 +92,16 @@
 .hd-header__submenu .hd-header__menu-link {
   padding: 0.5rem 0.85rem;
   font-size: 0.95rem;
-  color: var(--color-text);
-  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
   border-radius: 6px;
   display: block;
 }
 
 /* hover item trong submenu: nền rõ, chữ primary */
 .hd-header__submenu .hd-header__menu-link:hover {
-  background-color: var(--color-bg-card);
-  color: var(--color-primary);
-  border-color: var(--color-border);
+  background: var(--color-primary);
+  color: var(--color-bg-card);
 }
 
 /* submenu cấp 2 (đẩy sang phải) */
@@ -115,7 +114,7 @@
 .hd-header__icon-caret {
   margin-left: auto;
   font-size: 0.85rem;
-  color: var(--color-text-muted);
+  color: var(--color-primary);
 }
 
 /* Auth / right area */
@@ -217,7 +216,7 @@
   }
   .hd-header__mobile-only {
     display: inline-flex;
-    font-size: 1.3rem;
+    font-size: 1rem;
     background: none;
     border: none;
     cursor: pointer;

@@ -19,8 +19,8 @@
 
 .ttr-tab-buttons button {
   padding: 0.625rem 1.125rem; /* 10px 18px */
-  border: none;
-  background: var(--color-bg);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   cursor: pointer;
   border-radius: var(--radius-sm);
   font-size: 0.9375rem;
@@ -28,16 +28,16 @@
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s ease;
-  color: var(--color-text);
 }
 
 .ttr-tab-buttons button:hover {
-  background: var(--color-border);
+  background: var(--color-primary);
+  color: var(--color-bg-card);
 }
 
 .ttr-tab-buttons button.active {
   background: var(--color-primary);
-  color: var(--color-bg);
+  color: var(--color-bg-card);
   transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }

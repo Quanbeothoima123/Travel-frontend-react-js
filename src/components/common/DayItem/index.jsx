@@ -1,10 +1,25 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./DayItem.css";
 import SafeHTML from "../SafeHTML";
-const DayItem = ({ day, title, image, description, isOpen }) => {
+
+const DayItem = ({
+  day,
+  title,
+  image,
+  description,
+  isOpen,
+  onIndividualToggle,
+}) => {
   const [open, setOpen] = useState(false);
   const expanded = open || isOpen;
   const contentRef = useRef(null);
+
+  // Sync với isOpen từ parent khi "Xem tất cả/Thu gọn"
+  useEffect(() => {
+    if (isOpen !== undefined) {
+      setOpen(isOpen);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -17,9 +32,36 @@ const DayItem = ({ day, title, image, description, isOpen }) => {
     }
   }, [expanded]);
 
+  // Handle click trên header (chỉ toggle khi click vào header, không phải icon)
+  const handleHeaderClick = (e) => {
+    // Nếu click vào icon thì không toggle ở đây
+    if (!e.target.closest(".di-day-item__icon")) {
+      setOpen(!open);
+      // Thông báo parent về individual toggle
+      if (onIndividualToggle) {
+        onIndividualToggle();
+      }
+    }
+  };
+
+  // Handle click trên icon - luôn toggle (kể cả khi đang mở)
+  const handleIconClick = (e) => {
+    e.stopPropagation();
+    setOpen(!open);
+    // Thông báo parent về individual toggle
+    if (onIndividualToggle) {
+      onIndividualToggle();
+    }
+  };
+
+  // Handle click trên content - ngăn đóng item
+  const handleContentClick = (e) => {
+    e.stopPropagation();
+  };
+
   return (
-    <div className="di-day-item" onClick={() => setOpen(!open)}>
-      <div className="di-day-item__header">
+    <div className="di-day-item">
+      <div className="di-day-item__header" onClick={handleHeaderClick}>
         {!expanded && (
           <img
             src={image}
@@ -39,6 +81,7 @@ const DayItem = ({ day, title, image, description, isOpen }) => {
           className={`di-day-item__icon ${
             expanded ? "di-day-item__icon--open" : ""
           }`}
+          onClick={handleIconClick}
         >
           ▼
         </span>
@@ -47,6 +90,7 @@ const DayItem = ({ day, title, image, description, isOpen }) => {
       <div
         ref={contentRef}
         className={`di-day-item__content-wrapper ${expanded ? "open" : ""}`}
+        onClick={handleContentClick}
       >
         <SafeHTML html={description} className="di-day-item__content" />
       </div>
