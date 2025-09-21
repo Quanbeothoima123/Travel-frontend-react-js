@@ -48,7 +48,7 @@ const TourCreatePage = () => {
   const [loading, setLoading] = useState(true);
   const [loadingModal, setLoadingModal] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
-
+  const [iconForLoading, setIconForLoading] = useState("");
   // === Options from API ===
   const [travelTimes, setTravelTimes] = useState([]);
   const [hotels, setHotels] = useState([]);
@@ -160,8 +160,6 @@ const TourCreatePage = () => {
   // === Unified postForm for check + submit ===
   const postForm = async (url, successMsg, failMsg) => {
     setLoadingModal(true);
-    setLoadingMessage("Đang xử lý...");
-
     const MIN_LOADING = 2500;
 
     try {
@@ -191,6 +189,8 @@ const TourCreatePage = () => {
   };
 
   const handleCheck = () => {
+    setIconForLoading("FaCheck");
+    setLoadingMessage("Đang kiểm tra thông tin");
     postForm(
       `${API_BASE}/api/v1/admin/tours/check-info-tour-create`,
       "Dữ liệu tour hợp lệ",
@@ -199,6 +199,8 @@ const TourCreatePage = () => {
   };
 
   const handleSubmit = (e) => {
+    setLoadingMessage("Đang tiến hành lưu tour");
+    setIconForLoading("FaSave");
     e.preventDefault();
     postForm(
       `${API_BASE}/api/v1/admin/tours/create`,
@@ -225,7 +227,11 @@ const TourCreatePage = () => {
   return (
     <div className="tour-create">
       <h2>Tạo tour mới</h2>
-      <LoadingModal open={loadingModal} message={loadingMessage} />
+      <LoadingModal
+        open={loadingModal}
+        message={loadingMessage}
+        icon={iconForLoading}
+      />
 
       {loading ? (
         <p>Đang tải dữ liệu…</p>
