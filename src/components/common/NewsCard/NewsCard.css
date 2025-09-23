@@ -1,0 +1,99 @@
+/* Wrapper */
+.n-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%; /* Thay đổi từ max-width thành width */
+  min-height: 350px; /* Thêm min-height để card có kích thước nhất quán */
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.n-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Thumbnail */
+.n-card-thumbnail {
+  overflow: hidden; /* Thêm để đảm bảo ảnh không tràn */
+}
+
+.n-card-thumbnail img {
+  width: 100%;
+  height: 220px; /* Thay đổi từ height: auto thành fixed height */
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease; /* Thêm hiệu ứng hover cho ảnh */
+}
+
+.n-card:hover .n-card-thumbnail img {
+  transform: scale(1.05); /* Hiệu ứng zoom khi hover */
+}
+
+/* Content */
+.n-card-content {
+  padding: 20px; /* Tăng padding để có không gian thoải mái hơn */
+  position: relative;
+  flex-grow: 1; /* Đảm bảo content chiếm hết không gian còn lại */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.n-card-quote {
+  font-size: 32px; /* Tăng size cho nổi bật hơn */
+  color: var(--color-primary-hover);
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  opacity: 0.7;
+}
+
+.n-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px; /* Tăng margin bottom */
+  padding-left: 32px; /* Tăng padding để chừa chỗ quote */
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Giới hạn 2 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.n-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* Tăng gap */
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-bottom: 16px; /* Tăng margin */
+  padding-left: 32px; /* Căn chỉnh với title */
+}
+
+.n-card-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Tăng gap giữa icon và text */
+}
+
+.n-card-excerpt {
+  font-size: 14px;
+  color: var(--color-text);
+  line-height: 1.5;
+  margin: 0;
+  padding-left: 32px; /* Căn chỉnh với title */
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Giới hạn 3 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Responsive - Loại bỏ các responsive cũ vì đã có grid layout */
+/* Grid layout sẽ tự động điều chỉnh kích thước */
