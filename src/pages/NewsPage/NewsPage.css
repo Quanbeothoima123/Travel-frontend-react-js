@@ -1,0 +1,452 @@
+/* NewsPage.css */
+.np-news-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Page Header */
+.np-page-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 40px 20px;
+  background: var(--color-primary-hover);
+  border-radius: 16px;
+}
+
+.np-page-header h1 {
+  color: var(--color-bg-card);
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.np-page-header p {
+  color: var(--color-bg-card);
+  font-size: 16px;
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* Search & Filter Section */
+.np-search-filter-section {
+  background: var(--color-bg-card, #ffffff);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+}
+
+.np-search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Main Search */
+.np-main-search {
+  width: 100%;
+}
+
+/* Filter Row */
+.np-filters-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 16px;
+  align-items: end;
+}
+
+.np-filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.np-filter-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary, #374151);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.np-select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #f9fafb;
+  color: var(--color-text-primary, #1f2937);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.np-select:focus {
+  outline: none;
+  border-color: var(--color-primary, #007bff);
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+/* Filter Actions */
+.np-filter-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.np-search-btn,
+.np-clear-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.np-search-btn {
+  background: var(--color-primary, #007bff);
+  color: white;
+}
+
+.np-search-btn:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.np-clear-btn {
+  background: #6b7280;
+  color: white;
+}
+
+.np-clear-btn:hover {
+  background: #4b5563;
+  transform: translateY(-1px);
+}
+
+/* Advanced Filters */
+.np-advanced-filters {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.np-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.np-filter-group-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary, #374151);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.np-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+  max-height: 120px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.np-checkbox-grid::-webkit-scrollbar {
+  width: 4px;
+}
+
+.np-checkbox-grid::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 2px;
+}
+
+.np-checkbox-grid::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+.np-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.np-checkbox-item:hover {
+  background: #f1f5f9;
+}
+
+.np-checkbox-input {
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.np-checkbox-custom {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 3px;
+  background: #ffffff;
+  position: relative;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.np-checkbox-input:checked + .np-checkbox-custom {
+  background: var(--color-primary, #007bff);
+  border-color: var(--color-primary, #007bff);
+}
+
+.np-checkbox-input:checked + .np-checkbox-custom::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.np-checkbox-input:focus + .np-checkbox-custom {
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+.np-checkbox-label {
+  font-size: 13px;
+  color: var(--color-text-primary, #374151);
+  line-height: 1.3;
+  user-select: none;
+}
+
+.np-checkbox-item:hover .np-checkbox-label {
+  color: var(--color-primary, #007bff);
+}
+
+/* News List Section */
+.np-news-list-section {
+  margin-bottom: 40px;
+}
+
+.np-results-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: var(--color-bg-card, #ffffff);
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.np-results-count {
+  font-weight: 500;
+  color: var(--color-text-primary, #374151);
+}
+
+/* News List Grid - Phần được tối ưu */
+.np-news-list {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(320px, 1fr)
+  ); /* Giảm min-width */
+  gap: 24px;
+  align-items: start; /* Thêm để card không bị stretch */
+}
+
+/* Loading and empty states */
+.np-loading {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--color-text-secondary, #6b7280);
+  font-size: 16px;
+  padding: 60px 20px;
+  background: var(--color-bg-card, #ffffff);
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.np-no-news {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--color-bg-card, #ffffff);
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.np-no-news h3 {
+  margin: 0 0 12px 0;
+  color: var(--color-text-primary, #374151);
+  font-size: 20px;
+}
+
+.np-no-news p {
+  margin: 0;
+  color: var(--color-text-secondary, #6b7280);
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 1199px) {
+  .np-news-list {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  .np-search-filter-section {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 991px) {
+  .np-filters-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .np-filter-actions {
+    grid-column: 1 / -1;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  .np-checkbox-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    max-height: 100px;
+  }
+
+  .np-news-list {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
+  }
+}
+
+@media (max-width: 767px) {
+  .np-filters-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .np-filter-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .np-search-btn,
+  .np-clear-btn {
+    width: 100%;
+    padding: 12px 16px;
+  }
+
+  .np-advanced-filters {
+    gap: 16px;
+  }
+
+  .np-checkbox-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    max-height: 80px;
+  }
+
+  .np-news-list {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .np-page-header {
+    padding: 30px 20px;
+    margin-bottom: 24px;
+  }
+
+  .np-page-header h1 {
+    font-size: 24px;
+  }
+
+  .np-page-header p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 575px) {
+  .np-news-page {
+    padding: 16px;
+  }
+
+  .np-search-filter-section {
+    padding: 20px;
+  }
+
+  .np-page-header {
+    padding: 24px 16px;
+    border-radius: 12px;
+  }
+
+  .np-page-header h1 {
+    font-size: 22px;
+  }
+
+  .np-checkbox-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .np-results-info {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}
+
+/* Additional utility classes */
+.np-hidden {
+  display: none !important;
+}
+
+.np-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.np-text-center {
+  text-align: center;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .np-news-page {
+    --color-bg-card: #1f2937;
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #d1d5db;
+  }
+
+  .np-select {
+    background: #374151;
+    color: #f9fafb;
+    border-color: #4b5563;
+  }
+
+  .np-checkbox-custom {
+    background: #374151;
+    border-color: #4b5563;
+  }
+}
