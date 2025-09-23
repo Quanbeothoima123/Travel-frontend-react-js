@@ -17,6 +17,8 @@ import BookingPage from "./pages/BookingPage";
 import RepayPage from "./pages/RePay";
 import ReAuthFlow from "./pages/ReAuthFlow";
 import SearchPage from "./pages/SearchPage";
+import NewsPage from "./pages/NewsPage";
+import NewsDetailPage from "./pages/NewsDetailPage";
 import MomoPaymentResultPage from "./pages/MomoPaymentResultPage";
 import HistoryTourOrder from "./pages/HistoryTourOrder";
 import AdminLayout from "./admin/components/layout/AdminLayout";
@@ -68,6 +70,8 @@ function AppContent() {
         <Route path="/booking-tour/:slug" element={<BookingPage />} />
         <Route path="/repay/:invoiceId" element={<RepayPage />} />
         <Route path="/search/tours/:categorySlug" element={<SearchPage />} />
+        <Route path="/news/:newsCategorySlug" element={<NewsPage />} />
+        <Route path="/news/detail/:newsSlug" element={<NewsDetailPage />} />
         <Route
           path="/payment/momo/result"
           element={<MomoPaymentResultPage />}
