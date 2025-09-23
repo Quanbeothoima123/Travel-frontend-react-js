@@ -1,6 +1,70 @@
 import React, { useState, useEffect } from "react";
 import TinyEditor from "../../tour/TinyEditor";
+import ImageUploader from "../../tour/TourCreate/ImageUploader";
+import NewsCategoryTreeSelect from "../../../../components/common/DropDownTreeSearch/NewsCategoryTreeSelect";
+import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
+import ProvinceSelect from "../../../../components/common/DropDownTreeSearch/ProvinceSelect";
+import LoadingModal from "../../../components/common/LoadingModal";
+import TourSelect from "./TourSelect";
+import { useToast } from "../../../../contexts/ToastContext";
+import { FaCog, FaBrain, FaRobot, FaMagic } from "react-icons/fa";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  horizontalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import "./NewsCreate.css";
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
+
+// Sortable Gallery Item Component
+const SortableGalleryItem = ({ image, index, onRemove }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: image });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="nc-gallery-item sortable"
+      {...attributes}
+      {...listeners}
+    >
+      <img src={image} alt={`Gallery ${index + 1}`} />
+      <button
+        type="button"
+        className="nc-gallery-remove"
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemove(image);
+        }}
+      >
+        ×
+      </button>
+      <div className="nc-gallery-order">{index + 1}</div>
+    </div>
+  );
+};
 
 const NewsCreate = () => {
   const [formData, setFormData] = useState({
@@ -12,13 +76,10 @@ const NewsCreate = () => {
     metaTitle: "",
     metaDescription: "",
     metaKeywords: [],
-    categoryId: "",
-    destinationIds: [],
+    newsCategoryId: null,
+    categoryId: null,
+    destinationIds: [], // Changed to array for multiple destinations
     relatedTourIds: [],
-    author: {
-      type: "admin",
-      id: "",
-    },
     tags: [],
     type: "news",
     status: "draft",
@@ -28,15 +89,17 @@ const NewsCreate = () => {
     language: "vi",
   });
 
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [provinces, setProvinces] = useState([]);
-  const [tours, setTours] = useState([]);
-  const [adminAccounts, setAdminAccounts] = useState([]);
+  const [uploadLoading, setUploadLoading] = useState(false);
+
+  // AI loading modal states
+  const [aiLoadingModal, setAiLoadingModal] = useState(false);
+  const [aiLoadingMessage, setAiLoadingMessage] = useState("");
 
   // AI generation states
   const [aiLoading, setAiLoading] = useState({
-    title: false,
+    slug: false,
     excerpt: false,
     content: false,
     metaTitle: false,
@@ -44,68 +107,24 @@ const NewsCreate = () => {
     tags: false,
   });
 
-  // Fetch data for dropdowns
+  // Drag and drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
+
+  // Fetch tours for related tours dropdown
   useEffect(() => {
-    fetchCategories();
-    fetchProvinces();
-    fetchTours();
-    fetchAdminAccounts();
+    // TourSelect component will handle its own data fetching
   }, []);
-
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch("/api/admin/tour-categories");
-      const data = await response.json();
-      setCategories(data.categories || []);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-
-  const fetchProvinces = async () => {
-    try {
-      const response = await fetch("/api/admin/provinces");
-      const data = await response.json();
-      setProvinces(data.provinces || []);
-    } catch (error) {
-      console.error("Error fetching provinces:", error);
-    }
-  };
-
-  const fetchTours = async () => {
-    try {
-      const response = await fetch("/api/admin/tours?limit=50");
-      const data = await response.json();
-      setTours(data.tours || []);
-    } catch (error) {
-      console.error("Error fetching tours:", error);
-    }
-  };
-
-  const fetchAdminAccounts = async () => {
-    try {
-      const response = await fetch("/api/admin/accounts");
-      const data = await response.json();
-      setAdminAccounts(data.accounts || []);
-    } catch (error) {
-      console.error("Error fetching admin accounts:", error);
-    }
-  };
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
-    }));
-  };
-
-  const handleNestedInputChange = (parentField, field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [parentField]: {
-        ...prev[parentField],
-        [field]: value,
-      },
     }));
   };
 
@@ -118,8 +137,8 @@ const NewsCreate = () => {
     }));
   };
 
-  // Auto-generate slug from title
-  const generateSlug = (title) => {
+  // Auto-generate slug from title with AI
+  const generateSlugFromTitle = (title) => {
     const slug = title
       .toLowerCase()
       .replace(/[áàảãạăắằẳẵặâấầẩẫậ]/g, "a")
@@ -137,33 +156,147 @@ const NewsCreate = () => {
     handleInputChange("slug", slug);
   };
 
-  // AI Generation functions (placeholders for now)
+  // Get AI loading message based on field
+  const getAiLoadingMessage = (field) => {
+    const messages = {
+      slug: "Đang tạo slug từ tiêu đề...",
+      excerpt: "Đang tạo mô tả ngắn...",
+      content: "Đang tạo nội dung bài viết...",
+      metaTitle: "Đang tạo Meta Title SEO...",
+      metaDescription: "Đang tạo Meta Description SEO...",
+      tags: "Đang tạo tags phù hợp...",
+    };
+    return messages[field] || "Đang xử lý...";
+  };
+
+  // Get AI icon based on field
+  const getAiIcon = (field) => {
+    const icons = {
+      slug: "FaMagic",
+      excerpt: "FaRobot",
+      content: "FaBrain",
+      metaTitle: "FaMagic",
+      metaDescription: "FaRobot",
+      tags: "FaBrain",
+    };
+    return icons[field] || "FaRobot";
+  };
+
+  // AI Generation functions
   const handleAIGenerate = async (field) => {
     setAiLoading((prev) => ({ ...prev, [field]: true }));
+    setAiLoadingModal(true);
+    setAiLoadingMessage(getAiLoadingMessage(field));
+
+    // Minimum loading time of 2.5 seconds
+    const minLoadingTime = 2500;
+    const startTime = Date.now();
 
     try {
-      // TODO: Implement actual AI API call
-      const response = await fetch(`/api/admin/ai/generate-${field}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          context: formData.title || formData.content,
-          type: formData.type,
-          language: formData.language,
-        }),
-      });
+      // Determine context based on field type
+      let contextData = formData.title || formData.content;
+
+      // For slug generation, always use title as context
+      if (field === "slug") {
+        contextData = formData.title;
+        if (!contextData) {
+          setAiLoadingModal(false);
+          showToast("Vui lòng nhập tiêu đề trước khi tạo slug", "error");
+          return;
+        }
+      }
+
+      // Use specific route for each field
+      const response = await fetch(
+        `${API_BASE}/api/v1/admin/ai/generate-${field}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            context: contextData,
+            type: formData.type,
+            language: formData.language,
+          }),
+        }
+      );
 
       const data = await response.json();
+
+      // Calculate remaining time to meet minimum loading duration
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+      // Wait for remaining time if needed
+      if (remainingTime > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remainingTime));
+      }
+
       if (data.success) {
-        handleInputChange(field, data.content);
+        if (field === "tags" && Array.isArray(data.content)) {
+          handleInputChange(field, data.content);
+        } else {
+          handleInputChange(field, data.content);
+        }
+        showToast(`Đã tạo ${field} thành công!`, "success");
+      } else {
+        showToast(`Lỗi tạo ${field}: ${data.message}`, "error");
       }
     } catch (error) {
+      // Ensure minimum loading time even for errors
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+      if (remainingTime > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remainingTime));
+      }
+
       console.error(`Error generating ${field}:`, error);
+      showToast(`Lỗi khi tạo ${field}`, "error");
     } finally {
       setAiLoading((prev) => ({ ...prev, [field]: false }));
+      setAiLoadingModal(false);
+      setAiLoadingMessage("");
     }
+  };
+
+  // Handle thumbnail upload
+  const handleThumbnailUpload = (url) => {
+    handleInputChange("thumbnail", url);
+  };
+
+  // Handle gallery images upload
+  const handleGalleryUpload = (urls) => {
+    const urlArray = Array.isArray(urls) ? urls : [urls];
+    setFormData((prev) => ({
+      ...prev,
+      highlightImages: [...prev.highlightImages, ...urlArray],
+    }));
+  };
+
+  // Handle drag end for gallery images
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      const oldIndex = formData.highlightImages.indexOf(active.id);
+      const newIndex = formData.highlightImages.indexOf(over.id);
+
+      const newImages = arrayMove(formData.highlightImages, oldIndex, newIndex);
+      handleInputChange("highlightImages", newImages);
+    }
+  };
+
+  // Get button text based on status
+  const getButtonText = () => {
+    if (loading) {
+      return formData.status === "draft"
+        ? "Đang lưu nháp..."
+        : "Đang xuất bản...";
+    }
+    return formData.status === "draft" ? "Lưu nháp" : "Xuất bản";
   };
 
   const handleSubmit = async (e) => {
@@ -171,24 +304,37 @@ const NewsCreate = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/admin/news", {
+      const submitData = {
+        ...formData,
+        newsCategoryId: formData.newsCategoryId?._id || null,
+        categoryId: formData.categoryId?._id || null,
+        // Handle multiple destinations - extract IDs or codes
+        destinationIds: formData.destinationIds.map(
+          (dest) => dest._id || dest.code || dest
+        ),
+        // Handle tours - extract IDs
+        relatedTourIds: formData.relatedTourIds.map((tour) => tour._id || tour),
+      };
+      console.log(submitData);
+      const response = await fetch(`${API_BASE}/api/v1/admin/news/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        credentials: "include",
+        body: JSON.stringify(submitData),
       });
 
       const data = await response.json();
       if (data.success) {
-        alert("Tin tức đã được tạo thành công!");
+        showToast("Tin tức đã được tạo thành công!", "success");
         // Reset form or redirect
       } else {
-        alert("Có lỗi xảy ra: " + data.message);
+        showToast("Có lỗi xảy ra: " + data.message, "error");
       }
     } catch (error) {
       console.error("Error creating news:", error);
-      alert("Có lỗi xảy ra khi tạo tin tức");
+      showToast("Có lỗi xảy ra khi tạo tin tức", "error");
     } finally {
       setLoading(false);
     }
@@ -196,6 +342,20 @@ const NewsCreate = () => {
 
   return (
     <div className="nc-container">
+      {/* Upload Loading Modal */}
+      <LoadingModal
+        open={uploadLoading}
+        message="Đang tải ảnh lên..."
+        icon="FaCloudUploadAlt"
+      />
+
+      {/* AI Loading Modal */}
+      <LoadingModal
+        open={aiLoadingModal}
+        message={aiLoadingMessage}
+        icon={getAiIcon(Object.keys(aiLoading).find((key) => aiLoading[key]))}
+      />
+
       <div className="nc-header">
         <h1 className="nc-title">Tạo tin tức mới</h1>
         <div className="nc-actions">
@@ -204,15 +364,22 @@ const NewsCreate = () => {
             className="nc-btn nc-btn-secondary"
             onClick={() => handleInputChange("status", "draft")}
           >
-            Lưu nháp
+            Nháp
+          </button>
+          <button
+            type="button"
+            className="nc-btn nc-btn-secondary"
+            onClick={() => handleInputChange("status", "published")}
+          >
+            Xuất bản
           </button>
           <button
             type="submit"
             form="news-form"
             className="nc-btn nc-btn-primary"
-            disabled={loading}
+            disabled={loading || aiLoadingModal}
           >
-            {loading ? "Đang tạo..." : "Xuất bản"}
+            {getButtonText()}
           </button>
         </div>
       </div>
@@ -227,57 +394,68 @@ const NewsCreate = () => {
 
               <div className="nc-form-group">
                 <label className="nc-label">Tiêu đề *</label>
-                <div className="nc-input-group">
-                  <input
-                    type="text"
-                    className="nc-input"
-                    value={formData.title}
-                    onChange={(e) => {
-                      handleInputChange("title", e.target.value);
-                      generateSlug(e.target.value);
-                    }}
-                    placeholder="Nhập tiêu đề tin tức"
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="nc-ai-btn"
-                    onClick={() => handleAIGenerate("title")}
-                    disabled={aiLoading.title}
-                  >
-                    {aiLoading.title ? "⏳" : "🤖"} AI
-                  </button>
-                </div>
-              </div>
-
-              <div className="nc-form-group">
-                <label className="nc-label">Slug *</label>
                 <input
                   type="text"
                   className="nc-input"
-                  value={formData.slug}
-                  onChange={(e) => handleInputChange("slug", e.target.value)}
-                  placeholder="duong-dan-url"
+                  value={formData.title}
+                  onChange={(e) => {
+                    handleInputChange("title", e.target.value);
+                    generateSlugFromTitle(e.target.value);
+                  }}
+                  placeholder="Nhập tiêu đề tin tức"
                   required
                 />
               </div>
 
               <div className="nc-form-group">
+                <label className="nc-label">Slug *</label>
+                <div className="nc-input-group">
+                  <input
+                    type="text"
+                    className="nc-input"
+                    value={formData.slug}
+                    onChange={(e) => handleInputChange("slug", e.target.value)}
+                    placeholder="duong-dan-url"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="nc-ai-btn"
+                    onClick={() => handleAIGenerate("slug")}
+                    disabled={aiLoading.slug || aiLoadingModal}
+                  >
+                    {aiLoading.slug ? <FaCog /> : <FaMagic />} AI
+                  </button>
+                </div>
+              </div>
+
+              <div className="nc-form-group">
                 <label className="nc-label">Ảnh thumbnail</label>
-                <input
-                  type="url"
-                  className="nc-input"
-                  value={formData.thumbnail}
-                  onChange={(e) =>
-                    handleInputChange("thumbnail", e.target.value)
-                  }
-                  placeholder="https://example.com/image.jpg"
-                />
-                {formData.thumbnail && (
-                  <div className="nc-thumbnail-preview">
-                    <img src={formData.thumbnail} alt="Thumbnail preview" />
+                <div className="nc-thumbnail-section">
+                  <div className="nc-thumbnail-options">
+                    <input
+                      type="url"
+                      className="nc-input"
+                      value={formData.thumbnail}
+                      onChange={(e) =>
+                        handleInputChange("thumbnail", e.target.value)
+                      }
+                      placeholder="https://example.com/image.jpg hoặc upload ảnh"
+                    />
+                    <span className="nc-or-divider">hoặc</span>
+                    <ImageUploader
+                      onUpload={handleThumbnailUpload}
+                      onUploadStart={() => setUploadLoading(true)}
+                      onUploadEnd={() => setUploadLoading(false)}
+                      multiple={false}
+                    />
                   </div>
-                )}
+                  {formData.thumbnail && (
+                    <div className="nc-thumbnail-preview">
+                      <img src={formData.thumbnail} alt="Thumbnail preview" />
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="nc-form-group">
@@ -296,9 +474,9 @@ const NewsCreate = () => {
                     type="button"
                     className="nc-ai-btn"
                     onClick={() => handleAIGenerate("excerpt")}
-                    disabled={aiLoading.excerpt}
+                    disabled={aiLoading.excerpt || aiLoadingModal}
                   >
-                    {aiLoading.excerpt ? "⏳" : "🤖"} AI
+                    {aiLoading.excerpt ? <FaCog /> : <FaRobot />} AI
                   </button>
                 </div>
               </div>
@@ -314,11 +492,9 @@ const NewsCreate = () => {
                     type="button"
                     className="nc-ai-btn"
                     onClick={() => handleAIGenerate("content")}
-                    disabled={aiLoading.content}
+                    disabled={aiLoading.content || aiLoadingModal}
                   >
-                    {aiLoading.content
-                      ? "⏳ Đang tạo..."
-                      : "🤖 Tạo nội dung bằng AI"}
+                    {aiLoading.content ? <FaCog /> : <FaBrain />} AI
                   </button>
                 </div>
                 <TinyEditor
@@ -349,9 +525,9 @@ const NewsCreate = () => {
                     type="button"
                     className="nc-ai-btn"
                     onClick={() => handleAIGenerate("metaTitle")}
-                    disabled={aiLoading.metaTitle}
+                    disabled={aiLoading.metaTitle || aiLoadingModal}
                   >
-                    {aiLoading.metaTitle ? "⏳" : "🤖"} AI
+                    {aiLoading.metaTitle ? <FaCog /> : <FaMagic />} AI
                   </button>
                 </div>
                 <small className="nc-helper-text">
@@ -376,9 +552,9 @@ const NewsCreate = () => {
                     type="button"
                     className="nc-ai-btn"
                     onClick={() => handleAIGenerate("metaDescription")}
-                    disabled={aiLoading.metaDescription}
+                    disabled={aiLoading.metaDescription || aiLoadingModal}
                   >
-                    {aiLoading.metaDescription ? "⏳" : "🤖"} AI
+                    {aiLoading.metaDescription ? <FaCog /> : <FaRobot />} AI
                   </button>
                 </div>
                 <small className="nc-helper-text">
@@ -454,65 +630,117 @@ const NewsCreate = () => {
               <h3 className="nc-section-title">Phân loại</h3>
 
               <div className="nc-form-group">
-                <label className="nc-label">Danh mục</label>
-                <select
-                  className="nc-select"
-                  value={formData.categoryId}
-                  onChange={(e) =>
-                    handleInputChange("categoryId", e.target.value)
+                <label className="nc-label">Danh mục tin tức</label>
+                <NewsCategoryTreeSelect
+                  value={formData.newsCategoryId}
+                  onChange={(category) =>
+                    handleInputChange("newsCategoryId", category)
                   }
-                >
-                  <option value="">Chọn danh mục</option>
-                  {categories.map((category) => (
-                    <option key={category._id} value={category._id}>
-                      {category.title}
-                    </option>
-                  ))}
-                </select>
+                  placeholder="Chọn danh mục tin tức"
+                />
               </div>
 
               <div className="nc-form-group">
+                <label className="nc-label">Danh mục tour</label>
+                <CategoryTreeSelect
+                  value={formData.categoryId}
+                  onChange={(category) =>
+                    handleInputChange("categoryId", category)
+                  }
+                  placeholder="Chọn danh mục tour"
+                />
+              </div>
+
+              {/* In the Right Column - Category & Relations section */}
+              <div className="nc-form-group">
                 <label className="nc-label">Điểm đến</label>
-                <select
-                  className="nc-select"
-                  multiple
-                  value={formData.destinationIds}
-                  onChange={(e) => {
-                    const values = Array.from(
-                      e.target.selectedOptions,
-                      (option) => option.value
-                    );
-                    handleInputChange("destinationIds", values);
+                <ProvinceSelect
+                  value={null} // Always null to reset after selection
+                  onChange={(selectedProvince) => {
+                    if (selectedProvince) {
+                      // Check if province already exists in the list
+                      const exists = formData.destinationIds.some(
+                        (dest) => dest.code === selectedProvince.code
+                      );
+
+                      if (exists) {
+                        showToast(
+                          `Điểm đến "${selectedProvince.name_with_type}" đã được chọn!`,
+                          "warning"
+                        );
+                      } else {
+                        // Add new province to the list
+                        handleInputChange("destinationIds", [
+                          ...formData.destinationIds,
+                          selectedProvince,
+                        ]);
+                        showToast(
+                          `Đã thêm điểm đến "${selectedProvince.name_with_type}"`,
+                          "success"
+                        );
+                      }
+                    }
                   }}
-                >
-                  {provinces.map((province) => (
-                    <option key={province._id} value={province._id}>
-                      {province.name}
-                    </option>
-                  ))}
-                </select>
+                  placeholder="Chọn điểm đến để thêm vào danh sách"
+                />
+
+                {/* Display selected destinations */}
+                {formData.destinationIds.length > 0 && (
+                  <div className="nc-selected-destinations">
+                    <div className="nc-selected-list">
+                      {formData.destinationIds.map((destination, index) => (
+                        <div
+                          key={destination.code}
+                          className="nc-selected-item"
+                        >
+                          <span
+                            className="nc-selected-text"
+                            title={destination.name_with_type}
+                          >
+                            {destination.name_with_type}
+                          </span>
+                          <button
+                            type="button"
+                            className="nc-selected-remove"
+                            onClick={() => {
+                              const updatedDestinations =
+                                formData.destinationIds.filter(
+                                  (dest) => dest.code !== destination.code
+                                );
+                              handleInputChange(
+                                "destinationIds",
+                                updatedDestinations
+                              );
+                              showToast(
+                                `Đã xóa điểm đến "${destination.name_with_type}"`,
+                                "info"
+                              );
+                            }}
+                            title="Xóa điểm đến này"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="nc-selected-count">
+                      Đã chọn {formData.destinationIds.length} điểm đến
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="nc-form-group">
                 <label className="nc-label">Tours liên quan</label>
-                <select
-                  className="nc-select"
-                  multiple
+                <TourSelect
                   value={formData.relatedTourIds}
-                  onChange={(e) => {
-                    const values = Array.from(
-                      e.target.selectedOptions,
-                      (option) => option.value
-                    );
-                    handleInputChange("relatedTourIds", values);
+                  onChange={(tours) => {
+                    // Store the full tour objects to have access to both _id and title
+                    handleInputChange("relatedTourIds", tours || []);
                   }}
-                >
-                  {tours.map((tour) => (
-                    <option key={tour._id} value={tour._id}>
-                      {tour.title}
-                    </option>
-                  ))}
-                </select>
+                  placeholder="Chọn tour liên quan"
+                  multiple={true}
+                />
               </div>
             </div>
 
@@ -541,9 +769,9 @@ const NewsCreate = () => {
                     type="button"
                     className="nc-ai-btn"
                     onClick={() => handleAIGenerate("tags")}
-                    disabled={aiLoading.tags}
+                    disabled={aiLoading.tags || aiLoadingModal}
                   >
-                    {aiLoading.tags ? "⏳" : "🤖"} AI
+                    {aiLoading.tags ? <FaCog /> : <FaBrain />} AI
                   </button>
                 </div>
 
@@ -563,43 +791,6 @@ const NewsCreate = () => {
                     </span>
                   ))}
                 </div>
-              </div>
-            </div>
-
-            {/* Author */}
-            <div className="nc-section">
-              <h3 className="nc-section-title">Tác giả</h3>
-
-              <div className="nc-form-group">
-                <label className="nc-label">Loại tác giả</label>
-                <select
-                  className="nc-select"
-                  value={formData.author.type}
-                  onChange={(e) =>
-                    handleNestedInputChange("author", "type", e.target.value)
-                  }
-                >
-                  <option value="admin">Admin</option>
-                  <option value="user">User</option>
-                </select>
-              </div>
-
-              <div className="nc-form-group">
-                <label className="nc-label">Tác giả</label>
-                <select
-                  className="nc-select"
-                  value={formData.author.id}
-                  onChange={(e) =>
-                    handleNestedInputChange("author", "id", e.target.value)
-                  }
-                >
-                  <option value="">Chọn tác giả</option>
-                  {adminAccounts.map((admin) => (
-                    <option key={admin._id} value={admin._id}>
-                      {admin.fullName} ({admin.email})
-                    </option>
-                  ))}
-                </select>
               </div>
             </div>
 
@@ -627,40 +818,64 @@ const NewsCreate = () => {
               <h3 className="nc-section-title">Thư viện ảnh</h3>
 
               <div className="nc-form-group">
-                <label className="nc-label">URL ảnh</label>
-                <input
-                  type="url"
-                  className="nc-input"
-                  placeholder="https://example.com/image.jpg"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      const value = e.target.value.trim();
-                      if (value && !formData.highlightImages.includes(value)) {
-                        handleArrayInputChange("highlightImages", value);
-                        e.target.value = "";
+                <div className="nc-gallery-upload-section">
+                  <input
+                    type="url"
+                    className="nc-input"
+                    placeholder="https://example.com/image.jpg hoặc upload nhiều ảnh"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        const value = e.target.value.trim();
+                        if (
+                          value &&
+                          !formData.highlightImages.includes(value)
+                        ) {
+                          handleArrayInputChange("highlightImages", value);
+                          e.target.value = "";
+                        }
                       }
-                    }
-                  }}
-                />
+                    }}
+                  />
+                  <span className="nc-or-divider">hoặc</span>
+                  <ImageUploader
+                    onUpload={handleGalleryUpload}
+                    onUploadStart={() => setUploadLoading(true)}
+                    onUploadEnd={() => setUploadLoading(false)}
+                    multiple={true}
+                  />
+                </div>
               </div>
 
-              <div className="nc-gallery-list">
-                {formData.highlightImages.map((image, index) => (
-                  <div key={index} className="nc-gallery-item">
-                    <img src={image} alt={`Gallery ${index + 1}`} />
-                    <button
-                      type="button"
-                      className="nc-gallery-remove"
-                      onClick={() =>
-                        handleArrayInputChange("highlightImages", image, false)
-                      }
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
+              {formData.highlightImages.length > 0 && (
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext
+                    items={formData.highlightImages}
+                    strategy={horizontalListSortingStrategy}
+                  >
+                    <div className="nc-gallery-list">
+                      {formData.highlightImages.map((image, index) => (
+                        <SortableGalleryItem
+                          key={image}
+                          image={image}
+                          index={index}
+                          onRemove={(img) =>
+                            handleArrayInputChange(
+                              "highlightImages",
+                              img,
+                              false
+                            )
+                          }
+                        />
+                      ))}
+                    </div>
+                  </SortableContext>
+                </DndContext>
+              )}
             </div>
           </div>
         </div>
