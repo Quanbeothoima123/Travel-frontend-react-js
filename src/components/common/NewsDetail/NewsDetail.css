@@ -1,4 +1,4 @@
-/* NewsDetail.css */
+/* NewsDetail.css - Complete version with SimpleTOCWrapper */
 
 .nd-container {
   max-width: 1200px;
@@ -180,8 +180,8 @@
   gap: 8px;
   padding: 12px 20px;
   border: 2px solid #e5e7eb;
-  background: transparent;
-  color: var(--color-text-primary, #374151);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   font-size: 14px;
   font-weight: 500;
   border-radius: 25px;
@@ -190,22 +190,22 @@
 }
 
 .nd-action-btn:hover {
-  border-color: var(--color-primary, #007bff);
-  color: var(--color-primary, #007bff);
+  background: var(--color-primary);
+  color: var(--color-bg-card);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
 }
 
 .nd-action-btn.liked,
 .nd-action-btn.saved {
-  border-color: var(--color-primary, #007bff);
-  background: var(--color-primary, #007bff);
-  color: white;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
 }
 
 .nd-action-btn.liked:hover,
 .nd-action-btn.saved:hover {
-  background: var(--color-primary-hover, #0056b3);
+  background: var(--color-primary);
+  color: var(--color-bg-card);
 }
 
 /* Thumbnail */
@@ -226,131 +226,19 @@
   object-fit: cover;
 }
 
-/* Content Layout */
-.nd-content-layout {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 40px;
+/* Content Wrapper */
+.nd-content-wrapper {
   padding: 40px;
-  position: relative;
 }
 
-/* TOC Wrapper */
-.nd-toc-wrapper {
-  position: sticky;
-  top: 20px;
-  height: fit-content;
-}
-
-.nd-toc-content .toc {
-  margin: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Main Content */
-.nd-content {
-  min-width: 0; /* Prevents grid overflow */
-}
-
-.nd-article-content {
-  line-height: 1.8;
-  font-size: 16px;
-  color: var(--color-text-primary, #374151);
-}
-
-.nd-article-content h1,
-.nd-article-content h2,
-.nd-article-content h3,
-.nd-article-content h4,
-.nd-article-content h5,
-.nd-article-content h6 {
-  margin: 32px 0 16px;
-  font-weight: 600;
-  color: var(--color-text-primary, #1f2937);
-  scroll-margin-top: 100px; /* Offset for fixed header */
-}
-
-.nd-article-content h1 {
-  font-size: 28px;
-}
-.nd-article-content h2 {
-  font-size: 24px;
-}
-.nd-article-content h3 {
-  font-size: 20px;
-}
-.nd-article-content h4 {
-  font-size: 18px;
-}
-.nd-article-content h5 {
-  font-size: 16px;
-}
-.nd-article-content h6 {
-  font-size: 14px;
-}
-
-.nd-article-content p {
-  margin: 16px 0;
-  text-align: justify;
-}
-
-.nd-article-content img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin: 24px 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.nd-article-content blockquote {
-  border-left: 4px solid var(--color-primary, #007bff);
-  margin: 24px 0;
-  padding: 16px 20px;
-  background: #f8f9fa;
-  font-style: italic;
-  border-radius: 0 8px 8px 0;
-}
-
-.nd-article-content ul,
-.nd-article-content ol {
-  padding-left: 24px;
-  margin: 16px 0;
-}
-
-.nd-article-content li {
-  margin: 8px 0;
-}
-
-.nd-article-content a {
-  color: var(--color-primary, #007bff);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: all 0.2s ease;
-}
-
-.nd-article-content a:hover {
-  border-bottom-color: var(--color-primary, #007bff);
-}
-
-.nd-article-content code {
-  background: #f1f5f9;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: "Courier New", monospace;
-  font-size: 14px;
-}
-
-.nd-article-content pre {
-  background: #f8f9fa;
-  padding: 16px;
-  border-radius: 8px;
-  overflow-x: auto;
-  margin: 24px 0;
+/* Additional Content */
+.nd-additional-content {
+  margin-top: 40px;
 }
 
 /* Tags */
 .nd-tags {
-  margin-top: 40px;
+  margin-bottom: 40px;
   padding: 24px;
   background: #f8f9fa;
   border-radius: 12px;
@@ -388,7 +276,6 @@
 
 /* Related Tours */
 .nd-related-tours {
-  margin-top: 40px;
   padding: 24px;
   background: #f8f9fa;
   border-radius: 12px;
@@ -471,19 +358,8 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .nd-content-layout {
-    grid-template-columns: 1fr;
-    gap: 32px;
+  .nd-content-wrapper {
     padding: 32px;
-  }
-
-  .nd-toc-wrapper {
-    position: static;
-    order: -1;
-  }
-
-  .nd-toc-content .toc {
-    max-width: 100%;
   }
 }
 
@@ -520,9 +396,8 @@
     justify-content: center;
   }
 
-  .nd-content-layout {
+  .nd-content-wrapper {
     padding: 24px;
-    gap: 24px;
   }
 
   .nd-tours-grid {
@@ -531,6 +406,10 @@
 
   .nd-breadcrumb span:last-child {
     max-width: 200px;
+  }
+
+  .nd-additional-content {
+    margin-top: 24px;
   }
 }
 
@@ -547,116 +426,19 @@
     font-size: 14px;
   }
 
-  .nd-content-layout {
+  .nd-content-wrapper {
     padding: 16px;
-    gap: 20px;
-  }
-
-  .nd-article-content {
-    font-size: 15px;
   }
 
   .nd-comments,
   .nd-tags,
   .nd-related-tours {
-    margin-top: 24px;
     padding: 16px;
   }
-}
 
-/* Table of Contents Styles - Import từ file riêng */
-.toc {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  padding: 20px;
-  margin: 20px 0;
-  max-width: 300px;
-  font-family: system-ui, -apple-system, sans-serif;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.toc-title {
-  font-weight: bold;
-  font-size: 1.1em;
-  margin-bottom: 12px;
-  color: #333;
-  border-bottom: 2px solid #007bff;
-  padding-bottom: 8px;
-}
-
-.toc-list,
-.toc-sublist {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-}
-
-.toc-sublist {
-  padding-left: 20px;
-  margin-top: 4px;
-  border-left: 1px solid #dee2e6;
-  margin-left: 8px;
-}
-
-.toc-item {
-  margin: 4px 0;
-}
-
-.toc-link {
-  display: block;
-  color: #007bff;
-  text-decoration: none;
-  padding: 6px 8px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  font-size: 0.9em;
-  line-height: 1.4;
-  word-wrap: break-word;
-}
-
-.toc-link:hover {
-  background-color: #007bff;
-  color: white;
-  text-decoration: none;
-  transform: translateX(2px);
-}
-
-.toc-link:focus {
-  outline: 2px solid #0056b3;
-  outline-offset: 2px;
-}
-
-.toc-level-1 .toc-link {
-  font-weight: bold;
-  font-size: 1em;
-  color: #0056b3;
-}
-
-.toc-level-2 .toc-link {
-  font-weight: 600;
-  color: #007bff;
-}
-
-.toc-level-3 .toc-link {
-  font-weight: normal;
-  opacity: 0.9;
-  color: #6c757d;
-}
-
-.toc-level-4 .toc-link,
-.toc-level-5 .toc-link,
-.toc-level-6 .toc-link {
-  font-weight: normal;
-  opacity: 0.8;
-  font-size: 0.85em;
-  color: #868e96;
-}
-
-.toc-link.active {
-  background-color: #e3f2fd;
-  color: #0d47a1;
-  font-weight: 600;
+  .nd-additional-content {
+    margin-top: 20px;
+  }
 }
 
 /* Dark theme support */
@@ -667,85 +449,30 @@
     --color-text-secondary: #d1d5db;
   }
 
-  .toc {
-    background: #2d3748;
-    border-color: #4a5568;
-    color: #e2e8f0;
+  .nd-article {
+    background: var(--color-bg-card, #1f2937);
   }
 
-  .toc-title {
-    color: #e2e8f0;
-    border-bottom-color: #4299e1;
+  .nd-header {
+    background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
   }
 
-  .toc-sublist {
-    border-left-color: #4a5568;
+  .nd-tags,
+  .nd-related-tours {
+    background: #374151;
   }
 
-  .toc-link {
-    color: #4299e1;
+  .nd-tag {
+    background: #4b5563;
+    border-color: #6b7280;
+    color: #d1d5db;
   }
 
-  .toc-link:hover {
-    background-color: #4299e1;
-    color: #1a202c;
+  .nd-tour-card {
+    background: #4b5563;
   }
 
-  .toc-level-1 .toc-link {
-    color: #63b3ed;
-  }
-
-  .toc-level-2 .toc-link {
-    color: #4299e1;
-  }
-
-  .toc-level-3 .toc-link {
-    color: #a0aec0;
-  }
-
-  .toc-level-4 .toc-link,
-  .toc-level-5 .toc-link,
-  .toc-level-6 .toc-link {
-    color: #718096;
-  }
-
-  .toc-link.active {
-    background-color: #2c5282;
-    color: #bee3f8;
-  }
-}
-
-/* Responsive design for TOC */
-@media (max-width: 768px) {
-  .toc {
-    max-width: 100%;
-    margin: 10px 0;
-    padding: 15px;
-  }
-
-  .toc-sublist {
-    padding-left: 15px;
-    margin-left: 5px;
-  }
-}
-
-@media (max-width: 480px) {
-  .toc {
-    padding: 12px;
-    margin: 8px 0;
-  }
-
-  .toc-title {
-    font-size: 1em;
-    margin-bottom: 10px;
-  }
-
-  .toc-link {
-    padding: 5px 6px;
-    font-size: 0.85em;
-  }
-
-  .toc-sublist {
-    padding-left: 12px;
+  .nd-comments-placeholder {
+    background: #374151;
   }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import {
   FaCalendarAlt,
@@ -9,32 +9,27 @@ import {
   FaTags,
   FaUser,
 } from "react-icons/fa";
-import generateTOCFromHtml from "../../../utils/tocGenerator";
+import SimpleTOCWrapper from "../../../components/common/SimpleTOCWrapper";
+import ScrollToTopButton from "../../../components/common/ScrollToTopButton";
 import "./NewsDetail.css";
 
-const NewsDetail = ({ newsData, loading, error, relatedTours }) => {
-  const [tocData, setTocData] = useState({ tocHtml: "", contentHtml: "" });
-  const [isLiked, setIsLiked] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
-
-  // Generate TOC when newsData changes
-  useEffect(() => {
-    if (newsData && newsData.content) {
-      const toc = generateTOCFromHtml(newsData.content, {
-        tocTitle: "Mục lục",
-        smoothScroll: true,
-        includeNumbers: false,
-      });
-      setTocData(toc);
-    }
-  }, [newsData]);
-
+const NewsDetail = ({
+  newsData,
+  loading,
+  error,
+  relatedTours,
+  likedStatus,
+  savedStatus,
+  onLikeToggle,
+  onSaveToggle,
+  onShare,
+}) => {
   // Handle like
   const handleLike = async () => {
     try {
-      // TODO: Implement API call to like/unlike
-      setIsLiked(!isLiked);
-      // For now, just toggle the state
+      if (onLikeToggle) {
+        await onLikeToggle(!likedStatus);
+      }
     } catch (err) {
       console.error("Error updating like:", err);
     }
@@ -43,8 +38,9 @@ const NewsDetail = ({ newsData, loading, error, relatedTours }) => {
   // Handle save
   const handleSave = async () => {
     try {
-      // TODO: Implement API call to save/unsave
-      setIsSaved(!isSaved);
+      if (onSaveToggle) {
+        await onSaveToggle(!savedStatus);
+      }
     } catch (err) {
       console.error("Error saving article:", err);
     }
@@ -60,12 +56,25 @@ const NewsDetail = ({ newsData, loading, error, relatedTours }) => {
           url: window.location.href,
         });
       } else {
-        // Fallback: copy to clipboard
         await navigator.clipboard.writeText(window.location.href);
         alert("Đã sao chép liên kết!");
       }
+      onShare();
     } catch (err) {
       console.error("Error sharing:", err);
+      // Fallback: try to copy to clipboard manually
+      try {
+        const textArea = document.createElement("textarea");
+        textArea.value = window.location.href;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+        alert("Đã sao chép liên kết!");
+      } catch (fallbackErr) {
+        console.error("Fallback copy failed:", fallbackErr);
+        alert("Không thể chia sẻ hoặc sao chép liên kết");
+      }
     }
   };
 
@@ -161,6 +170,10 @@ const NewsDetail = ({ newsData, loading, error, relatedTours }) => {
               <FaHeart />
               <span>{newsData.likes || 0} lượt thích</span>
             </div>
+            <div className="nd-meta-item">
+              <FaHeart />
+              <span>{newsData.shares || 0} lượt chia sẻ</span>
+            </div>
             {newsData.author && (
               <div className="nd-meta-item">
                 <FaUser />
@@ -177,18 +190,18 @@ const NewsDetail = ({ newsData, loading, error, relatedTours }) => {
           {/* Action Buttons */}
           <div className="nd-actions">
             <button
-              className={`nd-action-btn ${isLiked ? "liked" : ""}`}
+              className={`nd-action-btn ${likedStatus ? "liked" : ""}`}
               onClick={handleLike}
             >
               <FaHeart />
-              <span>{isLiked ? "Đã thích" : "Thích"}</span>
+              <span>{likedStatus ? "Đã thích" : "Thích"}</span>
             </button>
             <button
-              className={`nd-action-btn ${isSaved ? "saved" : ""}`}
+              className={`nd-action-btn ${savedStatus ? "saved" : ""}`}
               onClick={handleSave}
             >
               <FaBookmark />
-              <span>{isSaved ? "Đã lưu" : "Lưu"}</span>
+              <span>{savedStatus ? "Đã lưu" : "Lưu"}</span>
             </button>
             <button className="nd-action-btn" onClick={handleShare}>
               <FaShare />
@@ -204,27 +217,20 @@ const NewsDetail = ({ newsData, loading, error, relatedTours }) => {
           </div>
         )}
 
-        {/* Main Content Layout */}
-        <div className="nd-content-layout">
-          {/* Table of Contents - Fixed Position */}
-          {tocData.tocHtml && (
-            <div className="nd-toc-wrapper">
-              <div
-                className="nd-toc-content"
-                dangerouslySetInnerHTML={{ __html: tocData.tocHtml }}
-              />
-            </div>
-          )}
+        {/* Content với SimpleTOCWrapper */}
+        <div className="nd-content-wrapper">
+          <SimpleTOCWrapper
+            htmlContent={newsData.content}
+            tocOptions={{
+              tocTitle: "Mục lục",
+              smoothScroll: true,
+              includeNumbers: false,
+            }}
+            className="nd-simple-toc"
+          />
 
-          {/* Article Content */}
-          <div className="nd-content">
-            <div
-              className="nd-article-content"
-              dangerouslySetInnerHTML={{
-                __html: tocData.contentHtml || newsData.content,
-              }}
-            />
-
+          {/* Additional content bên dưới */}
+          <div className="nd-additional-content">
             {/* Tags */}
             {newsData.tags && newsData.tags.length > 0 && (
               <div className="nd-tags">
@@ -271,7 +277,7 @@ const NewsDetail = ({ newsData, loading, error, relatedTours }) => {
           </div>
         </div>
 
-        {/* Comments Section Placeholder */}
+        {/* Comments Section */}
         <div className="nd-comments">
           <h3>Bình luận</h3>
           <div className="nd-comments-placeholder">
@@ -279,6 +285,9 @@ const NewsDetail = ({ newsData, loading, error, relatedTours }) => {
           </div>
         </div>
       </article>
+
+      {/* Scroll to Top Button - Riêng biệt */}
+      <ScrollToTopButton />
     </div>
   );
 };

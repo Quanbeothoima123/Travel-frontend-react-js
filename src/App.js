@@ -12,6 +12,8 @@ import Header from "./components/layout/Header";
 import Home from "./pages/Home";
 import DetailTour from "./pages/DetailTour";
 import Login from "./pages/Auth/Login";
+import UserLayout from "./components/layout/UserLayout";
+import UserProfile from "./components/common/UserProfile";
 import Register from "./pages/Auth/Register";
 import BookingPage from "./pages/BookingPage";
 import RepayPage from "./pages/RePay";
@@ -35,7 +37,7 @@ import NewsCategoryDetail from "./admin/pages/news-category/NewsCategoryDetail";
 import NewsCategoryEdit from "./admin/pages/news-category/NewsCategoryEdit";
 // Quản lí tin tức
 import NewsCreate from "./admin/pages/news/NewsCreate";
-
+// Quản lí tour
 import TourManager from "./admin/pages/tour/TourManager";
 import TourCreatePage from "./admin/pages/tour/TourCreate";
 import AdminTourDetail from "./admin/pages/tour/AdminTourDetail";
@@ -44,8 +46,6 @@ import TourEditPage from "./admin/pages/tour/TourEdit";
 import AdminLogin from "./admin/pages/Login";
 
 import AdminPrivateRoute from "./admin/components/routes/AdminPrivateRoute";
-import UserLayout from "./components/layout/UserLayout";
-import UserProfile from "./components/common/UserProfile";
 
 // Component để xử lý hiển thị Header có điều kiện
 function AppContent() {
