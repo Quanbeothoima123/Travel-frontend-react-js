@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   FaCalendarAlt,
@@ -11,7 +11,10 @@ import {
 } from "react-icons/fa";
 import SimpleTOCWrapper from "../../../components/common/SimpleTOCWrapper";
 import ScrollToTopButton from "../../../components/common/ScrollToTopButton";
+import CommentComponent from "../../../components/common/CommentComponent";
 import "./NewsDetail.css";
+
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 
 const NewsDetail = ({
   newsData,
@@ -24,6 +27,42 @@ const NewsDetail = ({
   onSaveToggle,
   onShare,
 }) => {
+  // State cho user hiện tại
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userLoading, setUserLoading] = useState(true);
+
+  // Fetch current user khi component mount
+  useEffect(() => {
+    fetchCurrentUser();
+  }, []);
+
+  // Hàm lấy thông tin user hiện tại
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/api/v1/user/me`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        // Kiểm tra cấu trúc response từ API
+        setCurrentUser(result.data || result.user || result);
+      } else {
+        // User chưa đăng nhập
+        setCurrentUser(null);
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin user:", error);
+      setCurrentUser(null);
+    } finally {
+      setUserLoading(false);
+    }
+  };
+
   // Handle like
   const handleLike = async () => {
     try {
@@ -59,7 +98,9 @@ const NewsDetail = ({
         await navigator.clipboard.writeText(window.location.href);
         alert("Đã sao chép liên kết!");
       }
-      onShare();
+      if (onShare) {
+        onShare();
+      }
     } catch (err) {
       console.error("Error sharing:", err);
       // Fallback: try to copy to clipboard manually
@@ -171,7 +212,7 @@ const NewsDetail = ({
               <span>{newsData.likes || 0} lượt thích</span>
             </div>
             <div className="nd-meta-item">
-              <FaHeart />
+              <FaShare />
               <span>{newsData.shares || 0} lượt chia sẻ</span>
             </div>
             {newsData.author && (
@@ -277,16 +318,24 @@ const NewsDetail = ({
           </div>
         </div>
 
-        {/* Comments Section */}
+        {/* Comments Section - Simplified */}
         <div className="nd-comments">
-          <h3>Bình luận</h3>
-          <div className="nd-comments-placeholder">
-            <p>Tính năng bình luận sẽ được phát triển trong tương lai.</p>
-          </div>
+          {userLoading ? (
+            <div className="nd-comments-loading">
+              <div className="nd-loading-spinner"></div>
+              <p>Đang tải...</p>
+            </div>
+          ) : (
+            <CommentComponent
+              targetId={newsData._id}
+              targetType="news" // Hardcode targetType thành "news" thay vì dùng newsData.targetId
+              currentUser={currentUser}
+            />
+          )}
         </div>
       </article>
 
-      {/* Scroll to Top Button - Riêng biệt */}
+      {/* Scroll to Top Button */}
       <ScrollToTopButton />
     </div>
   );
