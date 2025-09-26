@@ -37,6 +37,7 @@ import NewsCategoryDetail from "./admin/pages/news-category/NewsCategoryDetail";
 import NewsCategoryEdit from "./admin/pages/news-category/NewsCategoryEdit";
 // Quản lí tin tức
 import NewsCreate from "./admin/pages/news/NewsCreate";
+import NewsManager from "./admin/pages/news/NewsManager";
 // Quản lí tour
 import TourManager from "./admin/pages/tour/TourManager";
 import TourCreatePage from "./admin/pages/tour/TourCreate";
@@ -121,6 +122,7 @@ function AppContent() {
           <Route path="tours/create" element={<TourCreatePage />} />
           <Route path="tours/detail/:tourId" element={<AdminTourDetail />} />
           <Route path="tours/edit/:tourId" element={<TourEditPage />} />
+
           <Route path="news-category" element={<NewsCategoryManager />} />
           <Route path="news-category/create" element={<NewsCategoryCreate />} />
           <Route
@@ -128,6 +130,8 @@ function AppContent() {
             element={<NewsCategoryDetail />}
           />
           <Route path="news-category/edit/:id" element={<NewsCategoryEdit />} />
+
+          <Route path="news" element={<NewsManager />} />
           <Route path="news/create" element={<NewsCreate />} />
         </Route>
       </Routes>

@@ -66,7 +66,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
             title: "News Categories",
             path: "/admin/news-category",
           },
-          { id: "news-list", title: "News List", path: "/admin/news-list" },
+          { id: "news-list", title: "News List", path: "/admin/news" },
         ],
       },
       {
