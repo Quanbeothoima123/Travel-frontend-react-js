@@ -599,7 +599,7 @@ const NewsManager = () => {
                     <td>
                       <div className="new-manager__actions">
                         <Link
-                          to={`/admin/news/${news._id}`}
+                          to={`/admin/news/detail/${news._id}`}
                           className="new-manager__action-btn new-manager__action-btn--view"
                           title="Chi tiết"
                         >
