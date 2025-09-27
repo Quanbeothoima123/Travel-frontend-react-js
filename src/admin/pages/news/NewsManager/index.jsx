@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import PaginationV2 from "../../../../components/common/Pagination_V2";
+import NewsCategoryTreeSelect from "../../../../components/common/DropDownTreeSearch/NewsCategoryTreeSelect";
+import ConfirmModal from "../../../../components/common/ConfirmModal";
 import "./NewsManager.css";
+
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
+
 const NewsManager = () => {
   const [newsData, setNewsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -10,6 +14,13 @@ const NewsManager = () => {
   const [itemsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
+
+  // Confirm modal state
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    newsId: null,
+    title: "",
+  });
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -20,30 +31,23 @@ const NewsManager = () => {
     type: "",
     language: "",
     newsCategoryId: "",
+    dateFrom: "",
+    dateTo: "",
     sortBy: "createdAt",
     sortOrder: "desc",
   });
 
   // Data for dropdowns
-  const [newsCategories, setNewsCategories] = useState([]);
   const [authors, setAuthors] = useState({
     admin: [],
     user: [],
   });
 
-  // Load initial data
-  useEffect(() => {
-    loadNewsData();
-    loadNewsCategories();
-    loadAuthors();
-  }, []);
+  // Selected category for tree select
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
-  // Load data when filters or pagination change
-  useEffect(() => {
-    loadNewsData();
-  }, [filters, currentPage]);
-
-  const loadNewsData = async () => {
+  // Load data functions
+  const loadNewsData = useCallback(async () => {
     try {
       setLoading(true);
       const params = {
@@ -67,23 +71,9 @@ const NewsManager = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters, currentPage, itemsPerPage]);
 
-  const loadNewsCategories = async () => {
-    try {
-      const response = await fetch(
-        `${API_BASE}/api/v1/admin/news/news-categories`
-      );
-      const result = await response.json();
-      if (result.success) {
-        setNewsCategories(result.data);
-      }
-    } catch (error) {
-      console.error("Error loading categories:", error);
-    }
-  };
-
-  const loadAuthors = async () => {
+  const loadAuthors = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE}/api/v1/admin/news/authors`);
       const result = await response.json();
@@ -93,7 +83,17 @@ const NewsManager = () => {
     } catch (error) {
       console.error("Error loading authors:", error);
     }
-  };
+  }, []);
+
+  // Load initial data
+  useEffect(() => {
+    loadAuthors();
+  }, [loadAuthors]);
+
+  // Load data when filters or pagination change
+  useEffect(() => {
+    loadNewsData();
+  }, [loadNewsData]);
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
@@ -101,6 +101,11 @@ const NewsManager = () => {
       [key]: value,
     }));
     setCurrentPage(1);
+  };
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    handleFilterChange("newsCategoryId", category ? category._id : "");
   };
 
   const handleSearch = (e) => {
@@ -123,28 +128,57 @@ const NewsManager = () => {
     }));
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa tin tức này?")) {
-      try {
-        const response = await fetch(
-          `${API_BASE}/api/v1/admin/news/delete${id}`,
-          {
-            method: "DELETE",
-          }
-        );
-        const result = await response.json();
+  const handleDateRangeReset = () => {
+    setFilters((prev) => ({
+      ...prev,
+      dateFrom: "",
+      dateTo: "",
+    }));
+  };
 
-        if (result.success) {
-          alert("Xóa tin tức thành công");
-          loadNewsData();
-        } else {
-          alert(result.message || "Có lỗi xảy ra");
+  const handleDelete = async (id) => {
+    const newsItem = newsData.find((news) => news._id === id);
+    setConfirmModal({
+      isOpen: true,
+      newsId: id,
+      title: newsItem ? newsItem.title : "tin tức này",
+    });
+  };
+
+  const confirmDelete = async () => {
+    try {
+      const response = await fetch(
+        `${API_BASE}/api/v1/admin/news/delete/${confirmModal.newsId}`,
+        {
+          method: "DELETE",
         }
-      } catch (error) {
-        console.error("Error deleting news:", error);
-        alert("Có lỗi xảy ra khi xóa tin tức");
+      );
+      const result = await response.json();
+
+      if (result.success) {
+        alert("Xóa tin tức thành công");
+        loadNewsData();
+      } else {
+        alert(result.message || "Có lỗi xảy ra");
       }
+    } catch (error) {
+      console.error("Error deleting news:", error);
+      alert("Có lỗi xảy ra khi xóa tin tức");
+    } finally {
+      setConfirmModal({
+        isOpen: false,
+        newsId: null,
+        title: "",
+      });
     }
+  };
+
+  const cancelDelete = () => {
+    setConfirmModal({
+      isOpen: false,
+      newsId: null,
+      title: "",
+    });
   };
 
   const formatDate = (dateString) => {
@@ -190,6 +224,20 @@ const NewsManager = () => {
       return filters.sortOrder === "desc" ? " ↓" : " ↑";
     }
     return "";
+  };
+
+  // Get today for quick filters
+  const today = new Date().toISOString().split("T")[0];
+
+  const handleQuickDateFilter = (days) => {
+    const fromDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0];
+    setFilters((prev) => ({
+      ...prev,
+      dateFrom: fromDate,
+      dateTo: today,
+    }));
   };
 
   return (
@@ -241,23 +289,16 @@ const NewsManager = () => {
             </select>
           </div>
 
-          {/* News Category Filter */}
+          {/* News Category Tree Select */}
           <div className="new-manager__filter-group">
             <label>Danh mục tin tức:</label>
-            <select
-              value={filters.newsCategoryId}
-              onChange={(e) =>
-                handleFilterChange("newsCategoryId", e.target.value)
-              }
-              className="new-manager__select"
-            >
-              <option value="">Tất cả danh mục</option>
-              {newsCategories.map((category) => (
-                <option key={category._id} value={category._id}>
-                  {category.title}
-                </option>
-              ))}
-            </select>
+            <NewsCategoryTreeSelect
+              value={selectedCategory}
+              onChange={handleCategorySelect}
+              fetchUrl={`${API_BASE}/api/v1/admin/news-category/getAll?tree=true`}
+              placeholder="Chọn danh mục tin tức"
+              noDataText="Không có danh mục tin tức"
+            />
           </div>
 
           {/* Type Filter */}
@@ -279,6 +320,55 @@ const NewsManager = () => {
         </div>
 
         <div className="new-manager__filters-row">
+          {/* Date Range Filter */}
+          <div className="new-manager__filter-group">
+            <label>Từ ngày:</label>
+            <input
+              type="date"
+              value={filters.dateFrom}
+              onChange={(e) => handleFilterChange("dateFrom", e.target.value)}
+              className="new-manager__select"
+            />
+          </div>
+
+          <div className="new-manager__filter-group">
+            <label>Đến ngày:</label>
+            <input
+              type="date"
+              value={filters.dateTo}
+              onChange={(e) => handleFilterChange("dateTo", e.target.value)}
+              className="new-manager__select"
+            />
+          </div>
+
+          {/* Quick Date Filters */}
+          <div className="new-manager__filter-group">
+            <label>Lọc nhanh:</label>
+            <div className="new-manager__quick-filters">
+              <button
+                type="button"
+                onClick={() => handleQuickDateFilter(7)}
+                className="new-manager__quick-filter-btn"
+              >
+                7 ngày
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickDateFilter(30)}
+                className="new-manager__quick-filter-btn"
+              >
+                30 ngày
+              </button>
+              <button
+                type="button"
+                onClick={handleDateRangeReset}
+                className="new-manager__quick-filter-btn new-manager__quick-filter-btn--reset"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+
           {/* Language Filter */}
           <div className="new-manager__filter-group">
             <label>Ngôn ngữ:</label>
@@ -292,7 +382,9 @@ const NewsManager = () => {
               <option value="en">English</option>
             </select>
           </div>
+        </div>
 
+        <div className="new-manager__filters-row">
           {/* Author Type Filter */}
           <div className="new-manager__filter-group">
             <label>Loại tác giả:</label>
@@ -346,6 +438,7 @@ const NewsManager = () => {
               <option value="views">Lượt xem</option>
               <option value="likes">Lượt thích</option>
               <option value="shares">Lượt chia sẻ</option>
+              <option value="commentCount">Số bình luận</option>
             </select>
           </div>
 
@@ -367,6 +460,18 @@ const NewsManager = () => {
       <div className="new-manager__info">
         <span>
           Hiển thị {newsData.length} / {totalCount} tin tức
+          {(filters.dateFrom || filters.dateTo) && (
+            <span className="new-manager__date-filter-info">
+              {filters.dateFrom &&
+                ` (từ ${new Date(filters.dateFrom).toLocaleDateString(
+                  "vi-VN"
+                )})`}
+              {filters.dateTo &&
+                ` (đến ${new Date(filters.dateTo).toLocaleDateString(
+                  "vi-VN"
+                )})`}
+            </span>
+          )}
         </span>
       </div>
 
@@ -389,6 +494,12 @@ const NewsManager = () => {
                 </th>
                 <th
                   className="new-manager__sortable"
+                  onClick={() => handleSort("commentCount")}
+                >
+                  Bình luận{getSortIcon("commentCount")}
+                </th>
+                <th
+                  className="new-manager__sortable"
                   onClick={() => handleSort("createdAt")}
                 >
                   Ngày tạo{getSortIcon("createdAt")}
@@ -399,7 +510,7 @@ const NewsManager = () => {
             <tbody>
               {newsData.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="new-manager__empty">
+                  <td colSpan="7" className="new-manager__empty">
                     Không có dữ liệu
                   </td>
                 </tr>
@@ -477,6 +588,13 @@ const NewsManager = () => {
                         </small>
                       </div>
                     </td>
+                    <td>
+                      <div className="new-manager__stats">
+                        <div className="new-manager__comment-count">
+                          {news.commentCount || 0}
+                        </div>
+                      </div>
+                    </td>
                     <td>{formatDate(news.createdAt)}</td>
                     <td>
                       <div className="new-manager__actions">
@@ -488,7 +606,7 @@ const NewsManager = () => {
                           <i className="fas fa-eye"></i>
                         </Link>
                         <Link
-                          to={`/admin/news/${news._id}/edit`}
+                          to={`/admin/news/edit/${news._id}`}
                           className="new-manager__action-btn new-manager__action-btn--edit"
                           title="Sửa"
                         >
@@ -522,6 +640,18 @@ const NewsManager = () => {
           />
         </div>
       )}
+
+      {/* Confirm Delete Modal */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={cancelDelete}
+        onConfirm={confirmDelete}
+        title="Xác nhận xóa tin tức"
+        message={`Bạn có chắc chắn muốn xóa tin tức "${confirmModal.title}"? Hành động này không thể hoàn tác.`}
+        confirmText="Xóa"
+        cancelText="Hủy"
+        type="danger"
+      />
     </div>
   );
 };

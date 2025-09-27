@@ -1,4 +1,4 @@
-/* NewsManager.css */
+/* NewsManager.css - Updated with new features */
 .new-manager {
   padding: 20px;
   background-color: #f8f9fa;
@@ -110,6 +110,7 @@
   font-size: 14px;
   outline: none;
   transition: border-color 0.3s ease;
+  min-height: 38px;
 }
 
 .new-manager__select:focus {
@@ -117,11 +118,59 @@
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
+/* Quick date filter buttons */
+.new-manager__quick-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.new-manager__quick-filter-btn {
+  padding: 6px 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background: #f8f9fa;
+  color: #495057;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.new-manager__quick-filter-btn:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.new-manager__quick-filter-btn--reset {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.new-manager__quick-filter-btn--reset:hover {
+  background: #c82333;
+  border-color: #bd2130;
+}
+
 .new-manager__info {
   margin-bottom: 16px;
   padding: 0 4px;
   color: #6c757d;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.new-manager__date-filter-info {
+  color: #007bff;
+  font-weight: 500;
+  background: rgba(0, 123, 255, 0.1);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
 }
 
 .new-manager__table-container {
@@ -328,6 +377,13 @@
   font-size: 11px;
 }
 
+.new-manager__comment-count {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #28a745 !important;
+  margin-bottom: 0 !important;
+}
+
 .new-manager__actions {
   display: flex;
   gap: 8px;
@@ -384,10 +440,30 @@
   padding: 20px 0;
 }
 
+/* Tree dropdown integration */
+.new-manager__filter-group .tdp-field {
+  margin: 0;
+}
+
+.new-manager__filter-group .tdp-control {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .new-manager__filter-group {
     min-width: 160px;
+  }
+
+  .new-manager__quick-filters {
+    gap: 4px;
+  }
+
+  .new-manager__quick-filter-btn {
+    padding: 4px 8px;
+    font-size: 11px;
   }
 }
 
@@ -410,6 +486,10 @@
   .new-manager__create-btn {
     justify-content: center;
   }
+
+  .new-manager__quick-filters {
+    justify-content: flex-start;
+  }
 }
 
 @media (max-width: 768px) {
@@ -422,7 +502,7 @@
   }
 
   .new-manager__table {
-    min-width: 800px;
+    min-width: 900px;
   }
 
   .new-manager__post-info {
@@ -442,6 +522,11 @@
   .new-manager__action-btn {
     width: 32px;
     height: 32px;
+  }
+
+  .new-manager__date-filter-info {
+    font-size: 11px;
+    padding: 1px 6px;
   }
 }
 
@@ -466,5 +551,14 @@
 
   .new-manager__post-title {
     font-size: 14px;
+  }
+
+  .new-manager__quick-filters {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .new-manager__quick-filter-btn {
+    text-align: center;
   }
 }
