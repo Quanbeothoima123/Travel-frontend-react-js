@@ -11,12 +11,13 @@ import WardSelect from "../DropDownTreeSearch/WardSelect";
 import ImageUploader from "../../../admin/pages/tour/TourCreate/ImageUploader";
 import "./UserProfile.css";
 import { useToast } from "../../../contexts/ToastContext";
-
+import LoadingModal from "../../../admin/components/common/LoadingModal";
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 
 export default function UserProfile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [uploadLoading, setUploadLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const { showToast } = useToast();
 
@@ -75,12 +76,21 @@ export default function UserProfile() {
 
   return (
     <div className="upf-container">
+      {/* Upload Loading Modal */}
+      <LoadingModal
+        open={uploadLoading}
+        message="Đang tải ảnh lên..."
+        icon="FaCloudUploadAlt"
+      />
       <div className="upf-card">
         <h2>Thông tin cá nhân</h2>
         <form onSubmit={handleSubmit} className="upf-form">
           <div className="upf-avatar-section">
             <ImageUploader
               onUpload={(url) => setUser({ ...user, avatar: url })}
+              onUploadStart={() => setUploadLoading(true)}
+              onUploadEnd={() => setUploadLoading(false)}
+              multiple={false}
             />
             <img
               src={user?.avatar || "/default-avatar.png"}

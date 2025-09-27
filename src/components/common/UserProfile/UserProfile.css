@@ -74,10 +74,9 @@
 }
 
 .upf-btn-primary {
-  background: var(--color-primary, #007bff);
-  color: var(--color-bg, #fff);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   padding: 12px 20px;
-  border: none;
   border-radius: var(--radius-md, 8px);
   cursor: pointer;
   font-size: 1rem;
@@ -85,7 +84,8 @@
 }
 
 .upf-btn-primary:hover:not(:disabled) {
-  background: var(--color-primary-hover, #006ae6);
+  background: var(--color-primary);
+  color: var(--color-bg-card);
 }
 
 .upf-btn-primary:disabled {
