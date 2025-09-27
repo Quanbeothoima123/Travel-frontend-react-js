@@ -522,3 +522,150 @@
   color: #6b7280;
   font-style: italic;
 }
+
+/* Slug Validation Styles - Add to NewsCreate.css */
+
+/* Input states for slug validation */
+.nc-input-checking {
+  border-color: #fbbf24 !important;
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.1) !important;
+}
+
+.nc-input-success {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1) !important;
+}
+
+.nc-input-error {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Slug validation message container */
+.nc-slug-validation {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.nc-slug-checking {
+  background-color: #fef3c7;
+  color: #d97706;
+  border-left: 3px solid #fbbf24;
+}
+
+.nc-slug-success {
+  background-color: #d1fae5;
+  color: #059669;
+  border-left: 3px solid #10b981;
+}
+
+.nc-slug-error {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border-left: 3px solid #ef4444;
+}
+
+/* Spinner animation */
+.nc-spinner {
+  animation: nc-spin 1s linear infinite;
+}
+
+@keyframes nc-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Button disabled state when slug is invalid */
+.nc-btn-primary:disabled {
+  background-color: #9ca3af !important;
+  border-color: #9ca3af !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
+/* Loading container styles */
+.nc-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 16px;
+}
+
+.nc-loading-spinner {
+  font-size: 32px;
+  color: #3b82f6;
+  animation: nc-spin 1s linear infinite;
+}
+
+/* Error container styles */
+.nc-error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 16px;
+  text-align: center;
+}
+
+.nc-error-container p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Info section styles */
+.nc-info-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background-color: #f9fafb;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.nc-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.nc-info-item label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+}
+
+.nc-info-item span {
+  color: #6b7280;
+  font-size: 14px;
+  text-align: right;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .nc-info-group {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .nc-slug-validation {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+}

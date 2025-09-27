@@ -127,7 +127,6 @@ const NewsCreate = () => {
       [field]: value,
     }));
   };
-
   const handleArrayInputChange = (field, value, isAdd = true) => {
     setFormData((prev) => ({
       ...prev,
