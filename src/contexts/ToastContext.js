@@ -48,24 +48,19 @@ export const ToastProvider = ({ children }) => {
         removing: false,
       };
 
-      console.log(`🚀 BEFORE setToasts - Current toasts:`, toasts.length);
-
       setToasts((prev) => {
         const newToasts = [...prev, newToast];
-        console.log(`🚀 INSIDE setToasts - New toasts:`, newToasts);
         return newToasts;
       });
 
       // Set timeout để auto-remove sau 5 giây
       const timeoutId = setTimeout(() => {
-        console.log(`⏰ Timeout triggered for toast: ${id}`);
         removeToast(id);
       }, 5000);
 
       timeoutsRef.current.set(id, timeoutId);
 
       // Debug log
-      console.log(`✅ Toast created: "${message}" (${type}) - ID: ${id}`);
     },
     [removeToast]
   );

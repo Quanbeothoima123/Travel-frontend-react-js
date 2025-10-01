@@ -23,6 +23,8 @@ import NewsPage from "./pages/NewsPage";
 import NewsDetailPage from "./pages/NewsDetailPage";
 import MomoPaymentResultPage from "./pages/MomoPaymentResultPage";
 import HistoryTourOrder from "./pages/HistoryTourOrder";
+import UploadShortVideo from "./components/common/UploadShortVideo";
+import Shorts from "./pages/Shorts";
 import AdminLayout from "./admin/components/layout/AdminLayout";
 import { AuthProvider } from "./contexts/AuthContext";
 // Quản lí danh mục tour
@@ -75,6 +77,7 @@ function AppContent() {
         <Route path="/search/tours/:categorySlug" element={<SearchPage />} />
         <Route path="/news/:newsCategorySlug" element={<NewsPage />} />
         <Route path="/news/detail/:newsSlug" element={<NewsDetailPage />} />
+        <Route path="/shorts" element={<Shorts />} />
         <Route
           path="/payment/momo/result"
           element={<MomoPaymentResultPage />}
@@ -90,6 +93,7 @@ function AppContent() {
             path="transactions_service"
             element={<div>Lịch sử sử dụng dịch vụ</div>}
           />
+          <Route path="upload/videos" element={<UploadShortVideo />} />
           <Route path="posts" element={<div>Bài viết cá nhân</div>} />
           <Route path="favorites" element={<div>Tour yêu thích</div>} />
           <Route path="coupons" element={<div>Mã giảm giá</div>} />

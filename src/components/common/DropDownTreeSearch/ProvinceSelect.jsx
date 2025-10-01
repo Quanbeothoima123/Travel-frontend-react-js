@@ -26,7 +26,7 @@ export default function ProvinceSelect({
     (async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/api/v1/province`, {
+        const res = await fetch(`${API_BASE}/api/v1/province/getAll`, {
           credentials: "include",
         });
         const data = await res.json();
