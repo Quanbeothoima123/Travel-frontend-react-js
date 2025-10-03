@@ -21,6 +21,11 @@ import ReAuthFlow from "./pages/ReAuthFlow";
 import SearchPage from "./pages/SearchPage";
 import NewsPage from "./pages/NewsPage";
 import NewsDetailPage from "./pages/NewsDetailPage";
+
+import GalleryPage from "./pages/GalleryPage";
+
+import GalleryDetailPage from "./pages/Auth/GalleryDetailPage";
+
 import MomoPaymentResultPage from "./pages/MomoPaymentResultPage";
 import HistoryTourOrder from "./pages/HistoryTourOrder";
 import UploadShortVideo from "./components/common/UploadShortVideo";
@@ -42,6 +47,19 @@ import NewsManager from "./admin/pages/news/NewsManager";
 import NewsCreate from "./admin/pages/news/NewsCreate";
 import NewsEdit from "./admin/pages/news/NewsEdit";
 import NewsDetail from "./admin/pages/news/NewsDetail";
+
+// Quản lí danh mục gallery
+import GalleryCategoryManager from "./admin/pages/gallery-category/GalleryCategoryManager";
+import GalleryCategoryCreate from "./admin/pages/gallery-category/GalleryCategoryCreate";
+import GalleryCategoryEdit from "./admin/pages/gallery-category/GalleryCategoryEdit";
+import GalleryCategoryDetail from "./admin/pages/gallery-category/GalleryCategoryDetail";
+
+// Quản lí gallery
+import GalleryManager from "./admin/pages/gallery/GalleryManager";
+import GalleryCreate from "./admin/pages/gallery/GalleryCreate";
+import GalleryEdit from "./admin/pages/gallery/GalleryEdit";
+import GalleryDetail from "./admin/pages/gallery/GalleryDetail";
+
 // Quản lí tour
 import TourManager from "./admin/pages/tour/TourManager";
 import TourCreatePage from "./admin/pages/tour/TourCreate";
@@ -77,6 +95,8 @@ function AppContent() {
         <Route path="/search/tours/:categorySlug" element={<SearchPage />} />
         <Route path="/news/:newsCategorySlug" element={<NewsPage />} />
         <Route path="/news/detail/:newsSlug" element={<NewsDetailPage />} />
+        <Route path="/gallery/:categorySlug" element={<GalleryPage />} />
+        <Route path="/gallery/detail/:slug" element={<GalleryDetailPage />} />
         <Route path="/shorts" element={<Shorts />} />
         <Route
           path="/payment/momo/result"
@@ -141,6 +161,24 @@ function AppContent() {
           <Route path="news/create" element={<NewsCreate />} />
           <Route path="news/edit/:id" element={<NewsEdit />} />
           <Route path="news/detail/:id" element={<NewsDetail />} />
+
+          <Route path="gallery-category" element={<GalleryCategoryManager />} />
+          <Route
+            path="gallery-category/create"
+            element={<GalleryCategoryCreate />}
+          />
+          <Route
+            path="gallery-category/edit/:id"
+            element={<GalleryCategoryEdit />}
+          />
+          <Route
+            path="gallery-category/detail/:id"
+            element={<GalleryCategoryDetail />}
+          />
+          <Route path="gallery" element={<GalleryManager />} />
+          <Route path="gallery/create" element={<GalleryCreate />} />
+          <Route path="gallery/edit/:id" element={<GalleryEdit />} />
+          <Route path="gallery/detail/:id" element={<GalleryDetail />} />
         </Route>
       </Routes>
     </>
