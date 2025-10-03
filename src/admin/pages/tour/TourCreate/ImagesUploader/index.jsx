@@ -110,7 +110,11 @@ const ImagesUploader = ({ images, setImages }) => {
         </div>
       </div>
 
-      <LoadingModal open={loading} message="Đang gửi email..." icon="FaImage" />
+      <LoadingModal
+        open={loading}
+        message="Đang tải ảnh lên..."
+        icon="FaImage"
+      />
 
       <DndContext
         sensors={sensors}
