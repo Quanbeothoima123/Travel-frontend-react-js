@@ -1,0 +1,140 @@
+.gct-tree {
+  padding-left: 1rem;
+}
+
+.gct-node {
+  margin: 0.5rem 0;
+  border-left: 2px solid var(--color-primary);
+  padding-left: 0.5rem;
+}
+
+.gct-node-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background: #f2f4f7;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.gct-toggle {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.gct-level {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+/* Màu sắc cho từng cấp độ */
+.gct-level-0 {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.gct-level-1 {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  box-shadow: 0 2px 4px rgba(240, 147, 251, 0.3);
+}
+
+.gct-level-2 {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  box-shadow: 0 2px 4px rgba(79, 172, 254, 0.3);
+}
+
+.gct-level-3 {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  box-shadow: 0 2px 4px rgba(67, 233, 123, 0.3);
+}
+
+.gct-level-4 {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  box-shadow: 0 2px 4px rgba(250, 112, 154, 0.3);
+}
+
+.gct-level-5 {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  color: #333;
+  box-shadow: 0 2px 4px rgba(168, 237, 234, 0.3);
+}
+
+.gct-level-6 {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  color: #333;
+  box-shadow: 0 2px 4px rgba(255, 236, 210, 0.3);
+}
+
+/* Màu mặc định cho cấp độ cao hơn (nếu có) */
+.gct-level:not(.gct-level-0):not(.gct-level-1):not(.gct-level-2):not(
+    .gct-level-3
+  ):not(.gct-level-4):not(.gct-level-5):not(.gct-level-6) {
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+  box-shadow: 0 2px 4px rgba(137, 247, 254, 0.3);
+}
+
+/* Hiệu ứng hover */
+.gct-level:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.gct-info {
+  flex: 1;
+}
+
+.gct-meta {
+  font-size: 0.75rem;
+  color: #777;
+}
+
+.gct-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.gct-action {
+  cursor: pointer;
+  color: #333;
+  font-size: 0.9rem;
+  width: 40px;
+  height: 40px;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gct-delete {
+  color: red;
+}
+
+/* highlight phát sáng */
+.gct-highlight {
+  animation: gct-glow 2s ease-out;
+}
+
+@keyframes gct-glow {
+  0% {
+    background-color: var(--color-primary);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.gct-children {
+  margin-left: 1rem;
+  border-left: 1px dashed #ccc;
+  padding-left: 0.5rem;
+}
