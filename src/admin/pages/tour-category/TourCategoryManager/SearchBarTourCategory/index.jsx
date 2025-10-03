@@ -45,9 +45,6 @@ const SearchBarTourCategory = ({
         <button onClick={onFindLatestCreated} className="sbtc-btn">
           ⟳ Thêm mới nhất
         </button>
-        <button onClick={onToggleCollapse} className="sbtc-btn">
-          ⬆ Thu gọn cây
-        </button>
         <Link
           to={`/admin/tour-categories/create`}
           className="sbtc-btn sbtc-btn-add"

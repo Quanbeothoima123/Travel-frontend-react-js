@@ -45,9 +45,6 @@ const SearchBarNewsCategory = ({
         <button onClick={onFindLatestCreated} className="sbnc-btn">
           ⟳ Thêm mới nhất
         </button>
-        <button onClick={onToggleCollapse} className="sbnc-btn">
-          ⬆ Thu gọn cây
-        </button>
         <Link
           to={`/admin/news-category/create`}
           className="sbnc-btn sbnc-btn-add"
