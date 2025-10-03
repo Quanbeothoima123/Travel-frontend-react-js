@@ -78,7 +78,7 @@ const Header = () => {
           },
           service: { url: `${API_BASE}/api/v1/service`, basePath: "service" },
           news: { url: `${API_BASE}/api/v1/news`, basePath: "news" },
-          library: { url: `${API_BASE}/api/v1/library`, basePath: "library" },
+          library: { url: `${API_BASE}/api/v1/library`, basePath: "gallery" },
           contact: { url: `${API_BASE}/api/v1/contact`, basePath: "contact" },
           about: { url: `${API_BASE}/api/v1/info`, basePath: "info" },
         };
