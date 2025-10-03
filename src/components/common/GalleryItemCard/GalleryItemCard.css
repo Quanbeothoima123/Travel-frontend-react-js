@@ -1,0 +1,244 @@
+/* GalleryItemCard.css */
+
+.gic-card {
+  display: block;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.gic-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Thumbnail */
+.gic-thumbnail-wrapper {
+  position: relative;
+  height: 240px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+}
+
+.gic-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.gic-card:hover .gic-thumbnail {
+  transform: scale(1.1);
+}
+
+/* Overlay */
+.gic-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.6) 0%,
+    transparent 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gic-card:hover .gic-overlay {
+  opacity: 1;
+}
+
+/* Badges Top (Image & Video Count) */
+.gic-badges-top {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.gic-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.gic-badge-icon {
+  font-size: 12px;
+}
+
+.gic-badge-image .gic-badge-icon {
+  color: #3b82f6;
+}
+
+.gic-badge-video .gic-badge-icon {
+  color: #ef4444;
+}
+
+/* Category Badge */
+.gic-category-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 12px;
+  background: rgba(79, 70, 229, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  z-index: 2;
+}
+
+/* Content */
+.gic-content {
+  padding: 20px;
+}
+
+/* Title */
+.gic-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.3s ease;
+}
+
+.gic-card:hover .gic-title {
+  color: #4f46e5;
+}
+
+/* Description */
+.gic-description {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Stats */
+.gic-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.gic-stats-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.gic-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gic-stat-icon {
+  font-size: 14px;
+}
+
+.gic-stat-value {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Stat Colors */
+.gic-stat-views {
+  color: #6b7280;
+}
+
+.gic-stat-likes {
+  color: #f43f5e;
+}
+
+.gic-stat-shares {
+  color: #3b82f6;
+}
+
+/* View More */
+.gic-view-more {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4f46e5;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gic-card:hover .gic-view-more {
+  opacity: 1;
+}
+
+/* Tour Info */
+.gic-tour-info {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 12px;
+}
+
+.gic-tour-label {
+  color: #9ca3af;
+  margin-right: 6px;
+}
+
+.gic-tour-title {
+  color: #374151;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .gic-thumbnail-wrapper {
+    height: 200px;
+  }
+
+  .gic-content {
+    padding: 16px;
+  }
+
+  .gic-title {
+    font-size: 16px;
+  }
+
+  .gic-description {
+    font-size: 13px;
+  }
+
+  .gic-stats-left {
+    gap: 12px;
+  }
+
+  .gic-stat-icon {
+    font-size: 12px;
+  }
+
+  .gic-stat-value {
+    font-size: 13px;
+  }
+}
