@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import SearchBox from "../../components/common/SearchBox";
-import CategoryTreeSelect from "../../components/common/DropDownTreeSearch/CategoryTreeSelect";
+import CategoryTreeSelect from "../../components/common/DropDownTreeSearch/CategoryTreeSelectUser";
 import TourCard from "../../components/common/TourCard";
 import Pagination from "../../components/common/Pagination";
 import "./SearchPage.css";

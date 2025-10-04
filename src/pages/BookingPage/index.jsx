@@ -8,7 +8,7 @@ import PaymentSection from "./PaymentSection";
 import TourInfoSummary from "../../components/common/TourInfoSummary";
 import { usePeopleLogic } from "./PeopleLogic";
 import { validateForm } from "./Validate";
-import CategoryTreeSelect from "../../components/common/DropDownTreeSearch/CategoryTreeSelect";
+import CategoryTreeSelect from "../../components/common/DropDownTreeSearch/CategoryTreeSelectUser";
 import TourSearchSelect from "../../components/common/DropDownTreeSearch/TourSearchSelect";
 import ConfirmModal from "../../components/common/ConfirmModal";
 import "./BookingPage.css";
