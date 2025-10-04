@@ -1,7 +1,7 @@
-// NewCategoryManager.jsx
+// TourCategoryManager.jsx
 import React, { useEffect, useState, useMemo } from "react";
-import SearchBarNewCategory from "./SearchBarTourCategory";
-import NewCategoryTree from "./TourCategoryTree/index.jsx.jsx";
+import SearchBarTourCategory from "./SearchBarTourCategory";
+import TourCategoryTree from "./TourCategoryTree/index.jsx";
 import "./TourCategoryManager.css";
 import { useToast } from "../../../../contexts/ToastContext";
 import ConfirmModal from "../../../components/common/ConfirmModal";
@@ -24,7 +24,11 @@ const TourCategoryManager = () => {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `${API_BASE}/api/v1/admin/tour-categories/get-all-category?tree=true`
+          `${API_BASE}/api/v1/admin/tour-categories/get-all-category?tree=true`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
         );
         const data = await res.json();
         setCategories(data || []);
@@ -32,6 +36,7 @@ const TourCategoryManager = () => {
         console.error("Fetch categories error:", err);
       }
     };
+
     fetchData();
   }, []);
 
@@ -40,7 +45,11 @@ const TourCategoryManager = () => {
     try {
       setCategoryId(id);
       const res = await fetch(
-        `http://localhost:5000/api/v1/admin/tour-categories/delete-info/${id}`
+        `http://localhost:5000/api/v1/admin/tour-categories/delete-info/${id}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
       );
 
       const data = await res.json();
@@ -63,9 +72,7 @@ const TourCategoryManager = () => {
         `http://localhost:5000/api/v1/admin/tour-categories/delete/${categoryId}`,
         {
           method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          credentials: "include",
         }
       );
 
@@ -80,7 +87,11 @@ const TourCategoryManager = () => {
         const fetchData = async () => {
           try {
             const res = await fetch(
-              `${API_BASE}/api/v1/admin/tour-categories/get-all-category?tree=true`
+              `${API_BASE}/api/v1/admin/tour-categories/get-all-category?tree=true`,
+              {
+                method: "GET",
+                credentials: "include",
+              }
             );
             const data = await res.json();
             setCategories(data || []);
@@ -93,7 +104,7 @@ const TourCategoryManager = () => {
         showToast(data.message || "Xoá danh mục thất bại", "error");
       }
     } catch (err) {
-      console.error("Lỗi khi gọi API xoá:", err);
+      console.error("Lỗi khi xác nhận xóa:", err);
       showToast("Có lỗi xảy ra khi xoá danh mục", "error");
     }
   };
@@ -130,7 +141,11 @@ const TourCategoryManager = () => {
   const handleFindLatestUpdated = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/v1/admin/tour-categories/last-updated`
+        `http://localhost:5000/api/v1/admin/tour-categories/last-updated`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
       );
       const data = await res.json();
 
@@ -153,7 +168,11 @@ const TourCategoryManager = () => {
   const handleFindLatestCreated = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/v1/admin/tour-categories/last-created`
+        `http://localhost:5000/api/v1/admin/tour-categories/last-created`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
       );
       const data = await res.json();
 
@@ -209,7 +228,7 @@ const TourCategoryManager = () => {
     <div className="tcm-container">
       <h2 className="tcm-title">Quản lý danh mục mới</h2>
 
-      <SearchBarNewCategory
+      <SearchBarTourCategory
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         statusFilter={statusFilter}
@@ -220,7 +239,7 @@ const TourCategoryManager = () => {
       />
 
       <div className="tcm-tree-wrapper">
-        <NewCategoryTree
+        <TourCategoryTree
           data={filteredCategories}
           onDelete={handleDelete}
           highlightId={highlightId}
