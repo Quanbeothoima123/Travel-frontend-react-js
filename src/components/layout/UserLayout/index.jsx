@@ -32,6 +32,7 @@ const UserLayout = () => {
       label: "Lịch sử sử dụng dịch vụ khác",
       path: "/user/transactions_service",
     },
+    { label: "Bạn bè", path: "/user/friends" },
     { label: "Tải video khoảng khắc", path: "/user/upload/videos" },
     { label: "Bài viết cá nhân", path: "/user/posts" },
     { label: "Tour yêu thích", path: "/user/favorites" },

@@ -1,0 +1,153 @@
+/* components/FriendsTabs/BlockedCard.css */
+
+.friends-blocked-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s;
+}
+
+.friends-blocked-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.friends-blocked-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.friends-blocked-avatar-wrapper {
+  flex-shrink: 0;
+}
+
+.friends-blocked-avatar-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: grayscale(100%);
+  opacity: 0.7;
+}
+
+.friends-blocked-avatar-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  opacity: 0.7;
+}
+
+.friends-blocked-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.friends-blocked-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.friends-blocked-username {
+  font-size: 13px;
+  color: #666;
+  margin: 0 0 4px 0;
+}
+
+.friends-blocked-reason {
+  font-size: 12px;
+  color: #999;
+  font-style: italic;
+  margin: 0;
+}
+
+.friends-blocked-menu-wrapper {
+  position: relative;
+}
+
+.friends-blocked-btn-more {
+  padding: 10px 12px;
+  background: #f0f2f5;
+  color: #666;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.friends-blocked-btn-more:hover {
+  background: #e4e6eb;
+  color: #333;
+}
+
+.friends-blocked-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 8px 0;
+  min-width: 200px;
+  z-index: 10;
+}
+
+.friends-blocked-actions {
+  display: flex;
+}
+
+.friends-blocked-btn-unblock {
+  width: 100%;
+  padding: 10px 16px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: inherit;
+}
+
+.friends-blocked-btn-unblock:hover {
+  background: #059669;
+}
+
+@media (max-width: 768px) {
+  .friends-blocked-name {
+    font-size: 15px;
+  }
+
+  .friends-blocked-username {
+    font-size: 12px;
+  }
+
+  .friends-blocked-btn-unblock {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}

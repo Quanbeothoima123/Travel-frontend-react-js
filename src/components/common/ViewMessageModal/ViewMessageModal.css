@@ -1,0 +1,109 @@
+/* components/ViewMessageModal/ViewMessageModal.css */
+
+.friends-message-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: friends-modal-fadeIn 0.2s ease;
+}
+
+.friends-message-modal-box {
+  background: white;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: friends-modal-slideUp 0.3s ease;
+}
+
+.friends-message-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.friends-message-modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.friends-message-modal-close {
+  padding: 8px;
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.friends-message-modal-close:hover {
+  background: #f3f4f6;
+  color: #333;
+}
+
+.friends-message-modal-content {
+  padding: 24px;
+}
+
+.friends-message-modal-text {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+@keyframes friends-modal-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes friends-modal-slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .friends-message-modal-box {
+    max-width: 100%;
+    margin: 16px;
+  }
+
+  .friends-message-modal-header {
+    padding: 16px 20px;
+  }
+
+  .friends-message-modal-title {
+    font-size: 16px;
+  }
+
+  .friends-message-modal-content {
+    padding: 20px;
+  }
+}

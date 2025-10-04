@@ -1,0 +1,37 @@
+/* pages/FriendsPage/FriendsPage.css */
+
+.friends-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+.friends-loading {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 18px;
+  color: #666;
+}
+
+.friends-header {
+  margin-bottom: 24px;
+}
+
+.friends-page-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .friends-page {
+    padding: 16px;
+  }
+
+  .friends-page-title {
+    font-size: 24px;
+  }
+}

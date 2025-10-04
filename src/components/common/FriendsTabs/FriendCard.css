@@ -1,0 +1,178 @@
+/* components/FriendsTabs/FriendCard.css */
+
+.friends-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s;
+}
+
+.friends-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.friends-card-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.friends-card-avatar-wrapper {
+  flex-shrink: 0;
+}
+
+.friends-card-avatar-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.friends-card-avatar-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.friends-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.friends-card-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.friends-card-username {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+}
+
+.friends-card-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.friends-btn-message {
+  padding: 10px 12px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.friends-btn-message:hover {
+  background: #2563eb;
+}
+
+.friends-card-menu-wrapper {
+  position: relative;
+}
+
+.friends-btn-more {
+  padding: 10px 12px;
+  background: #f0f2f5;
+  color: #666;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.friends-btn-more:hover {
+  background: #e4e6eb;
+  color: #333;
+}
+
+.friends-menu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9;
+}
+
+.friends-card-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 8px 0;
+  min-width: 200px;
+  z-index: 10;
+}
+
+.friends-menu-item {
+  width: 100%;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #333;
+  font-family: inherit;
+}
+
+.friends-menu-item:hover {
+  background: #f0f2f5;
+}
+
+.friends-menu-item-danger {
+  color: #e74c3c;
+}
+
+.friends-menu-item-danger:hover {
+  background: #fee;
+}
+
+@media (max-width: 768px) {
+  .friends-card-name {
+    font-size: 15px;
+  }
+
+  .friends-card-username {
+    font-size: 12px;
+  }
+
+  .friends-btn-message,
+  .friends-btn-more {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+}

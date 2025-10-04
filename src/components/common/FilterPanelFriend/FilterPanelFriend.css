@@ -1,0 +1,112 @@
+/* components/FilterPanelFriend/FilterPanelFriend.css */
+
+.friends-filter-panel {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.friends-filter-toggle {
+  width: 100%;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+
+.friends-filter-toggle:hover {
+  background: #f8f9fa;
+}
+
+.friends-filter-toggle-text {
+  flex: 1;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  font-size: 15px;
+}
+
+.friends-filter-chevron {
+  transition: transform 0.3s;
+}
+
+.friends-filter-chevron-open {
+  transform: rotate(180deg);
+}
+
+.friends-filter-content {
+  padding: 16px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: friends-filter-slideDown 0.3s ease;
+}
+
+.friends-filter-input,
+.friends-filter-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.friends-filter-input:focus,
+.friends-filter-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.friends-filter-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.friends-filter-reset {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.friends-filter-reset:hover {
+  background: #f8f9fa;
+  color: #333;
+}
+
+@keyframes friends-filter-slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .friends-filter-row {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,44 @@
+/* components/FriendsTabs/FriendsList.css */
+
+.friends-list {
+  margin-bottom: 40px;
+}
+
+.friends-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.friends-list-loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+  font-size: 16px;
+}
+
+.friends-list-empty {
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.friends-list-empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.friends-list-empty-text {
+  color: #666;
+  font-size: 16px;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .friends-list-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}

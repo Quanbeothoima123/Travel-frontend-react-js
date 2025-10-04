@@ -22,6 +22,8 @@ import SearchPage from "./pages/SearchPage";
 import NewsPage from "./pages/NewsPage";
 import NewsDetailPage from "./pages/NewsDetailPage";
 
+import FriendsPage from "./pages/FriendPage";
+
 import GalleryPage from "./pages/GalleryPage";
 
 import GalleryDetailPage from "./pages/Auth/GalleryDetailPage";
@@ -113,6 +115,7 @@ function AppContent() {
             path="transactions_service"
             element={<div>Lịch sử sử dụng dịch vụ</div>}
           />
+          <Route path="friends" element={<FriendsPage />} />
           <Route path="upload/videos" element={<UploadShortVideo />} />
           <Route path="posts" element={<div>Bài viết cá nhân</div>} />
           <Route path="favorites" element={<div>Tour yêu thích</div>} />
