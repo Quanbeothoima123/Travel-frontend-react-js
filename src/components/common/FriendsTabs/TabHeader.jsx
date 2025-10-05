@@ -1,6 +1,12 @@
 // components/FriendsTabs/TabHeader.jsx
 import React from "react";
-import { FaUserFriends, FaUserPlus, FaPaperPlane, FaBan } from "react-icons/fa";
+import {
+  FaUserFriends,
+  FaUserPlus,
+  FaPaperPlane,
+  FaBan,
+  FaUsers,
+} from "react-icons/fa";
 import "./TabHeader.css";
 
 const TabHeader = ({ activeTab, onTabChange, counts }) => {
@@ -10,6 +16,12 @@ const TabHeader = ({ activeTab, onTabChange, counts }) => {
       label: "Bạn bè",
       count: counts.friends,
       icon: <FaUserFriends />,
+    },
+    {
+      id: "suggestions",
+      label: "Gợi ý kết bạn",
+      count: null, // Không hiển thị count cho suggestions
+      icon: <FaUsers />,
     },
     {
       id: "received",
@@ -43,7 +55,7 @@ const TabHeader = ({ activeTab, onTabChange, counts }) => {
         >
           <span className="friends-tab-icon">{tab.icon}</span>
           <span className="friends-tab-label">{tab.label}</span>
-          {tab.count > 0 && (
+          {tab.count !== null && tab.count > 0 && (
             <span className="friends-tab-badge">{tab.count}</span>
           )}
         </button>

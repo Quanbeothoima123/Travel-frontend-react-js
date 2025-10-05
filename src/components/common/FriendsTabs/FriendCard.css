@@ -160,6 +160,45 @@
 .friends-menu-item-danger:hover {
   background: #fee;
 }
+/* Nút kết bạn cho suggested friends */
+.friends-btn-add {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.friends-btn-add:hover:not(:disabled) {
+  background: #166fe5;
+  transform: translateY(-1px);
+}
+
+.friends-btn-add:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.friends-btn-view-profile {
+  padding: 8px 12px;
+  background: #e4e6eb;
+  color: #050505;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.friends-btn-view-profile:hover {
+  background: #d8dadf;
+}
 
 @media (max-width: 768px) {
   .friends-card-name {

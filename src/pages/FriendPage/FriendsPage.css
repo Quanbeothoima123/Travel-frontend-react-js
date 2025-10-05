@@ -1,18 +1,9 @@
-/* pages/FriendsPage/FriendsPage.css */
+/* pages/FriendsPage/FriendsPage.css - Fully Responsive */
 
 .friends-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  min-height: 100vh;
-  background: #f5f7fa;
-}
-
-.friends-loading {
-  text-align: center;
-  padding: 60px 20px;
-  font-size: 18px;
-  color: #666;
 }
 
 .friends-header {
@@ -20,18 +11,65 @@
 }
 
 .friends-page-title {
-  font-size: 32px;
-  font-weight: bold;
-  color: #333;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text, #333);
   margin: 0;
 }
 
-@media (max-width: 768px) {
+.friends-loading {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
   .friends-page {
     padding: 16px;
   }
 
   .friends-page-title {
     font-size: 24px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .friends-page {
+    padding: 12px;
+  }
+
+  .friends-header {
+    margin-bottom: 16px;
+  }
+
+  .friends-page-title {
+    font-size: 20px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .friends-page {
+    padding: 8px;
+  }
+
+  .friends-page-title {
+    font-size: 18px;
+  }
+}
+
+/* Extra responsive fixes for mobile */
+@media (max-width: 768px) {
+  /* Ensure all content fits within viewport */
+  .friends-page * {
+    max-width: 100%;
+  }
+
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
   }
 }

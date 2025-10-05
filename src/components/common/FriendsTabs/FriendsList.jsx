@@ -3,84 +3,233 @@ import React, { useState, useEffect } from "react";
 import FriendCard from "./FriendCard";
 import RequestCard from "./RequestCard";
 import BlockedCard from "./BlockedCard";
+import SuggestedFriendCard from "./SuggestedFriendCard";
 import "./FriendsList.css";
+
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
+
 const FriendsList = ({ user, activeTab, filters, onDataChange }) => {
-  const [items, setItems] = useState([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
-    loadItems();
+    setPage(1);
+    setData([]);
   }, [activeTab, filters]);
 
-  const loadItems = async () => {
+  useEffect(() => {
+    loadData();
+  }, [activeTab, filters, page]);
+
+  const loadData = async () => {
     setLoading(true);
     try {
-      let data = [];
+      let endpoint = "";
+      let queryParams = new URLSearchParams({
+        page,
+        limit: 20,
+        ...filters,
+      });
 
-      // Lấy data từ user profile đã fetch sẵn
       switch (activeTab) {
         case "friends":
-          data = user.friends?.map((f) => f.user).filter(Boolean) || [];
+          endpoint = `/api/v1/user/friends?${queryParams}`;
+          break;
+        case "suggestions":
+          endpoint = `/api/v1/user/friends/suggestions?${queryParams}`;
           break;
         case "received":
-          data =
-            user.friendRequestsReceived
-              ?.map((r) => ({
-                ...r.user,
-                message: r.message,
-                createdAt: r.createdAt,
-              }))
-              .filter((r) => r._id) || [];
+          endpoint = `/api/v1/user/friend-requests/received?${queryParams}`;
           break;
         case "sent":
-          data =
-            user.friendRequestsSent
-              ?.map((r) => ({
-                ...r.user,
-                message: r.message,
-                createdAt: r.createdAt,
-              }))
-              .filter((r) => r._id) || [];
+          endpoint = `/api/v1/user/friend-requests/sent?${queryParams}`;
           break;
         case "blocked":
-          data =
-            user.blockedUsers
-              ?.map((b) => ({
-                ...b.user,
-                reason: b.reason,
-                createdAt: b.createdAt,
-              }))
-              .filter((b) => b._id) || [];
+          endpoint = `/api/v1/user/blocked?${queryParams}`;
           break;
         default:
-          data = [];
+          return;
       }
 
-      // Apply filters
-      let filteredData = data;
+      const response = await fetch(`${API_BASE}${endpoint}`, {
+        credentials: "include",
+      });
 
-      if (filters.userName) {
-        filteredData = filteredData.filter(
-          (item) =>
-            item.userName
-              ?.toLowerCase()
-              .includes(filters.userName.toLowerCase()) ||
-            item.customName
-              ?.toLowerCase()
-              .includes(filters.userName.toLowerCase())
-        );
+      if (!response.ok) throw new Error("Failed to fetch data");
+
+      const result = await response.json();
+
+      if (page === 1) {
+        setData(result.data.items);
+      } else {
+        setData((prev) => [...prev, ...result.data.items]);
       }
 
-      setItems(filteredData);
+      setHasMore(result.data.nextPageExists);
     } catch (error) {
-      console.error("Load items error:", error);
+      console.error("Load data error:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const renderItem = (item) => {
+  const handleMessage = (userId) => {
+    console.log("Message user:", userId);
+    // TODO: Navigate to chat
+  };
+
+  const handleViewProfile = (userId) => {
+    console.log("View profile:", userId);
+    // TODO: Navigate to profile
+  };
+
+  const handleUnfriend = async (friendId) => {
+    try {
+      const response = await fetch(
+        `${API_BASE}/api/v1/user/friends/${friendId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) throw new Error("Unfriend failed");
+
+      setData((prev) => prev.filter((item) => item._id !== friendId));
+      onDataChange();
+    } catch (error) {
+      console.error("Unfriend error:", error);
+      alert("Không thể hủy kết bạn");
+    }
+  };
+
+  const handleAcceptRequest = async (fromUserId) => {
+    try {
+      const response = await fetch(
+        `${API_BASE}/api/v1/user/friend-requests/accept`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ fromUserId }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Accept failed");
+
+      setData((prev) => prev.filter((item) => item._id !== fromUserId));
+      onDataChange();
+    } catch (error) {
+      console.error("Accept request error:", error);
+      alert("Không thể chấp nhận lời mời");
+    }
+  };
+
+  const handleRejectRequest = async (fromUserId) => {
+    try {
+      const response = await fetch(
+        `${API_BASE}/api/v1/user/friend-requests/reject`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ fromUserId }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Reject failed");
+
+      setData((prev) => prev.filter((item) => item._id !== fromUserId));
+      onDataChange();
+    } catch (error) {
+      console.error("Reject request error:", error);
+      alert("Không thể từ chối lời mời");
+    }
+  };
+
+  const handleCancelRequest = async (toUserId) => {
+    try {
+      const response = await fetch(
+        `${API_BASE}/api/v1/user/friend-requests/cancel`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ toUserId }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Cancel failed");
+
+      setData((prev) => prev.filter((item) => item._id !== toUserId));
+      onDataChange();
+    } catch (error) {
+      console.error("Cancel request error:", error);
+      alert("Không thể hủy lời mời");
+    }
+  };
+
+  const handleUnblock = async (targetUserId) => {
+    try {
+      const response = await fetch(`${API_BASE}/api/v1/user/unblock`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ targetUserId }),
+      });
+
+      if (!response.ok) throw new Error("Unblock failed");
+
+      setData((prev) => prev.filter((item) => item._id !== targetUserId));
+      onDataChange();
+    } catch (error) {
+      console.error("Unblock error:", error);
+      alert("Không thể bỏ chặn");
+    }
+  };
+
+  // Updated: Now accepts message parameter
+  const handleAddFriend = async (userId, message) => {
+    console.log("handleAddFriend called with:", { userId, message }); // Debug log
+
+    try {
+      const requestBody = {
+        toUserId: userId,
+        message: message, // Use the message from modal
+      };
+
+      console.log("Request body:", requestBody); // Debug log
+
+      const response = await fetch(
+        `${API_BASE}/api/v1/user/friend-requests/send`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Send request failed");
+      }
+
+      const result = await response.json();
+      console.log("Response:", result); // Debug log
+
+      setData((prev) => prev.filter((item) => item._id !== userId));
+      onDataChange();
+      alert("Đã gửi lời mời kết bạn!");
+    } catch (error) {
+      console.error("Add friend error:", error);
+      alert(error.message || "Không thể gửi lời mời kết bạn");
+    }
+  };
+
+  const renderCard = (item) => {
     switch (activeTab) {
       case "friends":
         return (
@@ -89,6 +238,15 @@ const FriendsList = ({ user, activeTab, filters, onDataChange }) => {
             friend={item}
             onMessage={handleMessage}
             onUnfriend={handleUnfriend}
+            onViewProfile={handleViewProfile}
+          />
+        );
+      case "suggestions":
+        return (
+          <SuggestedFriendCard
+            key={item._id}
+            user={item}
+            onAddFriend={handleAddFriend}
             onViewProfile={handleViewProfile}
           />
         );
@@ -127,145 +285,43 @@ const FriendsList = ({ user, activeTab, filters, onDataChange }) => {
     }
   };
 
-  // Action handlers
-  const handleMessage = (userId) => {
-    window.location.href = `/chat/${userId}`;
-  };
-
-  const handleViewProfile = (userId) => {
-    window.location.href = `/profile/${userId}`;
-  };
-
-  const handleUnfriend = async (friendId) => {
-    if (!window.confirm("Bạn có chắc muốn hủy kết bạn?")) return;
-
-    try {
-      const response = await fetch(
-        `${API_BASE}/api/v1/user/friends/${friendId}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
-      );
-
-      if (response.ok) {
-        onDataChange();
-      }
-    } catch (error) {
-      console.error("Unfriend error:", error);
-    }
-  };
-
-  const handleAcceptRequest = async (fromUserId) => {
-    try {
-      const response = await fetch(
-        `${API_BASE}/api/v1/user/friend-requests/accept`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ fromUserId }),
-        }
-      );
-
-      if (response.ok) {
-        onDataChange();
-      }
-    } catch (error) {
-      console.error("Accept request error:", error);
-    }
-  };
-
-  const handleRejectRequest = async (fromUserId) => {
-    try {
-      const response = await fetch(
-        `${API_BASE}/api/v1/user/friend-requests/reject`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ fromUserId }),
-        }
-      );
-
-      if (response.ok) {
-        onDataChange();
-      }
-    } catch (error) {
-      console.error("Reject request error:", error);
-    }
-  };
-
-  const handleCancelRequest = async (toUserId) => {
-    if (!window.confirm("Bạn có chắc muốn hủy lời mời?")) return;
-
-    try {
-      const response = await fetch(
-        `${API_BASE}/api/v1/user/friend-requests/cancel`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ toUserId }),
-        }
-      );
-
-      if (response.ok) {
-        onDataChange();
-      }
-    } catch (error) {
-      console.error("Cancel request error:", error);
-    }
-  };
-
-  const handleUnblock = async (targetUserId) => {
-    if (!window.confirm("Bạn có chắc muốn bỏ chặn người này?")) return;
-
-    try {
-      const response = await fetch(`${API_BASE}/api/v1/user/unblock`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ targetUserId }),
-      });
-
-      if (response.ok) {
-        onDataChange();
-      }
-    } catch (error) {
-      console.error("Unblock error:", error);
-    }
-  };
-
-  if (loading && items.length === 0) {
+  if (loading && page === 1) {
     return <div className="friends-list-loading">Đang tải...</div>;
   }
 
-  if (items.length === 0) {
+  if (!loading && data.length === 0) {
+    const emptyMessages = {
+      friends: "Bạn chưa có bạn bè nào",
+      suggestions: "Không có gợi ý kết bạn",
+      received: "Không có lời mời kết bạn nào",
+      sent: "Bạn chưa gửi lời mời nào",
+      blocked: "Bạn chưa chặn ai",
+    };
+
     return (
       <div className="friends-list-empty">
-        <div className="friends-list-empty-icon">📭</div>
-        <p className="friends-list-empty-text">
-          {activeTab === "friends" && "Chưa có bạn bè nào"}
-          {activeTab === "received" && "Chưa có lời mời kết bạn"}
-          {activeTab === "sent" && "Chưa gửi lời mời nào"}
-          {activeTab === "blocked" && "Chưa chặn ai"}
-        </p>
+        {emptyMessages[activeTab] || "Không có dữ liệu"}
       </div>
     );
   }
 
   return (
     <div className="friends-list">
-      <div className="friends-list-grid">{items.map(renderItem)}</div>
+      <div className="friends-list-grid">
+        {data.map((item) => renderCard(item))}
+      </div>
+
+      {hasMore && (
+        <div className="friends-list-load-more">
+          <button
+            onClick={() => setPage((p) => p + 1)}
+            disabled={loading}
+            className="friends-btn-load-more"
+          >
+            {loading ? "Đang tải..." : "Tải thêm"}
+          </button>
+        </div>
+      )}
     </div>
   );
 };

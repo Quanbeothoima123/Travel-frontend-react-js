@@ -1,4 +1,5 @@
-/* UserLayout - prefix ul */
+/* UserLayout - prefix ul - Enhanced Responsive */
+
 /* Layout base */
 .ul-layout {
   display: flex;
@@ -9,7 +10,7 @@
 
 /* Sidebar common */
 .ul-sidebar {
-  background: var(--color-bg-card); /* panel background from theme */
+  background: var(--color-bg-card);
   border-right: 1px solid var(--color-border);
   box-shadow: var(--shadow-sm);
   display: flex;
@@ -17,7 +18,8 @@
   padding: 20px 12px;
   z-index: 1002;
   color: var(--color-text);
-  border-radius: 0; /* full height panel */
+  border-radius: 0;
+  overflow-y: auto;
 }
 
 /* Desktop sidebar */
@@ -37,10 +39,9 @@
   top: 0;
   bottom: 0;
   left: 0;
-  overflow-y: auto;
   animation: ul-slide-in 0.28s ease forwards;
   z-index: 1004;
-  background: var(--color-bg-card); /* ensure not transparent */
+  background: var(--color-bg-card);
 }
 
 /* Close button inside mobile sidebar */
@@ -57,6 +58,7 @@
   transition: color 0.15s ease, background-color 0.15s ease,
     transform 0.12s ease;
 }
+
 .ul-sidebar__close-mobile:hover {
   color: var(--color-primary);
   background-color: rgba(13, 110, 253, 0.04);
@@ -70,6 +72,7 @@
   justify-content: center;
   margin-bottom: 20px;
 }
+
 .ul-sidebar__avatar img {
   width: 80px;
   height: 80px;
@@ -89,17 +92,19 @@
   padding: 12px 14px;
   margin-bottom: 8px;
   text-decoration: none;
-  color: var(--color-text); /* ensure black-ish text from theme */
+  color: var(--color-text);
   border-radius: var(--radius-md);
   transition: background-color 0.18s ease, color 0.18s ease,
     border-color 0.18s ease;
   display: block;
   border: 1px solid transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Hover: visible background (not transparent) */
 .ul-sidebar__link:hover {
-  background-color: var(--color-bg); /* page background (white in light) */
+  background-color: var(--color-bg);
   color: var(--color-primary);
   border-color: var(--color-border);
 }
@@ -118,6 +123,7 @@
   padding: 20px;
   transition: margin-left 0.28s ease;
   background: transparent;
+  min-width: 0; /* Prevent overflow */
 }
 
 /* Topbar for mobile */
@@ -134,6 +140,7 @@
   padding: 0 15px;
   z-index: 1001;
 }
+
 .ul-topbar__menu-btn {
   font-size: 1.4rem;
   background: transparent;
@@ -142,11 +149,14 @@
   cursor: pointer;
   padding: 8px;
   border-radius: var(--radius-md);
+  transition: background-color 0.15s, color 0.15s;
 }
+
 .ul-topbar__menu-btn:hover {
   background-color: rgba(13, 110, 253, 0.04);
   color: var(--color-primary);
 }
+
 .ul-topbar__avatar {
   width: 40px;
   height: 40px;
@@ -179,16 +189,105 @@
   }
 }
 
-/* Responsive behavior */
+/* Tablet (1024px and below) */
+@media screen and (max-width: 1024px) {
+  .ul-sidebar--desktop {
+    width: 220px;
+  }
+
+  .ul-main {
+    margin-left: 220px;
+    padding: 16px;
+  }
+
+  .ul-sidebar__avatar img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .ul-sidebar__link {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+}
+
+/* Mobile (768px and below) */
 @media screen and (max-width: 768px) {
+  /* Hide desktop sidebar, show mobile topbar */
   .ul-sidebar--desktop {
     display: none;
   }
+
   .ul-topbar {
     display: flex;
   }
+
   .ul-main {
     margin-left: 0;
-    padding-top: 72px; /* avoid topbar */
+    padding-top: 72px; /* Space for topbar */
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: 16px;
+  }
+
+  /* Mobile sidebar adjustments */
+  .ul-sidebar--mobile {
+    width: 260px;
+    padding: 16px 10px;
+  }
+
+  .ul-sidebar__avatar img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .ul-sidebar__link {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+}
+
+/* Small Mobile (480px and below) */
+@media screen and (max-width: 480px) {
+  .ul-topbar {
+    height: 56px;
+    padding: 0 12px;
+  }
+
+  .ul-topbar__menu-btn {
+    font-size: 1.2rem;
+    padding: 6px;
+  }
+
+  .ul-topbar__avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ul-main {
+    padding-top: 64px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 12px;
+  }
+
+  .ul-sidebar--mobile {
+    width: 240px;
+    padding: 12px 8px;
+  }
+
+  .ul-sidebar__avatar {
+    margin-bottom: 16px;
+  }
+
+  .ul-sidebar__avatar img {
+    width: 56px;
+    height: 56px;
+  }
+
+  .ul-sidebar__link {
+    padding: 9px 10px;
+    font-size: 13px;
+    margin-bottom: 6px;
   }
 }

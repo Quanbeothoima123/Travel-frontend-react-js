@@ -5,7 +5,7 @@ import TabHeader from "../../components/common/FriendsTabs/TabHeader";
 import FriendsList from "../../components/common/FriendsTabs/FriendsList";
 import FilterPanelFriend from "../../components/common/FilterPanelFriend";
 import "./FriendsPage.css";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 const FriendsPage = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,7 +25,7 @@ const FriendsPage = () => {
 
   const loadUserProfile = async () => {
     try {
-      const response = await fetch("/api/v1/user/profile", {
+      const response = await fetch(`${API_BASE}/api/v1/user/profile`, {
         credentials: "include", // Gửi cookie authToken
       });
 
