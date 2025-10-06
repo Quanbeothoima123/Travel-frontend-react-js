@@ -1,5 +1,6 @@
 // components/FriendsTabs/FriendCard.jsx
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   FaCommentDots,
   FaEllipsisV,
@@ -9,7 +10,7 @@ import {
 import ConfirmModal from "../../../admin/components/common/ConfirmModal";
 import "./FriendCard.css";
 
-const FriendCard = ({ friend, onMessage, onUnfriend, onViewProfile }) => {
+const FriendCard = ({ friend, onUnfriend, onViewProfile }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -53,13 +54,14 @@ const FriendCard = ({ friend, onMessage, onUnfriend, onViewProfile }) => {
 
           {/* Actions */}
           <div className="friends-card-actions">
-            <button
-              onClick={() => onMessage(friend._id)}
+            {/* ✅ Thay button bằng Link */}
+            <Link
+              to={`/user/chat?userId=${friend._id}`}
               className="friends-btn-message"
               title="Nhắn tin"
             >
               <FaCommentDots />
-            </button>
+            </Link>
 
             <div className="friends-card-menu-wrapper">
               <button

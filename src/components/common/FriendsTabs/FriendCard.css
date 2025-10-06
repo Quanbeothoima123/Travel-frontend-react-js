@@ -200,6 +200,29 @@
   background: #d8dadf;
 }
 
+.friends-btn-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: #0084ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: none; /* ✅ Quan trọng: Xóa underline của Link */
+  font-size: 16px;
+}
+
+.friends-btn-message:hover {
+  background: #0073e6;
+}
+
+.friends-btn-message:active {
+  transform: scale(0.95);
+}
+
 @media (max-width: 768px) {
   .friends-card-name {
     font-size: 15px;
