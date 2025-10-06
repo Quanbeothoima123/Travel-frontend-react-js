@@ -21,29 +21,32 @@ import ReAuthFlow from "./pages/ReAuthFlow";
 import SearchPage from "./pages/SearchPage";
 import NewsPage from "./pages/NewsPage";
 import NewsDetailPage from "./pages/NewsDetailPage";
-
 import FriendsPage from "./pages/FriendPage";
-
 import GalleryPage from "./pages/GalleryPage";
-
 import GalleryDetailPage from "./pages/Auth/GalleryDetailPage";
-
 import MomoPaymentResultPage from "./pages/MomoPaymentResultPage";
 import HistoryTourOrder from "./pages/HistoryTourOrder";
 import UploadShortVideo from "./components/common/UploadShortVideo";
 import Shorts from "./pages/Shorts";
+
+// ✅ Import ChatPage
+import ChatPage from "./pages/ChatPage";
+
 import AdminLayout from "./admin/components/layout/AdminLayout";
 import { AuthProvider } from "./contexts/AuthContext";
+
 // Quản lí danh mục tour
 import TourCategoryManager from "./admin/pages/tour-category/TourCategoryManager";
 import TourCategoryCreate from "./admin/pages/tour-category/TourCategoryCreate";
 import TourCategoryDetail from "./admin/pages/tour-category/TourCategoryDetail";
 import TourCategoryUpdate from "./admin/pages/tour-category/TourCategoryEdit";
+
 // Quản lí danh mục tin tức
 import NewsCategoryManager from "./admin/pages/news-category/NewsCategoryManager";
 import NewsCategoryCreate from "./admin/pages/news-category/NewsCategoryCreate";
 import NewsCategoryDetail from "./admin/pages/news-category/NewsCategoryDetail";
 import NewsCategoryEdit from "./admin/pages/news-category/NewsCategoryEdit";
+
 // Quản lí tin tức
 import NewsManager from "./admin/pages/news/NewsManager";
 import NewsCreate from "./admin/pages/news/NewsCreate";
@@ -69,7 +72,6 @@ import AdminTourDetail from "./admin/pages/tour/AdminTourDetail";
 import TourEditPage from "./admin/pages/tour/TourEdit";
 
 import AdminLogin from "./admin/pages/Login";
-
 import AdminPrivateRoute from "./admin/components/routes/AdminPrivateRoute";
 
 // Component để xử lý hiển thị Header có điều kiện
@@ -107,7 +109,6 @@ function AppContent() {
 
         {/* User dashboard routes */}
         <Route path="/user/*" element={<UserLayout />}>
-          {/* Redirect mặc định */}
           <Route index element={<Navigate to="profile" replace />} />
           <Route path="profile" element={<UserProfile />} />
           <Route path="transactions_tour" element={<HistoryTourOrder />} />
@@ -122,6 +123,10 @@ function AppContent() {
           <Route path="coupons" element={<div>Mã giảm giá</div>} />
           <Route path="support" element={<div>Liên hệ hỗ trợ</div>} />
           <Route path="dark-mode" element={<div>Chế độ tối</div>} />
+
+          {/* ✅ Thêm Chat routes vào UserLayout */}
+          <Route path="chat" element={<ChatPage />} />
+          <Route path="chat/:chatId" element={<ChatPage />} />
         </Route>
 
         {/* Admin routes */}
