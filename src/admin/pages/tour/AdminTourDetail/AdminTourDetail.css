@@ -1,4 +1,4 @@
-.tour-detail-container {
+.admin-tour-detail-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 30px;
@@ -9,7 +9,7 @@
   background: linear-gradient(to bottom, #f4f7fa, #ffffff);
 }
 
-.tour-title-admin {
+.admin-tour-detail-container .admin-tour-title {
   text-align: center;
   color: #1a3c6d;
   margin-bottom: 40px;
@@ -21,7 +21,7 @@
   gap: 10px;
 }
 
-.section {
+.admin-tour-detail-container .admin-tour-section {
   margin-bottom: 50px;
   padding: 25px;
   border: 1px solid #e0e7ff;
@@ -31,11 +31,11 @@
   transition: transform 0.3s ease;
 }
 
-.section:hover {
+.admin-tour-detail-container .admin-tour-section:hover {
   transform: translateY(-5px);
 }
 
-.section h2 {
+.admin-tour-detail-container .admin-tour-section h2 {
   color: #1a3c6d;
   border-bottom: 3px solid #3498db;
   padding-bottom: 12px;
@@ -46,22 +46,22 @@
   gap: 8px;
 }
 
-.info-grid {
+.admin-tour-detail-container .admin-tour-info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
 }
 
-.info-item {
+.admin-tour-detail-container .admin-tour-info-item {
   display: flex;
   flex-direction: column;
 }
 
-.info-item.full-width {
+.admin-tour-detail-container .admin-tour-info-item.admin-tour-full-width {
   grid-column: 1 / -1;
 }
 
-.info-item label {
+.admin-tour-detail-container .admin-tour-info-item label {
   font-weight: 600;
   color: #34495e;
   margin-bottom: 8px;
@@ -70,21 +70,21 @@
   gap: 6px;
 }
 
-.info-item span,
-.info-item p {
+.admin-tour-detail-container .admin-tour-info-item span,
+.admin-tour-detail-container .admin-tour-info-item p {
   color: #4a5568;
   font-size: 1.1em;
 }
 
-.tags,
-.filters {
+.admin-tour-detail-container .admin-tour-tags,
+.admin-tour-detail-container .admin-tour-filters {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.tag,
-.filter {
+.admin-tour-detail-container .admin-tour-tag,
+.admin-tour-detail-container .admin-tour-filter {
   background: var(--color-bg-card);
   padding: 6px 12px;
   border-radius: 20px;
@@ -94,13 +94,13 @@
   border: 2px solid var(--color-primary);
 }
 
-.tag:hover,
-.filter:hover {
+.admin-tour-detail-container .admin-tour-tag:hover,
+.admin-tour-detail-container .admin-tour-filter:hover {
   background: var(--color-primary);
   color: var(--color-bg-card);
 }
 
-.thumbnail {
+.admin-tour-detail-container .admin-tour-thumbnail {
   width: 100%;
   max-width: 500px;
   height: auto;
@@ -110,18 +110,18 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.images-grid,
-.vehicles-grid,
-.hotel-images {
+.admin-tour-detail-container .admin-tour-images-grid,
+.admin-tour-detail-container .admin-tour-vehicles-grid,
+.admin-tour-detail-container .admin-tour-hotel-images {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 15px;
 }
 
-.gallery-img,
-.hotel-img,
-.vehicle-img,
-.day-image {
+.admin-tour-detail-container .admin-tour-gallery-img,
+.admin-tour-detail-container .admin-tour-hotel-img,
+.admin-tour-detail-container .admin-tour-vehicle-img,
+.admin-tour-detail-container .admin-tour-day-image {
   width: 100%;
   height: 180px;
   object-fit: cover;
@@ -129,14 +129,14 @@
   transition: transform 0.3s ease;
 }
 
-.gallery-img:hover,
-.hotel-img:hover,
-.vehicle-img:hover,
-.day-image:hover {
+.admin-tour-detail-container .admin-tour-gallery-img:hover,
+.admin-tour-detail-container .admin-tour-hotel-img:hover,
+.admin-tour-detail-container .admin-tour-vehicle-img:hover,
+.admin-tour-detail-container .admin-tour-day-image:hover {
   transform: scale(1.05);
 }
 
-.day-item {
+.admin-tour-detail-container .admin-tour-day-item {
   margin-bottom: 35px;
   padding: 20px;
   background: #f8fafc;
@@ -144,19 +144,19 @@
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
 }
 
-.day-item h3 {
+.admin-tour-detail-container .admin-tour-day-item h3 {
   color: var(--color-primary);
   margin-bottom: 15px;
   font-size: 1.5em;
 }
 
-.html-content {
+.admin-tour-detail-container .admin-tour-html-content {
   margin-top: 15px;
   line-height: 1.9;
   color: var(--color-text);
 }
 
-.term-item {
+.admin-tour-detail-container .admin-tour-term-item {
   display: flex;
   align-items: flex-start;
   margin-bottom: 20px;
@@ -166,20 +166,20 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.term-icon {
+.admin-tour-detail-container .admin-tour-term-icon {
   width: 35px;
   height: 35px;
   margin-right: 12px;
   border-radius: 50%;
 }
 
-.term-item h4 {
+.admin-tour-detail-container .admin-tour-term-item h4 {
   color: var(--color-text);
   margin-bottom: 8px;
   font-size: 1.2em;
 }
 
-.vehicle-item {
+.admin-tour-detail-container .admin-tour-vehicle-item {
   text-align: center;
   padding: 15px;
   background: #ffffff;
@@ -187,8 +187,22 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.loading,
-.error {
+.admin-tour-detail-container .admin-tour-map-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.3s ease;
+}
+
+.admin-tour-detail-container .admin-tour-map-link:hover {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+}
+
+.admin-tour-detail-container .admin-tour-loading,
+.admin-tour-detail-container .admin-tour-error {
   text-align: center;
   font-size: 1.3em;
   color: var(--color-danger);
@@ -200,52 +214,52 @@
 }
 
 @media (max-width: 768px) {
-  .tour-detail-container {
+  .admin-tour-detail-container {
     padding: 15px;
   }
 
-  .tour-title-admin {
+  .admin-tour-detail-container .admin-tour-title {
     font-size: 2.2em;
   }
 
-  .info-grid {
+  .admin-tour-detail-container .admin-tour-info-grid {
     grid-template-columns: 1fr;
     gap: 15px;
   }
 
-  .images-grid,
-  .vehicles-grid,
-  .hotel-images {
+  .admin-tour-detail-container .admin-tour-images-grid,
+  .admin-tour-detail-container .admin-tour-vehicles-grid,
+  .admin-tour-detail-container .admin-tour-hotel-images {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
 
-  .section {
+  .admin-tour-detail-container .admin-tour-section {
     padding: 20px;
   }
 
-  .day-item {
+  .admin-tour-detail-container .admin-tour-day-item {
     padding: 15px;
   }
 }
 
 @media (max-width: 480px) {
-  .tour-title-admin {
+  .admin-tour-detail-container .admin-tour-title {
     font-size: 1.8em;
   }
 
-  .gallery-img,
-  .hotel-img,
-  .vehicle-img,
-  .day-image {
+  .admin-tour-detail-container .admin-tour-gallery-img,
+  .admin-tour-detail-container .admin-tour-hotel-img,
+  .admin-tour-detail-container .admin-tour-vehicle-img,
+  .admin-tour-detail-container .admin-tour-day-image {
     height: 140px;
   }
 
-  .tags,
-  .filters {
+  .admin-tour-detail-container .admin-tour-tags,
+  .admin-tour-detail-container .admin-tour-filters {
     flex-direction: column;
   }
 
-  .section h2 {
+  .admin-tour-detail-container .admin-tour-section h2 {
     font-size: 1.5em;
   }
 }

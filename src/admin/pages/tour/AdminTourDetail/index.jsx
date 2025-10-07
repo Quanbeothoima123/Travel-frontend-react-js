@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import * as FaIcons from "react-icons/fa"; // để dùng icon động
+import * as FaIcons from "react-icons/fa";
 import SafeHTML from "../../../../components/common/SafeHTML";
 import {
   FaMapMarkerAlt,
@@ -21,13 +21,15 @@ import {
   FaExclamation,
 } from "react-icons/fa";
 import "./AdminTourDetail.css";
+
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
+
 const AdminTourDetail = () => {
   const { tourId } = useParams();
   const [tour, setTour] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // Hàm format VNĐ
+
   const formatCurrency = (value) => {
     if (!value && value !== 0) return "N/A";
     return value.toLocaleString("vi-VN", {
@@ -40,7 +42,10 @@ const AdminTourDetail = () => {
     const fetchTour = async () => {
       try {
         const response = await axios.get(
-          `${API_BASE}/api/v1/admin/tours/getTourById/${tourId}`
+          `${API_BASE}/api/v1/admin/tours/getTourById/${tourId}`,
+          {
+            withCredentials: true, // 👈 thêm dòng này
+          }
         );
         setTour(response.data);
       } catch (err) {
@@ -54,13 +59,13 @@ const AdminTourDetail = () => {
 
   if (loading)
     return (
-      <div className="loading">
+      <div className="admin-tour-loading">
         <FaClock /> Đang tải...
       </div>
     );
   if (error)
     return (
-      <div className="error">
+      <div className="admin-tour-error">
         <FaInfoCircle /> Lỗi: {error}
       </div>
     );
@@ -72,24 +77,24 @@ const AdminTourDetail = () => {
     );
 
   return (
-    <div className="tour-detail-container">
-      <h1 className="tour-title-admin">
+    <div className="admin-tour-detail-container">
+      <h1 className="admin-tour-title">
         <FaMapMarkerAlt /> {tour.title}
       </h1>
 
       {/* Thông tin cơ bản */}
-      <section className="section basic-info">
+      <section className="admin-tour-section">
         <h2>
           <FaInfoCircle /> Thông tin cơ bản
         </h2>
-        <div className="info-grid">
-          <div className="info-item">
+        <div className="admin-tour-info-grid">
+          <div className="admin-tour-info-item">
             <label>
               <FaList /> Danh mục:
             </label>
             <span>{tour.categoryId?.title || "N/A"}</span>
           </div>
-          <div className="info-item">
+          <div className="admin-tour-info-item">
             <label>
               <FaGlobe /> Loại tour:
             </label>
@@ -97,7 +102,7 @@ const AdminTourDetail = () => {
               {tour.type === "domestic" ? "Trong nước" : "Nước ngoài"}
             </span>
           </div>
-          <div className="info-item">
+          <div className="admin-tour-info-item">
             <label>
               <FaCalendarAlt /> Thời gian:
             </label>
@@ -105,7 +110,7 @@ const AdminTourDetail = () => {
               {tour.travelTimeId?.day} ngày, {tour.travelTimeId?.night} đêm
             </span>
           </div>
-          <div className="info-item">
+          <div className="admin-tour-info-item">
             <label>
               <FaHotel /> Khách sạn:
             </label>
@@ -113,7 +118,7 @@ const AdminTourDetail = () => {
               {tour.hotelId?.name} ({tour.hotelId?.star} sao)
             </span>
           </div>
-          <div className="info-item">
+          <div className="admin-tour-info-item">
             <label>
               <FaMoneyBillWave /> Giá:
             </label>
@@ -121,61 +126,61 @@ const AdminTourDetail = () => {
               {formatCurrency(tour.prices)} (Giảm giá: {tour.discount}%)
             </span>
           </div>
-          <div className="info-item">
+          <div className="admin-tour-info-item">
             <label>
               <FaUser /> Số chỗ:
             </label>
             <span>{tour.seats}</span>
           </div>
-          <div className="info-item">
+          <div className="admin-tour-info-item">
             <label>
               <FaList /> Thứ tự:
             </label>
             <span>{tour.position}</span>
           </div>
-          <div className="info-item">
+          <div className="admin-tour-info-item">
             <label>
               <FaStar /> Hoạt động:
             </label>
             <span>{tour.active ? "Có" : "Không"}</span>
           </div>
-          <div className="info-item">
+          <div className="admin-tour-info-item">
             <label>
               <FaStar /> Đã xóa:
             </label>
             <span>{tour.deleted ? "Có" : "Không"}</span>
           </div>
-          <div className="info-item full-width">
+          <div className="admin-tour-info-item admin-tour-full-width">
             <label>
               <FaTags /> Thẻ:
             </label>
-            <div className="tags">
+            <div className="admin-tour-tags">
               {tour.tags?.map((tag, idx) => (
-                <span key={idx} className="tag">
+                <span key={idx} className="admin-tour-tag">
                   {tag}
                 </span>
               ))}
             </div>
           </div>
-          <div className="info-item full-width">
+          <div className="admin-tour-info-item admin-tour-full-width">
             <label>
               <FaList /> Bộ lọc:
             </label>
-            <div className="filters">
+            <div className="admin-tour-filters">
               {tour.filterId?.map((f, idx) => (
-                <span key={idx} className="filter">
+                <span key={idx} className="admin-tour-filter">
                   {f.label} ({f.value})
                 </span>
               ))}
             </div>
           </div>
-          <div className="info-item">
+          <div className="admin-tour-info-item">
             <label>
               <FaCalendarAlt /> Tần suất:
             </label>
             <span>{tour.frequency?.title || "N/A"}</span>
           </div>
-          <div className="info-item full-width">
+          <div className="admin-tour-info-item admin-tour-full-width">
             <label>
               <FaMapMarkerAlt /> Điểm khởi hành:
             </label>
@@ -185,13 +190,13 @@ const AdminTourDetail = () => {
                 href={tour.departPlaceId?.googleDirection}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="map-link"
+                className="admin-tour-map-link"
               >
                 Xem bản đồ <FaExternalLinkAlt style={{ marginLeft: "4px" }} />
               </a>
             </span>
           </div>
-          <div className="info-item full-width">
+          <div className="admin-tour-info-item admin-tour-full-width">
             <label>
               <FaExclamation /> Chú ý:
             </label>
@@ -199,8 +204,7 @@ const AdminTourDetail = () => {
               <span>{tour.departPlaceId?.description}</span>
             </span>
           </div>
-
-          <div className="info-item full-width">
+          <div className="admin-tour-info-item admin-tour-full-width">
             <label>
               <FaGlobe /> Slug:
             </label>
@@ -210,18 +214,22 @@ const AdminTourDetail = () => {
       </section>
 
       {/* Ảnh */}
-      <section className="section images-section">
+      <section className="admin-tour-section">
         <h2>
           <FaImages /> Ảnh giới thiệu
         </h2>
         {tour.thumbnail && (
-          <img src={tour.thumbnail} alt="Thumbnail" className="thumbnail" />
+          <img
+            src={tour.thumbnail}
+            alt="Thumbnail"
+            className="admin-tour-thumbnail"
+          />
         )}
 
         <h2>
           <FaImages /> Thư viện ảnh
         </h2>
-        <div className="images-grid">
+        <div className="admin-tour-images-grid">
           {tour.images
             ?.sort((a, b) => a.index - b.index)
             .map((img, idx) => (
@@ -229,19 +237,19 @@ const AdminTourDetail = () => {
                 key={idx}
                 src={img.url}
                 alt={`Ảnh ${img.index}`}
-                className="gallery-img"
+                className="admin-tour-gallery-img"
               />
             ))}
         </div>
       </section>
 
       {/* Lịch trình */}
-      <section className="section description-section">
+      <section className="admin-tour-section">
         <h2>
           <FaCalendarAlt /> Lịch trình
         </h2>
         {tour.description?.map((dayItem, idx) => (
-          <div key={idx} className="day-item">
+          <div key={idx} className="admin-tour-day-item">
             <h3>
               Ngày {dayItem.day}: {dayItem.title}
             </h3>
@@ -249,16 +257,19 @@ const AdminTourDetail = () => {
               <img
                 src={dayItem.image}
                 alt={`Ngày ${dayItem.day}`}
-                className="day-image"
+                className="admin-tour-day-image"
               />
             )}
-            <SafeHTML html={dayItem.description} className="html-content" />
+            <SafeHTML
+              html={dayItem.description}
+              className="admin-tour-html-content"
+            />
           </div>
         ))}
       </section>
 
       {/* Điều khoản */}
-      <section className="section terms-section">
+      <section className="admin-tour-section">
         <h2>
           <FaList /> Điều khoản
         </h2>
@@ -268,12 +279,12 @@ const AdminTourDetail = () => {
             const IconComp =
               FaIcons[termItem.termId?.icon] || FaIcons.FaInfoCircle;
             return (
-              <div key={idx} className="term-item">
-                {IconComp && <IconComp className="term-icon" />}
+              <div key={idx} className="admin-tour-term-item">
+                {IconComp && <IconComp className="admin-tour-term-icon" />}
                 <h4>{termItem.termId?.title}</h4>
                 <SafeHTML
                   html={termItem.description}
-                  className="term-description"
+                  className="admin-tour-html-content"
                 />
               </div>
             );
@@ -281,18 +292,18 @@ const AdminTourDetail = () => {
       </section>
 
       {/* Phương tiện */}
-      <section className="section vehicles-section">
+      <section className="admin-tour-section">
         <h2>
           <FaBus /> Phương tiện
         </h2>
-        <div className="vehicles-grid">
+        <div className="admin-tour-vehicles-grid">
           {tour.vehicleId?.map((vehicle, idx) => (
-            <div key={idx} className="vehicle-item">
+            <div key={idx} className="admin-tour-vehicle-item">
               {vehicle.image && (
                 <img
                   src={vehicle.image}
                   alt={vehicle.name}
-                  className="vehicle-img"
+                  className="admin-tour-vehicle-img"
                 />
               )}
               <span>{vehicle.name}</span>
@@ -302,13 +313,13 @@ const AdminTourDetail = () => {
       </section>
 
       {/* Phụ phí */}
-      <section className="section additional-prices-section">
+      <section className="admin-tour-section">
         <h2>
           <FaMoneyBillWave /> Phụ phí
         </h2>
-        <div className="info-grid">
+        <div className="admin-tour-info-grid">
           {tour.additionalPrices?.map((ap, idx) => (
-            <div key={idx} className="info-item">
+            <div key={idx} className="admin-tour-info-item">
               <label>Loại khách:</label>
               <span>
                 {ap.typeOfPersonId?.title || "N/A"} - +
@@ -320,37 +331,37 @@ const AdminTourDetail = () => {
       </section>
 
       {/* Trải nghiệm đặc biệt */}
-      <section className="section special-section">
+      <section className="admin-tour-section">
         <h2>
           <FaStar /> Trải nghiệm đặc biệt
         </h2>
         <SafeHTML
           html={tour.specialExperience || ""}
-          className="html-content"
+          className="admin-tour-html-content"
         />
       </section>
 
       {/* Nhật ký chỉnh sửa */}
-      <section className="section audit-section">
+      <section className="admin-tour-section">
         <h2>
           <FaUser /> Nhật ký chỉnh sửa
         </h2>
-        <div className="info-grid">
-          <div className="info-item full-width">
+        <div className="admin-tour-info-grid">
+          <div className="admin-tour-info-item admin-tour-full-width">
             <label>Tạo bởi:</label>
             <span>
               {tour.createdBy?._id?.fullName} lúc {tour.createdBy?.at}
             </span>
           </div>
           {tour.deletedBy && (
-            <div className="info-item full-width">
+            <div className="admin-tour-info-item admin-tour-full-width">
               <label>Xóa bởi:</label>
               <span>
                 {tour.deletedBy?._id?.fullName} lúc {tour.deletedBy?.at}
               </span>
             </div>
           )}
-          <div className="info-item full-width">
+          <div className="admin-tour-info-item admin-tour-full-width">
             <label>Cập nhật bởi:</label>
             <ul>
               {tour.updatedBy?.map((ub, idx) => (
