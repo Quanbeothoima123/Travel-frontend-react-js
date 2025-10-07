@@ -81,30 +81,31 @@ const TourInfo = ({ tourDetail }) => {
 
   return (
     <div className="tour-info">
-      <h1>{title.toUpperCase()}</h1>
+      <h1 className="tour-info-title">{title.toUpperCase()}</h1>
 
-      <p>
-        <FaClock className="icon" /> Thời gian: {duration}
+      <p className="tour-info-text">
+        <FaClock className="tour-info-icon" /> Thời gian: {duration}
       </p>
-      <p>
-        <FaBus className="icon" /> Phương tiện: {transport}
+      <p className="tour-info-text">
+        <FaBus className="tour-info-icon" /> Phương tiện: {transport}
       </p>
-      <p>
-        <FaHotel className="icon" /> Lưu trú: {stay}
+      <p className="tour-info-text">
+        <FaHotel className="tour-info-icon" /> Lưu trú: {stay}
       </p>
-      <p>
-        <FaCalendarAlt className="icon" /> Khởi hành: {start}
+      <p className="tour-info-text">
+        <FaCalendarAlt className="tour-info-icon" /> Khởi hành: {start}
       </p>
 
       {departPlaceId && (
-        <p className="depart">
-          <FaPlane className="icon" /> Điểm khởi hành: {departPlaceId.name}
+        <p className="tour-info-depart">
+          <FaPlane className="tour-info-icon" /> Điểm khởi hành:{" "}
+          {departPlaceId.name}
           {departPlaceId.googleDirection && (
             <a
               href={departPlaceId.googleDirection}
               target="_blank"
               rel="noopener noreferrer"
-              className="map-link"
+              className="tour-info-map-link"
             >
               <FaMapMarkerAlt />
               Map
@@ -112,11 +113,12 @@ const TourInfo = ({ tourDetail }) => {
           )}
         </p>
       )}
-      <p>
-        <FaExclamation className="icon" /> Chú ý: {departPlaceId.description}
+      <p className="tour-info-text">
+        <FaExclamation className="tour-info-icon" /> Chú ý:{" "}
+        {departPlaceId.description}
       </p>
 
-      <div className="price">
+      <div className="tour-info-price">
         {discountedPrice.toLocaleString("vi-VN", {
           style: "currency",
           currency: "VND",
@@ -129,37 +131,40 @@ const TourInfo = ({ tourDetail }) => {
         </del>
       </div>
 
-      <Link to={`/booking-tour/${slug}`} className="btn-main booking-button">
+      <Link
+        to={`/booking-tour/${slug}`}
+        className="tour-info-btn-main tour-info-booking-button"
+      >
         ĐẶT TOUR
       </Link>
 
-      <div className="tags">
+      <div className="tour-info-tags">
         {tags.map((tag, i) => (
-          <button key={i} className="tag-btn">
+          <button key={i} className="tour-info-tag-btn">
             {tag}
           </button>
         ))}
       </div>
 
-      <div className="social">
+      <div className="tour-info-social">
         <FaShareAlt /> Chia sẻ
         <FaBookmark /> Lưu
         <FaPhone /> Gọi
         <FaLinkedin /> In Share
       </div>
 
-      <p className="note">
+      <p className="tour-info-note">
         Hoặc Quý Khách có thể để lại thông tin liên hệ để được tư vấn chi tiết.
       </p>
 
-      <div className="phone-input">
+      <div className="tour-info-phone-input">
         <input
           type="tel"
           placeholder="Nhập số điện thoại của bạn"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
-        <button className="btn-send" onClick={handleSend}>
+        <button className="tour-info-btn-send" onClick={handleSend}>
           <FaPaperPlane /> Gửi đi
         </button>
       </div>
