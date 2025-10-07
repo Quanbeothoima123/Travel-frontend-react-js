@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom"; // Assuming you're using React Router
+import { Link } from "react-router-dom";
 import "./TourSelect.css";
 
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
@@ -104,7 +104,7 @@ export default function TourSelect({
 
   const removeSelected = (tourToRemove, e) => {
     e.stopPropagation();
-    e.preventDefault(); // Prevent Link navigation when removing
+    e.preventDefault();
     if (multiple) {
       const newSelection = selectedTours.filter(
         (selected) =>
@@ -117,7 +117,6 @@ export default function TourSelect({
   };
 
   const renderTourThumbnail = (tour) => {
-    // You can customize this based on your tour object structure
     const thumbnailUrl =
       tour.thumbnail ||
       tour.image ||
@@ -130,7 +129,7 @@ export default function TourSelect({
         alt={tour.title}
         className="ts-tour-thumbnail"
         onError={(e) => {
-          e.target.src = "/default-tour-thumb.jpg"; // Fallback image
+          e.target.src = "/default-tour-thumb.jpg";
         }}
       />
     );
@@ -208,13 +207,13 @@ export default function TourSelect({
                       onClick={() => pick(tour)}
                       title={tour.title}
                     >
-                      <div className="tour-info">
-                        <span className="tour-title">{tour.title}</span>
+                      <div className="ts-tour-info">
+                        <span className="ts-tour-title">{tour.title}</span>
                         {tour.code && (
-                          <span className="tour-code">#{tour.code}</span>
+                          <span className="ts-tour-code">#{tour.code}</span>
                         )}
                         {isSelected(tour) && (
-                          <span className="selected-indicator">✓</span>
+                          <span className="ts-selected-indicator">✓</span>
                         )}
                       </div>
                     </button>
