@@ -22,7 +22,10 @@ const GalleryCategoryManager = () => {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `${API_BASE}/api/v1/admin/gallery-category/getAll?tree=true`
+          `${API_BASE}/api/v1/admin/gallery-category/getAll?tree=true`,
+          {
+            credentials: "include",
+          }
         );
         const data = await res.json();
         setCategories(data || []);
@@ -78,7 +81,10 @@ const GalleryCategoryManager = () => {
         const fetchData = async () => {
           try {
             const res = await fetch(
-              `${API_BASE}/api/v1/admin/gallery-category/getAll?tree=true`
+              `${API_BASE}/api/v1/admin/gallery-category/getAll?tree=true`,
+              {
+                credentials: "include",
+              }
             );
             const data = await res.json();
             setCategories(data || []);
