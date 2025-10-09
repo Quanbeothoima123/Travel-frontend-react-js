@@ -1,7 +1,7 @@
 .dt-detail-tour {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20dpx;
 }
 
 .dt-main-content {
@@ -18,7 +18,7 @@
 .dt-right-column {
   flex: 0 0 504px;
   position: sticky; /* OPTIONAL: Giữ cố định khi scroll */
-  top: 20px; /* OPTIONAL: Khoảng cách từ top khi sticky */
+  top: 50px; /* OPTIONAL: Khoảng cách từ top khi sticky */
 }
 
 /* Tablet: layout dọc, full width */

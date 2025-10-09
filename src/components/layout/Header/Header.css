@@ -2,10 +2,13 @@
 .hd-header {
   background-color: var(--color-bg);
   box-shadow: var(--shadow-sm);
-  position: relative;
+  position: fixed; /* Thay đổi sang fixed */
+  top: 0;
+  left: 0; /* Thêm left */
+  right: 0; /* Thêm right */
+  width: 100%; /* Đảm bảo full width */
   z-index: 1001;
 }
-
 /* inner container (container là lớp chung của theme.css) */
 .hd-header__inner {
   display: flex;

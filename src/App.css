@@ -1,3 +1,8 @@
+/* Thêm padding-top cho nội dung khi có header */
+.main-content {
+  padding-top: 50px; /* Điều chỉnh số này bằng chiều cao header */
+}
+
 .App {
   text-align: center;
 }

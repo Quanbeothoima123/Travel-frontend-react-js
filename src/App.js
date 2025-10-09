@@ -7,8 +7,10 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
+import "./App.css";
 import { ToastProvider } from "./contexts/ToastContext";
 import Header from "./components/layout/Header";
+import ContactFloating from "./components/common/ContactFloating";
 import Home from "./pages/Home";
 import DetailTour from "./pages/DetailTour";
 import Login from "./pages/Auth/Login";
@@ -78,117 +80,129 @@ import AdminPrivateRoute from "./admin/components/routes/AdminPrivateRoute";
 function AppContent() {
   const location = useLocation();
 
-  // Ẩn Header khi ở /user/* và /admin/*
-  const hideHeader =
+  // Ẩn Header và ContactFloating khi ở /user/* và /admin/*
+  const hideHeaderAndContact =
     location.pathname.startsWith("/user") ||
     location.pathname.startsWith("/admin");
-
   return (
     <>
-      {!hideHeader && <Header />}
+      {!hideHeaderAndContact && <Header />}
 
-      <Routes>
-        {/* User routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/tour/:slug" element={<DetailTour />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/re-auth" element={<ReAuthFlow />} />
-        <Route path="/booking-tour/:slug" element={<BookingPage />} />
-        <Route path="/repay/:invoiceId" element={<RepayPage />} />
-        <Route path="/search/tours/:categorySlug" element={<SearchPage />} />
-        <Route path="/news/:newsCategorySlug" element={<NewsPage />} />
-        <Route path="/news/detail/:newsSlug" element={<NewsDetailPage />} />
-        <Route path="/gallery/:categorySlug" element={<GalleryPage />} />
-        <Route path="/gallery/detail/:slug" element={<GalleryDetailPage />} />
-        <Route path="/shorts" element={<Shorts />} />
-        <Route
-          path="/payment/momo/result"
-          element={<MomoPaymentResultPage />}
-        />
+      <div className={!hideHeaderAndContact ? "main-content" : ""}>
+        <Routes>
+          {/* User routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/tour/:slug" element={<DetailTour />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/re-auth" element={<ReAuthFlow />} />
+          <Route path="/booking-tour/:slug" element={<BookingPage />} />
+          <Route path="/repay/:invoiceId" element={<RepayPage />} />
+          <Route path="/search/tours/:categorySlug" element={<SearchPage />} />
+          <Route path="/news/:newsCategorySlug" element={<NewsPage />} />
+          <Route path="/news/detail/:newsSlug" element={<NewsDetailPage />} />
+          <Route path="/gallery/:categorySlug" element={<GalleryPage />} />
+          <Route path="/gallery/detail/:slug" element={<GalleryDetailPage />} />
+          <Route path="/shorts" element={<Shorts />} />
+          <Route
+            path="/payment/momo/result"
+            element={<MomoPaymentResultPage />}
+          />
 
-        {/* User dashboard routes */}
-        <Route path="/user/*" element={<UserLayout />}>
-          <Route index element={<Navigate to="profile" replace />} />
-          <Route path="profile" element={<UserProfile />} />
-          <Route path="transactions_tour" element={<HistoryTourOrder />} />
-          <Route
-            path="transactions_service"
-            element={<div>Lịch sử sử dụng dịch vụ</div>}
-          />
-          <Route path="friends" element={<FriendsPage />} />
-          <Route path="upload/videos" element={<UploadShortVideo />} />
-          <Route path="posts" element={<div>Bài viết cá nhân</div>} />
-          <Route path="favorites" element={<div>Tour yêu thích</div>} />
-          <Route path="coupons" element={<div>Mã giảm giá</div>} />
-          <Route path="support" element={<div>Liên hệ hỗ trợ</div>} />
-          <Route path="dark-mode" element={<div>Chế độ tối</div>} />
+          {/* User dashboard routes */}
+          <Route path="/user/*" element={<UserLayout />}>
+            <Route index element={<Navigate to="profile" replace />} />
+            <Route path="profile" element={<UserProfile />} />
+            <Route path="transactions_tour" element={<HistoryTourOrder />} />
+            <Route
+              path="transactions_service"
+              element={<div>Lịch sử sử dụng dịch vụ</div>}
+            />
+            <Route path="friends" element={<FriendsPage />} />
+            <Route path="upload/videos" element={<UploadShortVideo />} />
+            <Route path="posts" element={<div>Bài viết cá nhân</div>} />
+            <Route path="favorites" element={<div>Tour yêu thích</div>} />
+            <Route path="coupons" element={<div>Mã giảm giá</div>} />
+            <Route path="support" element={<div>Liên hệ hỗ trợ</div>} />
+            <Route path="dark-mode" element={<div>Chế độ tối</div>} />
 
-          {/* ✅ Thêm Chat routes vào UserLayout */}
-          <Route path="chat" element={<ChatPage />} />
-          <Route path="chat/:chatId" element={<ChatPage />} />
-        </Route>
+            {/* ✅ Thêm Chat routes vào UserLayout */}
+            <Route path="chat" element={<ChatPage />} />
+            <Route path="chat/:chatId" element={<ChatPage />} />
+          </Route>
 
-        {/* Admin routes */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/admin"
-          element={
-            <AdminPrivateRoute>
-              <AdminLayout />
-            </AdminPrivateRoute>
-          }
-        >
-          <Route path="tour-categories" element={<TourCategoryManager />} />
+          {/* Admin routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route
-            path="tour-categories/create"
-            element={<TourCategoryCreate />}
-          />
-          <Route
-            path="tour-categories/detail/:id"
-            element={<TourCategoryDetail />}
-          />
-          <Route
-            path="tour-categories/update/:id"
-            element={<TourCategoryUpdate />}
-          />
-          <Route path="tours" element={<TourManager />} />
-          <Route path="tours/create" element={<TourCreatePage />} />
-          <Route path="tours/detail/:tourId" element={<AdminTourDetail />} />
-          <Route path="tours/edit/:tourId" element={<TourEditPage />} />
+            path="/admin"
+            element={
+              <AdminPrivateRoute>
+                <AdminLayout />
+              </AdminPrivateRoute>
+            }
+          >
+            <Route path="tour-categories" element={<TourCategoryManager />} />
+            <Route
+              path="tour-categories/create"
+              element={<TourCategoryCreate />}
+            />
+            <Route
+              path="tour-categories/detail/:id"
+              element={<TourCategoryDetail />}
+            />
+            <Route
+              path="tour-categories/update/:id"
+              element={<TourCategoryUpdate />}
+            />
+            <Route path="tours" element={<TourManager />} />
+            <Route path="tours/create" element={<TourCreatePage />} />
+            <Route path="tours/detail/:tourId" element={<AdminTourDetail />} />
+            <Route path="tours/edit/:tourId" element={<TourEditPage />} />
 
-          <Route path="news-category" element={<NewsCategoryManager />} />
-          <Route path="news-category/create" element={<NewsCategoryCreate />} />
-          <Route
-            path="news-category/detail/:id"
-            element={<NewsCategoryDetail />}
-          />
-          <Route path="news-category/edit/:id" element={<NewsCategoryEdit />} />
+            <Route path="news-category" element={<NewsCategoryManager />} />
+            <Route
+              path="news-category/create"
+              element={<NewsCategoryCreate />}
+            />
+            <Route
+              path="news-category/detail/:id"
+              element={<NewsCategoryDetail />}
+            />
+            <Route
+              path="news-category/edit/:id"
+              element={<NewsCategoryEdit />}
+            />
 
-          <Route path="news" element={<NewsManager />} />
-          <Route path="news/create" element={<NewsCreate />} />
-          <Route path="news/edit/:id" element={<NewsEdit />} />
-          <Route path="news/detail/:id" element={<NewsDetail />} />
+            <Route path="news" element={<NewsManager />} />
+            <Route path="news/create" element={<NewsCreate />} />
+            <Route path="news/edit/:id" element={<NewsEdit />} />
+            <Route path="news/detail/:id" element={<NewsDetail />} />
 
-          <Route path="gallery-category" element={<GalleryCategoryManager />} />
-          <Route
-            path="gallery-category/create"
-            element={<GalleryCategoryCreate />}
-          />
-          <Route
-            path="gallery-category/edit/:id"
-            element={<GalleryCategoryEdit />}
-          />
-          <Route
-            path="gallery-category/detail/:id"
-            element={<GalleryCategoryDetail />}
-          />
-          <Route path="gallery" element={<GalleryManager />} />
-          <Route path="gallery/create" element={<GalleryCreate />} />
-          <Route path="gallery/edit/:id" element={<GalleryEdit />} />
-          <Route path="gallery/detail/:id" element={<GalleryDetail />} />
-        </Route>
-      </Routes>
+            <Route
+              path="gallery-category"
+              element={<GalleryCategoryManager />}
+            />
+            <Route
+              path="gallery-category/create"
+              element={<GalleryCategoryCreate />}
+            />
+            <Route
+              path="gallery-category/edit/:id"
+              element={<GalleryCategoryEdit />}
+            />
+            <Route
+              path="gallery-category/detail/:id"
+              element={<GalleryCategoryDetail />}
+            />
+            <Route path="gallery" element={<GalleryManager />} />
+            <Route path="gallery/create" element={<GalleryCreate />} />
+            <Route path="gallery/edit/:id" element={<GalleryEdit />} />
+            <Route path="gallery/detail/:id" element={<GalleryDetail />} />
+          </Route>
+        </Routes>
+      </div>
+      {/* ✅ Hiển thị ContactFloating trừ /user/* và /admin/* */}
+      {!hideHeaderAndContact && <ContactFloating />}
     </>
   );
 }
