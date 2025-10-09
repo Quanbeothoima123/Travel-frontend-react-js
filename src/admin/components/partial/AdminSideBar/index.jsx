@@ -88,7 +88,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
       },
       {
         id: "about",
-        title: "About",
+        title: "Về chúng tôi",
         icon: FaInfoCircle,
         children: [
           {
@@ -97,6 +97,23 @@ export default function AdminSidebar({ isOpen, onClose }) {
             path: "/admin/about-categories",
           },
           { id: "about-list", title: "About List", path: "/admin/about-list" },
+        ],
+      },
+      {
+        id: "config",
+        title: "Cấu hình",
+        icon: FaInfoCircle,
+        children: [
+          {
+            id: "config-home",
+            title: "Cấu hình trang chủ",
+            path: "/admin/config-home",
+          },
+          {
+            id: "config-bottom",
+            title: "Cấu hình chân trang",
+            path: "/admin/config-bottom",
+          },
         ],
       },
     ],
