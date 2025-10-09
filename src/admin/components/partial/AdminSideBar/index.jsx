@@ -105,14 +105,14 @@ export default function AdminSidebar({ isOpen, onClose }) {
         icon: FaInfoCircle,
         children: [
           {
-            id: "config-home",
-            title: "Cấu hình trang chủ",
-            path: "/admin/config-home",
+            id: "config-basic",
+            title: "Cấu hình cơ bản",
+            path: "/admin/config-basic",
           },
           {
-            id: "config-bottom",
-            title: "Cấu hình chân trang",
-            path: "/admin/config-bottom",
+            id: "config-advanced",
+            title: "Cấu hình nâng cao",
+            path: "/admin/config-advanced",
           },
         ],
       },

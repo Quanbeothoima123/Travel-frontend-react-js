@@ -31,7 +31,7 @@ import HistoryTourOrder from "./pages/HistoryTourOrder";
 import UploadShortVideo from "./components/common/UploadShortVideo";
 import Shorts from "./pages/Shorts";
 
-// ✅ Import ChatPage
+//  Import ChatPage
 import ChatPage from "./pages/ChatPage";
 
 import AdminLayout from "./admin/components/layout/AdminLayout";
@@ -76,6 +76,7 @@ import TourEditPage from "./admin/pages/tour/TourEdit";
 import AdminLogin from "./admin/pages/Login";
 import AdminPrivateRoute from "./admin/components/routes/AdminPrivateRoute";
 
+import SiteConfig from "./admin/pages/SiteConfig";
 // Component để xử lý hiển thị Header có điều kiện
 function AppContent() {
   const location = useLocation();
@@ -198,10 +199,12 @@ function AppContent() {
             <Route path="gallery/create" element={<GalleryCreate />} />
             <Route path="gallery/edit/:id" element={<GalleryEdit />} />
             <Route path="gallery/detail/:id" element={<GalleryDetail />} />
+
+            <Route path="config-basic" element={<SiteConfig />} />
           </Route>
         </Routes>
       </div>
-      {/* ✅ Hiển thị ContactFloating trừ /user/* và /admin/* */}
+      {/*  Hiển thị ContactFloating trừ /user/* và /admin/* */}
       {!hideHeaderAndContact && <ContactFloating />}
     </>
   );
