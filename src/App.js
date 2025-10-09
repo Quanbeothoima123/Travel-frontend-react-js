@@ -25,7 +25,7 @@ import NewsPage from "./pages/NewsPage";
 import NewsDetailPage from "./pages/NewsDetailPage";
 import FriendsPage from "./pages/FriendPage";
 import GalleryPage from "./pages/GalleryPage";
-import GalleryDetailPage from "./pages/Auth/GalleryDetailPage";
+import GalleryDetailPage from "./pages/GalleryDetailPage";
 import MomoPaymentResultPage from "./pages/MomoPaymentResultPage";
 import HistoryTourOrder from "./pages/HistoryTourOrder";
 import UploadShortVideo from "./components/common/UploadShortVideo";

@@ -14,6 +14,7 @@ import {
   FaSearchMinus,
   FaExpand,
 } from "react-icons/fa";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import "./GalleryDetailPage.css";
 
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
@@ -25,8 +26,8 @@ const GalleryDetailPage = () => {
   const [showLightbox, setShowLightbox] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [liked, setLiked] = useState(false);
-  const [zoomLevel, setZoomLevel] = useState(1);
   const viewCountedRef = useRef(false);
+  const transformComponentRef = useRef(null);
 
   useEffect(() => {
     fetchGalleryDetail();
@@ -117,13 +118,11 @@ const GalleryDetailPage = () => {
   const openLightbox = (index) => {
     setCurrentImageIndex(index);
     setShowLightbox(true);
-    setZoomLevel(1); // Reset zoom khi mở
     document.body.style.overflow = "hidden";
   };
 
   const closeLightbox = () => {
     setShowLightbox(false);
-    setZoomLevel(1); // Reset zoom khi đóng
     document.body.style.overflow = "auto";
   };
 
@@ -131,26 +130,20 @@ const GalleryDetailPage = () => {
     setCurrentImageIndex((prev) =>
       prev === gallery.images.length - 1 ? 0 : prev + 1
     );
-    setZoomLevel(1); // Reset zoom khi chuyển ảnh
+    // Reset zoom khi chuyển ảnh
+    if (transformComponentRef.current) {
+      transformComponentRef.current.resetTransform();
+    }
   };
 
   const prevImage = () => {
     setCurrentImageIndex((prev) =>
       prev === 0 ? gallery.images.length - 1 : prev - 1
     );
-    setZoomLevel(1); // Reset zoom khi chuyển ảnh
-  };
-
-  const handleZoomIn = () => {
-    setZoomLevel((prev) => Math.min(prev + 0.5, 3)); // Max zoom 3x
-  };
-
-  const handleZoomOut = () => {
-    setZoomLevel((prev) => Math.max(prev - 0.5, 0.5)); // Min zoom 0.5x
-  };
-
-  const handleResetZoom = () => {
-    setZoomLevel(1);
+    // Reset zoom khi chuyển ảnh
+    if (transformComponentRef.current) {
+      transformComponentRef.current.resetTransform();
+    }
   };
 
   // Handle keyboard shortcuts
@@ -161,9 +154,6 @@ const GalleryDetailPage = () => {
       if (e.key === "Escape") closeLightbox();
       if (e.key === "ArrowLeft") prevImage();
       if (e.key === "ArrowRight") nextImage();
-      if (e.key === "+") handleZoomIn();
-      if (e.key === "-") handleZoomOut();
-      if (e.key === "0") handleResetZoom();
     };
 
     window.addEventListener("keydown", handleKeyPress);
@@ -388,40 +378,58 @@ const GalleryDetailPage = () => {
             <FaChevronRight />
           </button>
 
-          {/* Zoom Controls */}
-          <div
-            className="gdp-lightbox-zoom-controls"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button onClick={handleZoomOut} title="Zoom Out (-)">
-              <FaSearchMinus />
-            </button>
-            <button onClick={handleResetZoom} title="Reset Zoom (0)">
-              <FaExpand />
-            </button>
-            <button onClick={handleZoomIn} title="Zoom In (+)">
-              <FaSearchPlus />
-            </button>
-            <span className="gdp-zoom-level">
-              {Math.round(zoomLevel * 100)}%
-            </span>
-          </div>
-
           <div
             className="gdp-lightbox-content"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="gdp-lightbox-image-wrapper">
-              <img
-                src={gallery.images[currentImageIndex]?.url}
-                alt={gallery.images[currentImageIndex]?.title || gallery.title}
-                style={{
-                  transform: `scale(${zoomLevel})`,
-                  transition: "transform 0.3s ease",
-                  cursor: zoomLevel > 1 ? "move" : "default",
-                }}
-              />
-            </div>
+            <TransformWrapper
+              ref={transformComponentRef}
+              initialScale={1}
+              minScale={0.5}
+              maxScale={4}
+              centerOnInit={true}
+              wheel={{ step: 0.1 }}
+              doubleClick={{ mode: "reset" }}
+              panning={{ velocityDisabled: true }}
+            >
+              {({ zoomIn, zoomOut, resetTransform, state }) => (
+                <>
+                  {/* Zoom Controls */}
+                  <div className="gdp-lightbox-zoom-controls">
+                    <button onClick={() => zoomOut()} title="Zoom Out (-)">
+                      <FaSearchMinus />
+                    </button>
+                    <button
+                      onClick={() => resetTransform()}
+                      title="Reset Zoom (Double Click)"
+                    >
+                      <FaExpand />
+                    </button>
+                    <button onClick={() => zoomIn()} title="Zoom In (+)">
+                      <FaSearchPlus />
+                    </button>
+                    <span className="gdp-zoom-level">
+                      {Math.round((state?.scale || 1) * 100)}%
+                    </span>
+                  </div>
+
+                  <TransformComponent
+                    wrapperClass="gdp-lightbox-image-wrapper"
+                    contentClass="gdp-lightbox-image-content"
+                  >
+                    <img
+                      src={gallery.images[currentImageIndex]?.url}
+                      alt={
+                        gallery.images[currentImageIndex]?.title ||
+                        gallery.title
+                      }
+                      draggable={false}
+                    />
+                  </TransformComponent>
+                </>
+              )}
+            </TransformWrapper>
+
             {gallery.images[currentImageIndex]?.title && (
               <div className="gdp-lightbox-caption">
                 {gallery.images[currentImageIndex].title}
