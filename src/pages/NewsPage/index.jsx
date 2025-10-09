@@ -99,7 +99,7 @@ export default function NewsPage() {
     const fetchRelatedTours = async () => {
       try {
         const res = await fetch(
-          `${API_BASE}/api/v1/tours/get-id-title?limit=100`
+          `${API_BASE}/api/v1/tours/get-id-title?limit=100`,
         );
         const data = await res.json();
         setAllRelatedTours(data.tours || []);

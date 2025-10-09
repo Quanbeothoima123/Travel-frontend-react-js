@@ -22,7 +22,10 @@ const NewsCategoryManager = () => {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `${API_BASE}/api/v1/admin/news-category/getAll?tree=true`
+          `${API_BASE}/api/v1/admin/news-category/getAll?tree=true`,
+          {
+            credentials: "include",
+          }
         );
         const data = await res.json();
         setCategories(data || []);
@@ -38,7 +41,10 @@ const NewsCategoryManager = () => {
     try {
       setCategoryId(id);
       const res = await fetch(
-        `http://localhost:5000/api/v1/admin/news-category/delete-info/${id}`
+        `http://localhost:5000/api/v1/admin/news-category/delete-info/${id}`,
+        {
+          credentials: "include",
+        }
       );
 
       const data = await res.json();
@@ -64,6 +70,7 @@ const NewsCategoryManager = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
         }
       );
 
@@ -78,7 +85,10 @@ const NewsCategoryManager = () => {
         const fetchData = async () => {
           try {
             const res = await fetch(
-              `${API_BASE}/api/v1/admin/news-category/getAll?tree=true`
+              `${API_BASE}/api/v1/admin/news-category/getAll?tree=true`,
+              {
+                credentials: "include",
+              }
             );
             const data = await res.json();
             setCategories(data || []);
@@ -128,7 +138,10 @@ const NewsCategoryManager = () => {
   const handleFindLatestUpdated = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/v1/admin/news-category/last-updated`
+        `http://localhost:5000/api/v1/admin/news-category/last-updated`,
+        {
+          credentials: "include",
+        }
       );
       const data = await res.json();
 
@@ -151,7 +164,10 @@ const NewsCategoryManager = () => {
   const handleFindLatestCreated = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/v1/admin/news-category/last-created`
+        `http://localhost:5000/api/v1/admin/news-category/last-created`,
+        {
+          credentials: "include",
+        }
       );
       const data = await res.json();
 

@@ -57,7 +57,10 @@ const NewsManager = () => {
       };
 
       const response = await fetch(
-        `${API_BASE}/api/v1/admin/news/manager?` + new URLSearchParams(params)
+        `${API_BASE}/api/v1/admin/news/manager?` + new URLSearchParams(params),
+        {
+          credentials: "include",
+        }
       );
       const result = await response.json();
 
@@ -151,6 +154,7 @@ const NewsManager = () => {
         `${API_BASE}/api/v1/admin/news/delete/${confirmModal.newsId}`,
         {
           method: "DELETE",
+          credentials: "include",
         }
       );
       const result = await response.json();

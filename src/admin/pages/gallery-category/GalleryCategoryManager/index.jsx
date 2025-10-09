@@ -41,7 +41,10 @@ const GalleryCategoryManager = () => {
     try {
       setCategoryId(id);
       const res = await fetch(
-        `${API_BASE}/api/v1/admin/gallery-category/delete-info/${id}`
+        `${API_BASE}/api/v1/admin/gallery-category/delete-info/${id}`,
+        {
+          credentials: "include",
+        }
       );
 
       const data = await res.json();
@@ -67,6 +70,7 @@ const GalleryCategoryManager = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
         }
       );
 
@@ -134,7 +138,10 @@ const GalleryCategoryManager = () => {
   const handleFindLatestUpdated = async () => {
     try {
       const res = await fetch(
-        `${API_BASE}/api/v1/admin/gallery-category/last-updated`
+        `${API_BASE}/api/v1/admin/gallery-category/last-updated`,
+        {
+          credentials: "include",
+        }
       );
       const data = await res.json();
 
@@ -157,7 +164,10 @@ const GalleryCategoryManager = () => {
   const handleFindLatestCreated = async () => {
     try {
       const res = await fetch(
-        `${API_BASE}/api/v1/admin/gallery-category/last-created`
+        `${API_BASE}/api/v1/admin/gallery-category/last-created`,
+        {
+          credentials: "include",
+        }
       );
       const data = await res.json();
 

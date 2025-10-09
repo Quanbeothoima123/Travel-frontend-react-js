@@ -12,7 +12,8 @@ const GalleryCategoryDetail = () => {
     const fetchCategory = async () => {
       try {
         const res = await fetch(
-          `${API_BASE}/api/v1/admin/gallery-category/detail/${id}`
+          `${API_BASE}/api/v1/admin/gallery-category/detail/${id}`,
+          { credentials: "include" }
         );
         const data = await res.json();
         setCategory(data);
@@ -33,7 +34,7 @@ const GalleryCategoryDetail = () => {
   return (
     <div className="category-detail">
       <div className="header-actions">
-        <Link to="/admin/news-category" className="btn back-btn">
+        <Link to="/admin/gallery-category" className="btn back-btn">
           <FaArrowLeft /> Quay lại
         </Link>
         <Link

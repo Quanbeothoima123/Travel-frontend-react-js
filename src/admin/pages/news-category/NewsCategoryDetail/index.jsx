@@ -12,7 +12,10 @@ const NewsCategoryDetail = () => {
     const fetchCategory = async () => {
       try {
         const res = await fetch(
-          `${API_BASE}/api/v1/admin/news-category/detail/${id}`
+          `${API_BASE}/api/v1/admin/news-category/detail/${id}`,
+          {
+            credentials: "include",
+          }
         );
         const data = await res.json();
         setCategory(data);
