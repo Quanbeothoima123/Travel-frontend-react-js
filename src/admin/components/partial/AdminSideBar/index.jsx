@@ -97,7 +97,11 @@ export default function AdminSidebar({ isOpen, onClose }) {
             title: "Travel Group Việt Nam",
             path: "/admin/about-us",
           },
-          { id: "more-info", title: "Tuyển dụng", path: "/admin/more-info" },
+          {
+            id: "recruitment",
+            title: "Tuyển dụng",
+            path: "/admin/recruitment",
+          },
         ],
       },
       {
