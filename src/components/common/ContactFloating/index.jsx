@@ -1,45 +1,126 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./ContactFloating.css";
+
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 
 const ContactFloating = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [contactItems, setContactItems] = useState([]);
+  const [isEnabled, setIsEnabled] = useState(false);
 
-  const contactItems = [
-    {
-      id: "phone",
-      icon: "/assets/images/phone.png", // hoặc .gif
-      alt: "Hotline",
-      label: "Hotline 1\n0373089951",
-      link: "tel:0373089951",
-    },
-    {
-      id: "messenger",
-      icon: "/assets/images/messenger.gif",
-      alt: "Messenger",
-      label: "Trực tuyến\nMessenger",
-      link: "", // Để trống như yêu cầu
-    },
-    {
-      id: "zalo",
-      icon: "/assets/images/zalo.png",
-      alt: "Zalo",
-      label: "Trực tuyến\nChat Zalo",
-      link: "", // Để trống như yêu cầu
-    },
-    {
-      id: "whatsapp",
-      icon: "/assets/images/whatsapp.png",
-      alt: "WhatsApp",
-      label: "WhatsApp",
-      link: "", // Để trống như yêu cầu
-    },
-  ];
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/api/v1/admin/site-config`, {
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          const config = await response.json();
+
+          // Kiểm tra xem contact floating có enabled không
+          if (!config.contactFloatingEnabled) {
+            setIsEnabled(false);
+            return;
+          }
+
+          setIsEnabled(true);
+
+          // Xử lý danh sách items từ API
+          const items = [];
+
+          // 1. Thêm số điện thoại đầu tiên (nếu có)
+          if (config.headquartersPhone && config.headquartersPhone.length > 0) {
+            items.push({
+              id: "phone",
+              icon:
+                config.contactFloatingItems?.find((item) => item.id === "phone")
+                  ?.icon || "/assets/images/phone.png",
+              alt: "Hotline",
+              label: `Hotline\n${config.headquartersPhone[0]}`,
+              link: `tel:${config.headquartersPhone[0]}`,
+              order: -1, // Đặt order âm để luôn hiện đầu tiên
+              isActive: true,
+            });
+          }
+
+          // 2. Thêm các contact floating items từ config
+          if (
+            config.contactFloatingItems &&
+            config.contactFloatingItems.length > 0
+          ) {
+            config.contactFloatingItems.forEach((item) => {
+              // Bỏ qua item phone vì đã xử lý ở trên
+              if (item.isActive && item.id !== "phone") {
+                items.push({
+                  id: item.id,
+                  icon: item.icon || "/assets/images/default-icon.png",
+                  alt: item.alt || item.label || item.id,
+                  label: item.label || item.id,
+                  link: item.link || "",
+                  order: item.order || 0,
+                  isActive: item.isActive,
+                });
+              }
+            });
+          }
+
+          // 3. Thêm các social media items
+          if (config.socialMedia && config.socialMedia.length > 0) {
+            config.socialMedia.forEach((social) => {
+              if (social.isActive && social.url) {
+                // Tìm xem đã có trong contactFloatingItems chưa để tránh trùng
+                const existingItem = items.find(
+                  (item) =>
+                    item.link === social.url || item.id === social.platform
+                );
+
+                if (!existingItem) {
+                  items.push({
+                    id: social.platform,
+                    icon: social.icon || "/assets/images/default-icon.png",
+                    alt: social.platform,
+                    label:
+                      social.platform.charAt(0).toUpperCase() +
+                      social.platform.slice(1),
+                    link: social.url,
+                    order: social.order + 100, // Thêm 100 để social media luôn ở sau contactFloatingItems
+                    isActive: social.isActive,
+                  });
+                }
+              }
+            });
+          }
+
+          // Sắp xếp theo order
+          items.sort((a, b) => a.order - b.order);
+
+          setContactItems(items);
+        }
+      } catch (error) {
+        console.error("Không thể tải cấu hình contact floating:", error);
+        setIsEnabled(false);
+      }
+    };
+
+    fetchConfig();
+  }, []);
 
   const handleClick = (link) => {
     if (link) {
-      window.open(link, "_blank", "noopener,noreferrer");
+      // Kiểm tra xem có phải link điện thoại không
+      if (link.startsWith("tel:")) {
+        window.location.href = link;
+      } else {
+        window.open(link, "_blank", "noopener,noreferrer");
+      }
     }
   };
+
+  // Không hiển thị nếu disabled hoặc không có items
+  if (!isEnabled || contactItems.length === 0) {
+    return null;
+  }
 
   return (
     <div className="cfb-contact-floating">
@@ -83,7 +164,15 @@ const ContactFloating = () => {
                 className={`cfb-item-btn cfb-item-${item.id}`}
                 aria-label={item.alt}
               >
-                <img src={item.icon} alt={item.alt} className="cfb-item-icon" />
+                <img
+                  src={item.icon}
+                  alt={item.alt}
+                  className="cfb-item-icon"
+                  onError={(e) => {
+                    // Fallback nếu ảnh lỗi
+                    e.target.src = "/assets/images/default-icon.png";
+                  }}
+                />
               </button>
             </div>
           ))}

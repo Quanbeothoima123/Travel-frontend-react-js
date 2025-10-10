@@ -12,9 +12,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 15px;
-  padding: 30px; /* Thêm padding để tăng vùng hover */
-  margin: -30px; /* Margin âm để giữ vị trí gốc */
+  gap: 12px;
 }
 
 /* Main Toggle Button */
@@ -31,6 +29,8 @@
   justify-content: center;
   transition: all 0.3s ease;
   animation: cfb-pulse 2s infinite, cfb-shake 5s infinite;
+  position: relative;
+  z-index: 2;
 }
 
 .cfb-main-btn:hover {
@@ -45,7 +45,7 @@
 }
 
 .cfb-open .cfb-main-btn {
-  transform: rotate(90deg);
+  transform: rotate(45deg);
 }
 
 /* Pulse Animation */
@@ -97,19 +97,17 @@
   }
 }
 
-/* Items Container */
+/* Items Container - THẲNG HÀNG DỌC */
 .cfb-items-container {
-  position: absolute;
-  bottom: 90px; /* Tăng từ 75px lên 90px để tạo khoảng cách */
-  right: 0;
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   gap: 12px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
-  padding: 20px 20px 5px 20px; /* Padding đáy nhỏ hơn */
-  margin: -20px -20px -5px -20px; /* Margin âm tương ứng */
+  position: relative;
+  z-index: 1;
 }
 
 .cfb-open .cfb-items-container {
@@ -124,15 +122,13 @@
   gap: 12px;
   cursor: pointer;
   opacity: 0;
-  transform: translateX(50px);
+  transform: translateY(20px);
   transition: all 0.3s ease;
-  padding: 8px; /* Thêm padding cho mỗi item */
-  margin: -8px; /* Margin âm để tăng vùng click */
 }
 
 .cfb-open .cfb-item {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(0);
   transition-delay: calc(var(--item-index) * 0.08s);
 }
 
@@ -172,6 +168,7 @@
   justify-content: center;
   transition: all 0.3s ease;
   padding: 0;
+  flex-shrink: 0;
 }
 
 .cfb-item-btn:hover {
@@ -185,12 +182,15 @@
   object-fit: contain;
 }
 
-/* Specific Button Colors */
+/* Specific Button Colors - Thêm các class động */
 .cfb-item-phone {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.cfb-item-messenger {
+.cfb-item-messenger,
+.cfb-item-facebook-messenger,
+.cfb-item-facebook,
+.cfb-item-1 {
   background: linear-gradient(135deg, #0084ff 0%, #0066cc 100%);
 }
 
@@ -200,6 +200,44 @@
 
 .cfb-item-whatsapp {
   background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+}
+
+.cfb-item-telegram {
+  background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
+}
+
+.cfb-item-viber {
+  background: linear-gradient(135deg, #665cac 0%, #7c4dff 100%);
+}
+
+.cfb-item-email,
+.cfb-item-mail {
+  background: linear-gradient(135deg, #ea4335 0%, #d32f2f 100%);
+}
+
+.cfb-item-youtube {
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+}
+
+.cfb-item-instagram {
+  background: linear-gradient(135deg, #e1306c 0%, #c13584 50%, #833ab4 100%);
+}
+
+.cfb-item-twitter {
+  background: linear-gradient(135deg, #1da1f2 0%, #0d8bd9 100%);
+}
+
+.cfb-item-tiktok {
+  background: linear-gradient(135deg, #000000 0%, #ee1d52 50%, #69c9d0 100%);
+}
+
+.cfb-item-linkedin {
+  background: linear-gradient(135deg, #0077b5 0%, #005582 100%);
+}
+
+/* Default button nếu không match class nào */
+.cfb-item-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 /* Responsive */
@@ -232,7 +270,7 @@
 
 /* Hover effect cho item label - hiện lên khi hover vào button */
 .cfb-item:hover {
-  z-index: 1;
+  z-index: 10;
 }
 
 /* Animation cho label xuất hiện mượt hơn */
