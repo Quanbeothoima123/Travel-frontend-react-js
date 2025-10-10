@@ -10,6 +10,7 @@ import {
   FaNewspaper,
   FaTachometerAlt,
   FaUserCircle,
+  FaCog,
 } from "react-icons/fa";
 
 const DefaultIcon = FaUserCircle;
@@ -88,21 +89,21 @@ export default function AdminSidebar({ isOpen, onClose }) {
       },
       {
         id: "about",
-        title: "Về chúng tôi",
+        title: "Giới thiệu",
         icon: FaInfoCircle,
         children: [
           {
-            id: "about-categories",
-            title: "About Categories",
-            path: "/admin/about-categories",
+            id: "about-page",
+            title: "Travel Group Việt Nam",
+            path: "/admin/about-us",
           },
-          { id: "about-list", title: "About List", path: "/admin/about-list" },
+          { id: "more-info", title: "Tuyển dụng", path: "/admin/more-info" },
         ],
       },
       {
         id: "config",
         title: "Cấu hình",
-        icon: FaInfoCircle,
+        icon: FaCog,
         children: [
           {
             id: "config-basic",
