@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "../../../../contexts/ToastContext";
 import CategoryTreeSelect from "../../../../components/common/DropDownTreeSearch/CategoryTreeSelect";
@@ -8,6 +8,7 @@ import PaginationV2 from "../../../../components/common/Pagination_V2";
 import LoadingModal from "../../../components/common/LoadingModal";
 import "./GalleryManager.css";
 import ConfirmModal from "../../../components/common/ConfirmModal";
+
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 
 const GalleryManager = () => {
@@ -37,32 +38,13 @@ const GalleryManager = () => {
 
   const [tempFilters, setTempFilters] = useState({ ...filters });
 
-  // Sử dụng ref để tránh double loading
-  const isFirstRender = useRef(true);
-  const isFetching = useRef(false);
-
-  // ❌ VẤN ĐỀ 1: useEffect bị gọi 2 lần vì phụ thuộc vào cả pagination.currentPage VÀ filters
-  // Khi filters thay đổi -> pagination.currentPage cũng thay đổi -> gọi 2 lần
+  // ✅ FIX: Chỉ trigger khi cần thiết
   useEffect(() => {
-    // Bỏ qua lần render đầu tiên nếu cần
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      fetchGalleries();
-      return;
-    }
-
     fetchGalleries();
-  }, [pagination.currentPage, filters]); // Giữ nguyên dependencies nhưng thêm logic kiểm tra
+  }, [pagination.currentPage, filters]);
 
   const fetchGalleries = async () => {
-    // ✅ FIX: Ngăn chặn double fetch
-    if (isFetching.current) {
-      console.log("Already fetching, skipping...");
-      return;
-    }
-
     try {
-      isFetching.current = true;
       setLoading(true);
 
       const params = new URLSearchParams({
@@ -74,7 +56,6 @@ const GalleryManager = () => {
         mediaType: filters.mediaType,
       });
 
-      // ✅ FIX: Kiểm tra object và _id trước khi append
       if (filters.tour?._id) {
         params.append("tour", filters.tour._id);
       }
@@ -112,14 +93,15 @@ const GalleryManager = () => {
       showToast("Có lỗi xảy ra khi tải danh sách", "error");
     } finally {
       setLoading(false);
-      isFetching.current = false;
     }
   };
 
   const handleApplyFilters = () => {
-    // ✅ FIX: Update filters và reset page trong một lần setState
+    // ✅ FIX: Batch update để tránh double render
     setFilters({ ...tempFilters });
-    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+    if (pagination.currentPage !== 1) {
+      setPagination((prev) => ({ ...prev, currentPage: 1 }));
+    }
   };
 
   const handleResetFilters = () => {
@@ -134,7 +116,9 @@ const GalleryManager = () => {
     };
     setTempFilters(defaultFilters);
     setFilters(defaultFilters);
-    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+    if (pagination.currentPage !== 1) {
+      setPagination((prev) => ({ ...prev, currentPage: 1 }));
+    }
   };
 
   const handleToggleActive = async (id, currentStatus) => {
@@ -200,17 +184,10 @@ const GalleryManager = () => {
     return date.toLocaleDateString("vi-VN");
   };
 
-  // ✅ FIX: Hàm tính STT an toàn
   const calculateRowNumber = (index) => {
     const currentPage = pagination.currentPage || 1;
     const limit = pagination.limit || 10;
-    const rowNumber = (currentPage - 1) * limit + index + 1;
-
-    // Kiểm tra kỹ để tránh NaN
-    if (typeof rowNumber === "number" && !isNaN(rowNumber)) {
-      return rowNumber;
-    }
-    return index + 1; // Fallback
+    return (currentPage - 1) * limit + index + 1;
   };
 
   return (
@@ -370,10 +347,7 @@ const GalleryManager = () => {
             ) : (
               galleries.map((gallery, idx) => (
                 <tr key={gallery._id}>
-                  <td>
-                    {/* ✅ FIX: Sử dụng hàm tính STT an toàn */}
-                    {calculateRowNumber(idx)}
-                  </td>
+                  <td>{calculateRowNumber(idx)}</td>
                   <td>
                     <Link
                       to={`/admin/gallery/detail/${gallery._id}`}
