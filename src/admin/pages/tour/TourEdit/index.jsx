@@ -14,7 +14,9 @@ import "../TourCreate/TourCreatePage.css";
 import { useToast } from "../../../../contexts/ToastContext";
 import ConfirmModal from "../../../components/common/ConfirmModal";
 import LoadingModal from "../../../components/common/LoadingModal";
+
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
+
 const TourEditPage = () => {
   const { tourId } = useParams();
   const { showToast } = useToast();
@@ -55,15 +57,33 @@ const TourEditPage = () => {
           departRes,
           tourRes,
         ] = await Promise.all([
-          fetch(`${API_BASE}/api/v1/admin/travel-time/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/hotel/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/vehicle/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/frequency/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/type-of-person/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/term/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/filter/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/depart-place/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/tours/getTourById/${tourId}`),
+          fetch(`${API_BASE}/api/v1/admin/travel-time/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/hotel/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/vehicle/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/frequency/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/type-of-person/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/term/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/filter/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/depart-place/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/tours/getTourById/${tourId}`, {
+            credentials: "include",
+          }),
         ]);
 
         const [
@@ -135,47 +155,40 @@ const TourEditPage = () => {
     fetchData();
   }, [tourId, showToast]);
 
-  // === Utility ===
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-  const postForm = async (url, successMsg, failMsg) => {
+  // === Handle Submit ===
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setLoadingModal(true);
-    setLoadingMessage("Đang xử lý...");
-    const MIN_LOADING = 2500;
+    setLoadingMessage("Đang cập nhật tour...");
 
     try {
-      const fetchPromise = fetch(url, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(form),
-      }).then((res) => res.json());
+      const res = await fetch(
+        `${API_BASE}/api/v1/admin/tours/update/${tourId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(form),
+        }
+      );
 
-      const [data] = await Promise.all([fetchPromise, delay(MIN_LOADING)]);
+      const data = await res.json();
 
       if (!data.success) {
         if (data.errors && Array.isArray(data.errors)) {
           data.errors.forEach((err) => showToast(err, "error"));
         } else {
-          showToast(data.message || failMsg, "error");
+          showToast(data.message || "Không thể cập nhật tour!", "error");
         }
       } else {
-        showToast(successMsg, "success");
+        showToast("Cập nhật tour thành công", "success");
       }
     } catch (err) {
-      showToast(failMsg, "error");
+      console.error("Submit error:", err);
+      showToast("Không thể cập nhật tour!", "error");
     } finally {
       setLoadingModal(false);
     }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    postForm(
-      `${API_BASE}/api/v1/admin/tours/update/${tourId}`,
-      "Cập nhật tour thành công",
-      "Không thể cập nhật tour!"
-    );
   };
 
   // === Derived data ===
@@ -203,7 +216,7 @@ const TourEditPage = () => {
       <h2>Chỉnh sửa tour</h2>
       <LoadingModal open={loadingModal} message={loadingMessage} />
 
-      <form onSubmit={handleSubmit} className="tour-form">
+      <div className="tour-form">
         <BasicInfo
           form={form}
           setForm={setForm}
@@ -262,11 +275,11 @@ const TourEditPage = () => {
         />
 
         <div className="form-submit">
-          <button type="submit" className="btn-save">
+          <button type="button" className="btn-save" onClick={handleSubmit}>
             Lưu thay đổi
           </button>
         </div>
-      </form>
+      </div>
 
       <ConfirmModal
         open={showClearModal}

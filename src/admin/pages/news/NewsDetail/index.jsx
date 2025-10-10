@@ -27,6 +27,7 @@ const NewsDetail = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
         }
       );
 
@@ -61,6 +62,7 @@ const NewsDetail = () => {
             headers: {
               "Content-Type": "application/json",
             },
+            credentials: "include",
             body: JSON.stringify({ status: newStatus }),
           }
         );
@@ -97,6 +99,7 @@ const NewsDetail = () => {
               Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
               "Content-Type": "application/json",
             },
+            credentials: "include",
           }
         );
 
