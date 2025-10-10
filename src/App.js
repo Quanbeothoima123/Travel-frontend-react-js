@@ -10,6 +10,7 @@ import {
 import "./App.css";
 import { ToastProvider } from "./contexts/ToastContext";
 import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
 import ContactFloating from "./components/common/ContactFloating";
 import Home from "./pages/Home";
 import DetailTour from "./pages/DetailTour";
@@ -77,19 +78,22 @@ import AdminLogin from "./admin/pages/Login";
 import AdminPrivateRoute from "./admin/components/routes/AdminPrivateRoute";
 
 import SiteConfig from "./admin/pages/SiteConfig";
-// Component để xử lý hiển thị Header có điều kiện
+
+// Component để xử lý hiển thị Header, Footer và ContactFloating có điều kiện
 function AppContent() {
   const location = useLocation();
 
-  // Ẩn Header và ContactFloating khi ở /user/* và /admin/*
-  const hideHeaderAndContact =
+  // Ẩn Header, Footer và ContactFloating khi ở /user/* và /admin/*
+  const hideLayoutComponents =
     location.pathname.startsWith("/user") ||
     location.pathname.startsWith("/admin");
+
   return (
     <>
-      {!hideHeaderAndContact && <Header />}
+      {/* Header chỉ hiển thị trên trang public */}
+      {!hideLayoutComponents && <Header />}
 
-      <div className={!hideHeaderAndContact ? "main-content" : ""}>
+      <div className={!hideLayoutComponents ? "main-content" : ""}>
         <Routes>
           {/* User routes */}
           <Route path="/" element={<Home />} />
@@ -127,7 +131,7 @@ function AppContent() {
             <Route path="support" element={<div>Liên hệ hỗ trợ</div>} />
             <Route path="dark-mode" element={<div>Chế độ tối</div>} />
 
-            {/* ✅ Thêm Chat routes vào UserLayout */}
+            {/* Chat routes */}
             <Route path="chat" element={<ChatPage />} />
             <Route path="chat/:chatId" element={<ChatPage />} />
           </Route>
@@ -204,8 +208,12 @@ function AppContent() {
           </Route>
         </Routes>
       </div>
-      {/*  Hiển thị ContactFloating trừ /user/* và /admin/* */}
-      {!hideHeaderAndContact && <ContactFloating />}
+
+      {/* ContactFloating chỉ hiển thị trên trang public */}
+      {!hideLayoutComponents && <ContactFloating />}
+
+      {/* Footer chỉ hiển thị trên trang public */}
+      {!hideLayoutComponents && <Footer />}
     </>
   );
 }
