@@ -12,7 +12,9 @@ import "./TourCreatePage.css";
 import { useToast } from "../../../../contexts/ToastContext";
 import ConfirmModal from "../../../components/common/ConfirmModal";
 import LoadingModal from "../../../components/common/LoadingModal";
+
 const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
+
 const TourCreatePage = () => {
   const { showToast } = useToast();
 
@@ -49,6 +51,7 @@ const TourCreatePage = () => {
   const [loadingModal, setLoadingModal] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
   const [iconForLoading, setIconForLoading] = useState("");
+
   // === Options from API ===
   const [travelTimes, setTravelTimes] = useState([]);
   const [hotels, setHotels] = useState([]);
@@ -57,7 +60,7 @@ const TourCreatePage = () => {
   const [personTypes, setPersonTypes] = useState([]);
   const [termOptions, setTermOptions] = useState([]);
   const [filterOptions, setFilterOptions] = useState([]);
-  const [departPlaces, setDepartPlaces] = useState([]); // ✅ thêm mới
+  const [departPlaces, setDepartPlaces] = useState([]);
 
   // === Reset form ===
   const resetForm = () => {
@@ -68,7 +71,7 @@ const TourCreatePage = () => {
       images: [],
       travelTimeId: "",
       hotelId: "",
-      departPlaceId: "", // ✅ reset về ""
+      departPlaceId: "",
       position: 0,
       prices: 0,
       discount: 0,
@@ -105,14 +108,30 @@ const TourCreatePage = () => {
           filterRes,
           departRes,
         ] = await Promise.all([
-          fetch(`${API_BASE}/api/v1/admin/travel-time/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/hotel/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/vehicle/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/frequency/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/type-of-person/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/term/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/filter/getAll`),
-          fetch(`${API_BASE}/api/v1/admin/depart-place/getAll`),
+          fetch(`${API_BASE}/api/v1/admin/travel-time/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/hotel/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/vehicle/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/frequency/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/type-of-person/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/term/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/filter/getAll`, {
+            credentials: "include",
+          }),
+          fetch(`${API_BASE}/api/v1/admin/depart-place/getAll`, {
+            credentials: "include",
+          }),
         ]);
 
         const [
@@ -123,7 +142,7 @@ const TourCreatePage = () => {
           personData,
           termData,
           filterData,
-          departData, // ✅ thêm
+          departData,
         ] = await Promise.all([
           travelRes.json(),
           hotelRes.json(),
@@ -132,7 +151,7 @@ const TourCreatePage = () => {
           personRes.json(),
           termRes.json(),
           filterRes.json(),
-          departRes.json(), // ✅
+          departRes.json(),
         ]);
 
         setTravelTimes(travelData || []);
@@ -142,7 +161,7 @@ const TourCreatePage = () => {
         setPersonTypes(personData || []);
         setTermOptions(termData || []);
         setFilterOptions(filterData || []);
-        setDepartPlaces(departData || []); // ✅
+        setDepartPlaces(departData || []);
       } catch (err) {
         console.error("Fetch data error:", err);
         showToast("Lỗi khi tải dữ liệu danh mục", "error");
@@ -154,59 +173,75 @@ const TourCreatePage = () => {
     fetchData();
   }, [showToast]);
 
-  // === Utility ===
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-  // === Unified postForm for check + submit ===
-  const postForm = async (url, successMsg, failMsg) => {
+  // === Handle Check ===
+  const handleCheck = async () => {
     setLoadingModal(true);
-    const MIN_LOADING = 2500;
+    setIconForLoading("FaCheck");
+    setLoadingMessage("Đang kiểm tra thông tin");
 
     try {
-      const fetchPromise = fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(form),
-      }).then((res) => res.json());
+      const res = await fetch(
+        `${API_BASE}/api/v1/admin/tours/check-info-tour-create`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(form),
+        }
+      );
 
-      const [data] = await Promise.all([fetchPromise, delay(MIN_LOADING)]);
+      const data = await res.json();
 
       if (!data.success) {
         if (data.errors && Array.isArray(data.errors)) {
           data.errors.forEach((err) => showToast(err, "error"));
         } else {
-          showToast(data.message || failMsg, "error");
+          showToast(data.message || "Thông tin không hợp lệ", "error");
         }
       } else {
-        showToast(successMsg, "success");
+        showToast("Dữ liệu tour hợp lệ", "success");
       }
     } catch (err) {
-      showToast(failMsg, "error");
+      console.error("Check error:", err);
+      showToast("Lỗi khi kiểm tra thông tin", "error");
     } finally {
       setLoadingModal(false);
     }
   };
 
-  const handleCheck = () => {
-    setIconForLoading("FaCheck");
-    setLoadingMessage("Đang kiểm tra thông tin");
-    postForm(
-      `${API_BASE}/api/v1/admin/tours/check-info-tour-create`,
-      "Dữ liệu tour hợp lệ",
-      "Thông tin không hợp lệ"
-    );
-  };
-
-  const handleSubmit = (e) => {
+  // === Handle Submit ===
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoadingModal(true);
     setLoadingMessage("Đang tiến hành lưu tour");
     setIconForLoading("FaSave");
-    e.preventDefault();
-    postForm(
-      `${API_BASE}/api/v1/admin/tours/create`,
-      "Tạo tour mới thành công",
-      "Không thể tạo tour!"
-    );
+
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/admin/tours/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        if (data.errors && Array.isArray(data.errors)) {
+          data.errors.forEach((err) => showToast(err, "error"));
+        } else {
+          showToast(data.message || "Không thể tạo tour!", "error");
+        }
+      } else {
+        showToast("Tạo tour mới thành công", "success");
+        resetForm();
+      }
+    } catch (err) {
+      console.error("Submit error:", err);
+      showToast("Không thể tạo tour!", "error");
+    } finally {
+      setLoadingModal(false);
+    }
   };
 
   // === Derived data ===
@@ -245,7 +280,7 @@ const TourCreatePage = () => {
             vehicles={vehicles}
             frequencies={frequencies}
             filters={filterOptions}
-            departPlaces={departPlaces} // ✅ truyền xuống
+            departPlaces={departPlaces}
           />
 
           <ThumbnailUploader
@@ -274,7 +309,7 @@ const TourCreatePage = () => {
             setAdditionalPrices={(val) =>
               setForm({ ...form, additionalPrices: val })
             }
-            personTypes={allowedPersonTypes} // ✅ chỉ hiển thị loại được phép
+            personTypes={allowedPersonTypes}
           />
 
           <TermEditor
