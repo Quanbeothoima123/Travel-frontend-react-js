@@ -78,7 +78,7 @@ import AdminLogin from "./admin/pages/Login";
 import AdminPrivateRoute from "./admin/components/routes/AdminPrivateRoute";
 
 import SiteConfig from "./admin/pages/SiteConfig";
-
+import AboutUsManager from "./admin/pages/AboutUsManager";
 // Component để xử lý hiển thị Header, Footer và ContactFloating có điều kiện
 function AppContent() {
   const location = useLocation();
@@ -205,6 +205,8 @@ function AppContent() {
             <Route path="gallery/detail/:id" element={<GalleryDetail />} />
 
             <Route path="config-basic" element={<SiteConfig />} />
+
+            <Route path="about-us" element={<AboutUsManager />} />
           </Route>
         </Routes>
       </div>
