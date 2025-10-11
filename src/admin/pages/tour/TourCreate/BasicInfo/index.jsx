@@ -338,7 +338,9 @@ const BasicInfo = ({
           onClick={async () => {
             try {
               const res = await fetch(
-                `${API_BASE}/api/v1/admin/tours/countTours`
+                `${API_BASE}/api/v1/admin/tours/countTours`,{
+                  credentials:"include",
+                }
               );
               const data = await res.json();
               if (data.success) {
