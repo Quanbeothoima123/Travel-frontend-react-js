@@ -115,12 +115,15 @@ const AboutUsManager = () => {
 
     try {
       setSaving(true);
-      const res = await fetch(`${API_BASE}/api/v1/admin/about-us`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(form),
-      });
+      const res = await fetch(
+        `${API_BASE}/api/v1/admin/about-us/createOrUpdate`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(form),
+        }
+      );
 
       const data = await res.json();
 
