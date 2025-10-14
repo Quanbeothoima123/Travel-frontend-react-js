@@ -1,20 +1,25 @@
 /* Weather Widget Styles - Prefix: ww- */
+/* Được thiết kế để đứng bên trái Contact Floating Button */
 
-/* Trigger button */
+/* Trigger button - Positioned left of contact button */
 .ww-trigger-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 110px; /* Cách nút contact 110px (60px nút + 50px khoảng cách) */
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px;
+  padding: 12px 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  border-radius: 25px;
+  border-radius: 50px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  z-index: 998; /* Thấp hơn contact button (999) một chút */
 }
 
 .ww-trigger-btn:hover {
@@ -112,196 +117,12 @@
   transition: all 0.2s ease;
 }
 
-.ww-detail-item:hover {
-  background: #e9ecef;
-  transform: translateY(-2px);
-}
-
-.ww-detail-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: white;
-  border-radius: 10px;
-  color: #667eea;
-  flex-shrink: 0;
-}
-
-.ww-detail-info {
-  flex: 1;
-}
-
-.ww-detail-label {
-  font-size: 12px;
-  color: #6c757d;
-  margin-bottom: 4px;
-}
-
-.ww-detail-value {
-  font-size: 16px;
-  font-weight: 600;
-  color: #212529;
-}
-
-/* Additional info */
-.ww-additional-info {
-  padding: 16px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-radius: 12px;
-  margin-top: 16px;
-}
-
-.ww-info-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  font-size: 14px;
-  color: #495057;
-}
-
-.ww-info-row:not(:last-child) {
-  border-bottom: 1px solid #dee2e6;
-}
-
-.ww-info-row strong {
-  color: #212529;
-  font-weight: 600;
-}
-
-/* Footer */
-.ww-footer {
-  padding: 16px 24px;
-  background: #f8f9fa;
-  border-top: 1px solid #e9ecef;
-  text-align: center;
-}
-
-.ww-footer small {
-  font-size: 12px;
-  color: #6c757d;
-}
-
-/* Scrollbar styling for suggestions dropdown */
-.ww-suggestions-dropdown::-webkit-scrollbar {
-  width: 6px;
-}
-
-.ww-suggestions-dropdown::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.ww-suggestions-dropdown::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
-  border-radius: 10px;
-}
-
-.ww-suggestions-dropdown::-webkit-scrollbar-thumb:hover {
-  background: #a0aec0;
-}
-
-/* Responsive */
-@media (max-width: 576px) {
-  .ww-modal {
-    width: 95%;
-    max-height: 95vh;
-    border-radius: 16px;
-  }
-
-  .ww-header {
-    padding: 16px 20px;
-  }
-
-  .ww-header-title h3 {
-    font-size: 18px;
-  }
-
-  .ww-search-form {
-    padding: 12px 20px;
-  }
-
-  .ww-location-btn {
-    width: calc(100% - 40px);
-    margin: 0 20px 12px;
-  }
-
-  .ww-content {
-    padding: 0 20px 20px;
-  }
-
-  .ww-main-info {
-    padding: 20px 0;
-  }
-
-  .ww-temp {
-    font-size: 40px;
-  }
-
-  .ww-weather-icon {
-    width: 80px;
-    height: 80px;
-  }
-
-  .ww-custom-icon {
-    width: 50px;
-    height: 50px;
-  }
-
-  .ww-details-grid {
-    gap: 12px;
-    margin: 20px 0;
-  }
-
-  .ww-detail-item {
-    padding: 12px;
-  }
-
-  .ww-detail-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .ww-detail-value {
-    font-size: 14px;
-  }
-
-  .ww-suggestions-dropdown {
-    max-height: 200px;
-  }
-}
-
-@media (max-width: 360px) {
-  .ww-temp-wrapper {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .ww-temp-info {
-    text-align: center;
-  }
-
-  .ww-details-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .ww-search-form {
-    flex-direction: column;
-  }
-
-  .ww-search-btn {
-    width: 100%;
-  }
-}
-
 .ww-close-btn:hover {
   background: rgba(255, 255, 255, 0.3);
   transform: rotate(90deg);
 }
 
-/* Search wrapper - chứa form và suggestions */
+/* Search wrapper */
 .ww-search-wrapper {
   position: relative;
   background: #f8f9fa;
@@ -659,4 +480,213 @@
   background: #f8f9fa;
   border-radius: 12px;
   transition: all 0.2s ease;
+}
+
+.ww-detail-item:hover {
+  background: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.ww-detail-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 10px;
+  color: #667eea;
+  flex-shrink: 0;
+}
+
+.ww-detail-info {
+  flex: 1;
+}
+
+.ww-detail-label {
+  font-size: 12px;
+  color: #6c757d;
+  margin-bottom: 4px;
+}
+
+.ww-detail-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #212529;
+}
+
+/* Additional info */
+.ww-additional-info {
+  padding: 16px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  margin-top: 16px;
+}
+
+.ww-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #495057;
+}
+
+.ww-info-row:not(:last-child) {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.ww-info-row strong {
+  color: #212529;
+  font-weight: 600;
+}
+
+/* Footer */
+.ww-footer {
+  padding: 16px 24px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  text-align: center;
+}
+
+.ww-footer small {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+/* Scrollbar styling */
+.ww-suggestions-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ww-suggestions-dropdown::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.ww-suggestions-dropdown::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 10px;
+}
+
+.ww-suggestions-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ww-trigger-btn {
+    bottom: 20px;
+    right: 90px; /* Điều chỉnh cho mobile - cách nút contact 90px */
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .ww-modal {
+    width: 95%;
+    max-height: 95vh;
+    border-radius: 16px;
+  }
+
+  .ww-header {
+    padding: 16px 20px;
+  }
+
+  .ww-header-title h3 {
+    font-size: 18px;
+  }
+
+  .ww-search-form {
+    padding: 12px 20px;
+  }
+
+  .ww-location-btn {
+    width: calc(100% - 40px);
+    margin: 0 20px 12px;
+  }
+
+  .ww-content {
+    padding: 0 20px 20px;
+  }
+
+  .ww-main-info {
+    padding: 20px 0;
+  }
+
+  .ww-temp {
+    font-size: 40px;
+  }
+
+  .ww-weather-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .ww-custom-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .ww-details-grid {
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .ww-detail-item {
+    padding: 12px;
+  }
+
+  .ww-detail-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ww-detail-value {
+    font-size: 14px;
+  }
+
+  .ww-suggestions-dropdown {
+    max-height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ww-trigger-btn {
+    right: 85px; /* Điều chỉnh thêm cho màn hình nhỏ */
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .ww-temp-wrapper {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ww-temp-info {
+    text-align: center;
+  }
+
+  .ww-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 360px) {
+  .ww-trigger-btn {
+    /* Ẩn text, chỉ hiện icon cho màn hình cực nhỏ */
+    padding: 10px;
+    right: 75px;
+  }
+
+  .ww-trigger-btn span {
+    display: none;
+  }
+
+  .ww-search-form {
+    flex-direction: column;
+  }
+
+  .ww-search-btn {
+    width: 100%;
+  }
 }

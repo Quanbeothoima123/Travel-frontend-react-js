@@ -15,7 +15,6 @@ import {
   CloudDrizzle,
 } from "lucide-react";
 import "./WeatherWidget.css";
-
 const WeatherWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [weather, setWeather] = useState(null);
@@ -28,19 +27,84 @@ const WeatherWidget = () => {
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const inputRef = useRef(null);
   const suggestionsRef = useRef(null);
+  const locationUpdateTimerRef = useRef(null);
 
-  const API_KEY =
-    process.env.REACT_APP_OPENWEATHER_KEY || "a6844b78148e1f3da68f878bcd6f1acf";
+  const API_KEY = process.env.REACT_APP_OPENWEATHER_KEY;
   const DEFAULT_CITY = "Hanoi";
+  const LOCATION_UPDATE_INTERVAL = 15 * 60 * 1000;
 
-  // Load thời tiết mặc định khi mở widget lần đầu
+  const setCookie = (name, value, days = 30) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  };
+
+  const getCookie = (name) => {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === " ") c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  };
+
+  const saveLocationToCookie = (lat, lon) => {
+    const locationData = JSON.stringify({
+      lat,
+      lon,
+      timestamp: Date.now(),
+    });
+    setCookie("userLocation", locationData);
+  };
+
+  const getLocationFromCookie = () => {
+    const locationData = getCookie("userLocation");
+    if (locationData) {
+      try {
+        return JSON.parse(locationData);
+      } catch (e) {
+        console.error("Error parsing location cookie:", e);
+        return null;
+      }
+    }
+    return null;
+  };
+
   useEffect(() => {
     if (isOpen && !weather) {
-      fetchWeatherByCity(DEFAULT_CITY);
+      const savedLocation = getLocationFromCookie();
+      if (savedLocation && savedLocation.lat && savedLocation.lon) {
+        fetchWeatherByCoords(savedLocation.lat, savedLocation.lon);
+      } else {
+        fetchWeatherByCity(DEFAULT_CITY);
+      }
     }
   }, [isOpen]);
 
-  // Xử lý click bên ngoài để đóng suggestions
+  useEffect(() => {
+    if (isOpen) {
+      const savedLocation = getLocationFromCookie();
+      if (savedLocation && savedLocation.lat && savedLocation.lon) {
+        const timeSinceLastUpdate = Date.now() - savedLocation.timestamp;
+        if (timeSinceLastUpdate >= LOCATION_UPDATE_INTERVAL) {
+          updateCurrentLocation(true);
+        }
+
+        locationUpdateTimerRef.current = setInterval(() => {
+          updateCurrentLocation(true);
+        }, LOCATION_UPDATE_INTERVAL);
+      }
+    }
+
+    return () => {
+      if (locationUpdateTimerRef.current) {
+        clearInterval(locationUpdateTimerRef.current);
+      }
+    };
+  }, [isOpen]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -57,7 +121,6 @@ const WeatherWidget = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Debounce cho autocomplete
   useEffect(() => {
     const timer = setTimeout(() => {
       if (cityInput.trim().length >= 2) {
@@ -71,7 +134,6 @@ const WeatherWidget = () => {
     return () => clearTimeout(timer);
   }, [cityInput]);
 
-  // Hàm gọi API gợi ý thành phố (Autocomplete)
   const fetchCitySuggestions = async (query) => {
     setLoadingSuggestions(true);
     try {
@@ -100,15 +162,13 @@ const WeatherWidget = () => {
     }
   };
 
-  // Hàm lấy tên địa điểm từ tọa độ (Reverse Geocoding) - Dùng Nominatim (OpenStreetMap)
   const getLocationName = async (lat, lon) => {
     try {
-      // Dùng Nominatim API (miễn phí, chính xác cho VN)
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1&accept-language=vi`,
         {
           headers: {
-            "User-Agent": "WeatherWidget/1.0", // Nominatim yêu cầu User-Agent
+            "User-Agent": "WeatherWidget/1.0",
           },
         }
       );
@@ -118,12 +178,9 @@ const WeatherWidget = () => {
       }
 
       const data = await response.json();
-
-      // Xây dựng tên địa điểm từ các thành phần
       const address = data.address;
       let locationName = "";
 
-      // Ưu tiên: Phường/Xã > Quận/Huyện > Thành phố/Tỉnh
       if (address.suburb || address.quarter || address.neighbourhood) {
         locationName =
           address.suburb || address.quarter || address.neighbourhood;
@@ -139,13 +196,11 @@ const WeatherWidget = () => {
         locationName = data.display_name.split(",")[0];
       }
 
-      // Thêm quận/huyện nếu có
       const district = address.city_district || address.county;
       if (district && !locationName.includes(district)) {
         locationName += `, ${district}`;
       }
 
-      // Thêm thành phố/tỉnh
       const city = address.city || address.town || address.state;
       if (city && !locationName.includes(city)) {
         locationName += `, ${city}`;
@@ -154,7 +209,6 @@ const WeatherWidget = () => {
       return locationName;
     } catch (err) {
       console.error("Error in reverse geocoding:", err);
-      // Fallback: dùng OpenWeatherMap geocoding
       try {
         const fallbackResponse = await fetch(
           `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${API_KEY}`
@@ -174,11 +228,10 @@ const WeatherWidget = () => {
         console.error("Fallback geocoding failed:", fallbackErr);
       }
 
-      return null; // Trả về null nếu không lấy được tên
+      return null;
     }
   };
 
-  // Hàm gọi API theo tên thành phố
   const fetchWeatherByCity = async (city) => {
     setLoading(true);
     setError(null);
@@ -207,13 +260,11 @@ const WeatherWidget = () => {
     }
   };
 
-  // Hàm gọi API theo tọa độ GPS - IMPROVED: Lấy tên địa điểm chính xác từ Nominatim
   const fetchWeatherByCoords = async (lat, lon) => {
     setLoading(true);
     setError(null);
 
     try {
-      // Bước 1: Lấy dữ liệu thời tiết từ OpenWeatherMap
       const weatherResponse = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=vi`
       );
@@ -226,14 +277,10 @@ const WeatherWidget = () => {
       }
 
       const weatherData = await weatherResponse.json();
-
-      // Bước 2: Lấy tên địa điểm chính xác từ Nominatim
       const locationName = await getLocationName(lat, lon);
 
-      // Nếu lấy được tên từ Nominatim thì thay thế, không thì giữ nguyên
       if (locationName) {
         weatherData.name = locationName;
-        // Xóa country code vì đã có tên đầy đủ
         weatherData.displayName = locationName;
       }
 
@@ -245,31 +292,37 @@ const WeatherWidget = () => {
     }
   };
 
-  // Xử lý lấy vị trí hiện tại
-  const handleGetLocation = () => {
+  const updateCurrentLocation = (silent = false) => {
     if (!navigator.geolocation) {
-      setError("Trình duyệt không hỗ trợ định vị");
+      if (!silent) setError("Trình duyệt không hỗ trợ định vị");
       return;
     }
 
-    setLoading(true);
+    if (!silent) setLoading(true);
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
+        saveLocationToCookie(latitude, longitude);
         fetchWeatherByCoords(latitude, longitude);
         setLocationPermission("granted");
       },
       (err) => {
-        setError(
-          "Không thể truy cập vị trí. Vui lòng cho phép truy cập vị trí."
-        );
-        setLocationPermission("denied");
-        setLoading(false);
+        if (!silent) {
+          setError(
+            "Không thể truy cập vị trí. Vui lòng cho phép truy cập vị trí."
+          );
+          setLocationPermission("denied");
+          setLoading(false);
+        }
       }
     );
   };
 
-  // Xử lý tìm kiếm theo tên thành phố
+  const handleGetLocation = () => {
+    updateCurrentLocation(false);
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (cityInput.trim()) {
@@ -278,19 +331,16 @@ const WeatherWidget = () => {
     }
   };
 
-  // Xử lý khi click vào suggestion
   const handleSuggestionClick = (suggestion) => {
     fetchWeatherByCoords(suggestion.lat, suggestion.lon);
     setCityInput("");
     setShowSuggestions(false);
   };
 
-  // Lấy icon thời tiết từ OpenWeather
   const getWeatherIcon = (iconCode) => {
     return `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
   };
 
-  // Lấy icon tùy chỉnh từ Lucide
   const getCustomWeatherIcon = (weatherMain) => {
     const iconProps = { size: 60, strokeWidth: 1.5 };
 
@@ -325,7 +375,6 @@ const WeatherWidget = () => {
 
   return (
     <>
-      {/* Nút mở widget */}
       <button
         className="ww-trigger-btn"
         onClick={() => setIsOpen(true)}
@@ -335,11 +384,9 @@ const WeatherWidget = () => {
         <span>Thời tiết</span>
       </button>
 
-      {/* Modal widget */}
       {isOpen && (
         <div className="ww-overlay" onClick={() => setIsOpen(false)}>
           <div className="ww-modal" onClick={(e) => e.stopPropagation()}>
-            {/* Header */}
             <div className="ww-header">
               <div className="ww-header-title">
                 <Cloud size={24} />
@@ -354,7 +401,6 @@ const WeatherWidget = () => {
               </button>
             </div>
 
-            {/* Search bar với autocomplete */}
             <div className="ww-search-wrapper">
               <div className="ww-search-form" onSubmit={handleSearch}>
                 <div className="ww-search-input-container">
@@ -375,7 +421,6 @@ const WeatherWidget = () => {
                     }}
                   />
 
-                  {/* Dropdown gợi ý */}
                   {showSuggestions && (
                     <div
                       ref={suggestionsRef}
@@ -422,7 +467,6 @@ const WeatherWidget = () => {
               </div>
             </div>
 
-            {/* Location button */}
             <button
               className="ww-location-btn"
               onClick={handleGetLocation}
@@ -432,7 +476,6 @@ const WeatherWidget = () => {
               <span>Sử dụng vị trí hiện tại</span>
             </button>
 
-            {/* Content area */}
             <div className="ww-content">
               {loading && (
                 <div className="ww-loading">
@@ -455,7 +498,6 @@ const WeatherWidget = () => {
 
               {weather && !loading && !error && (
                 <div className="ww-weather-display">
-                  {/* Main info */}
                   <div className="ww-main-info">
                     <div className="ww-location">
                       <MapPin size={18} />
@@ -489,7 +531,6 @@ const WeatherWidget = () => {
                     </div>
                   </div>
 
-                  {/* Details grid */}
                   <div className="ww-details-grid">
                     <div className="ww-detail-item">
                       <div className="ww-detail-icon">
@@ -543,7 +584,6 @@ const WeatherWidget = () => {
                     </div>
                   </div>
 
-                  {/* Additional info */}
                   <div className="ww-additional-info">
                     <div className="ww-info-row">
                       <span>Nhiệt độ cao nhất:</span>
@@ -558,7 +598,6 @@ const WeatherWidget = () => {
               )}
             </div>
 
-            {/* Footer */}
             <div className="ww-footer">
               <small>Dữ liệu từ OpenWeatherMap & OpenStreetMap</small>
             </div>
