@@ -97,16 +97,18 @@
   }
 }
 
-/* Items Container - THẲNG HÀNG DỌC */
+/* Items Container - HIỂN THỊ LÊN TRÊN */
 .cfb-items-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse; /* Đảo ngược để items xuất hiện từ dưới lên */
   align-items: flex-end;
   gap: 12px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
-  position: relative;
+  position: absolute;
+  bottom: 72px; /* Đặt phía trên nút chính */
+  right: 0;
   z-index: 1;
 }
 
@@ -182,7 +184,7 @@
   object-fit: contain;
 }
 
-/* Specific Button Colors - Thêm các class động */
+/* Specific Button Colors */
 .cfb-item-phone {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
@@ -235,7 +237,7 @@
   background: linear-gradient(135deg, #0077b5 0%, #005582 100%);
 }
 
-/* Default button nếu không match class nào */
+/* Default button */
 .cfb-item-btn {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
@@ -266,14 +268,16 @@
     font-size: 12px;
     padding: 6px 12px;
   }
+
+  .cfb-items-container {
+    bottom: 67px;
+  }
 }
 
-/* Hover effect cho item label - hiện lên khi hover vào button */
 .cfb-item:hover {
   z-index: 10;
 }
 
-/* Animation cho label xuất hiện mượt hơn */
 @keyframes cfb-fadeSlideIn {
   from {
     opacity: 0;
