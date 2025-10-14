@@ -112,9 +112,200 @@
   transition: all 0.2s ease;
 }
 
+.ww-detail-item:hover {
+  background: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.ww-detail-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 10px;
+  color: #667eea;
+  flex-shrink: 0;
+}
+
+.ww-detail-info {
+  flex: 1;
+}
+
+.ww-detail-label {
+  font-size: 12px;
+  color: #6c757d;
+  margin-bottom: 4px;
+}
+
+.ww-detail-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #212529;
+}
+
+/* Additional info */
+.ww-additional-info {
+  padding: 16px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  margin-top: 16px;
+}
+
+.ww-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #495057;
+}
+
+.ww-info-row:not(:last-child) {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.ww-info-row strong {
+  color: #212529;
+  font-weight: 600;
+}
+
+/* Footer */
+.ww-footer {
+  padding: 16px 24px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  text-align: center;
+}
+
+.ww-footer small {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+/* Scrollbar styling for suggestions dropdown */
+.ww-suggestions-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ww-suggestions-dropdown::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.ww-suggestions-dropdown::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 10px;
+}
+
+.ww-suggestions-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .ww-modal {
+    width: 95%;
+    max-height: 95vh;
+    border-radius: 16px;
+  }
+
+  .ww-header {
+    padding: 16px 20px;
+  }
+
+  .ww-header-title h3 {
+    font-size: 18px;
+  }
+
+  .ww-search-form {
+    padding: 12px 20px;
+  }
+
+  .ww-location-btn {
+    width: calc(100% - 40px);
+    margin: 0 20px 12px;
+  }
+
+  .ww-content {
+    padding: 0 20px 20px;
+  }
+
+  .ww-main-info {
+    padding: 20px 0;
+  }
+
+  .ww-temp {
+    font-size: 40px;
+  }
+
+  .ww-weather-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .ww-custom-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .ww-details-grid {
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .ww-detail-item {
+    padding: 12px;
+  }
+
+  .ww-detail-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ww-detail-value {
+    font-size: 14px;
+  }
+
+  .ww-suggestions-dropdown {
+    max-height: 200px;
+  }
+}
+
+@media (max-width: 360px) {
+  .ww-temp-wrapper {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ww-temp-info {
+    text-align: center;
+  }
+
+  .ww-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ww-search-form {
+    flex-direction: column;
+  }
+
+  .ww-search-btn {
+    width: 100%;
+  }
+}
+
 .ww-close-btn:hover {
   background: rgba(255, 255, 255, 0.3);
   transform: rotate(90deg);
+}
+
+/* Search wrapper - chứa form và suggestions */
+.ww-search-wrapper {
+  position: relative;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
 }
 
 /* Search form */
@@ -122,18 +313,22 @@
   display: flex;
   gap: 8px;
   padding: 16px 24px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
+}
+
+.ww-search-input-container {
+  flex: 1;
+  position: relative;
 }
 
 .ww-search-input {
-  flex: 1;
+  width: 100%;
   padding: 10px 16px;
   border: 2px solid #dee2e6;
   border-radius: 12px;
   font-size: 14px;
   transition: all 0.2s ease;
   outline: none;
+  background: white;
 }
 
 .ww-search-input:focus {
@@ -152,6 +347,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .ww-search-btn:hover {
@@ -161,6 +357,92 @@
 
 .ww-search-btn:active {
   transform: scale(0.95);
+}
+
+/* Autocomplete suggestions dropdown */
+.ww-suggestions-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 100;
+  animation: ww-dropdownSlide 0.2s ease;
+}
+
+@keyframes ww-dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ww-suggestions-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  color: #667eea;
+  font-size: 14px;
+}
+
+.ww-suggestion-item {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: white;
+  border: none;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.ww-suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.ww-suggestion-item:hover {
+  background: #f8f9fa;
+}
+
+.ww-suggestion-item:active {
+  background: #e9ecef;
+}
+
+.ww-suggestion-icon {
+  color: #667eea;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ww-suggestion-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ww-suggestion-name {
+  font-weight: 600;
+  color: #212529;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.ww-suggestion-location {
+  font-size: 12px;
+  color: #6c757d;
 }
 
 /* Location button */
@@ -296,10 +578,45 @@
   margin-bottom: 8px;
 }
 
+/* Weather icons container */
+.ww-weather-icons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
 .ww-weather-icon {
   width: 100px;
   height: 100px;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  margin-top: -20px;
+}
+
+/* Custom weather icon styles */
+.ww-custom-icon {
+  opacity: 0.3;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.ww-icon-sun {
+  color: #fbbf24;
+}
+
+.ww-icon-cloud {
+  color: #94a3b8;
+}
+
+.ww-icon-rain {
+  color: #3b82f6;
+}
+
+.ww-icon-drizzle {
+  color: #60a5fa;
+}
+
+.ww-icon-snow {
+  color: #bfdbfe;
 }
 
 .ww-temp-info {
@@ -342,152 +659,4 @@
   background: #f8f9fa;
   border-radius: 12px;
   transition: all 0.2s ease;
-}
-
-.ww-detail-item:hover {
-  background: #e9ecef;
-  transform: translateY(-2px);
-}
-
-.ww-detail-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: white;
-  border-radius: 10px;
-  color: #667eea;
-  flex-shrink: 0;
-}
-
-.ww-detail-info {
-  flex: 1;
-}
-
-.ww-detail-label {
-  font-size: 12px;
-  color: #6c757d;
-  margin-bottom: 4px;
-}
-
-.ww-detail-value {
-  font-size: 16px;
-  font-weight: 600;
-  color: #212529;
-}
-
-/* Additional info */
-.ww-additional-info {
-  padding: 16px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-radius: 12px;
-  margin-top: 16px;
-}
-
-.ww-info-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  font-size: 14px;
-  color: #495057;
-}
-
-.ww-info-row:not(:last-child) {
-  border-bottom: 1px solid #dee2e6;
-}
-
-.ww-info-row strong {
-  color: #212529;
-  font-weight: 600;
-}
-
-/* Footer */
-.ww-footer {
-  padding: 16px 24px;
-  background: #f8f9fa;
-  border-top: 1px solid #e9ecef;
-  text-align: center;
-}
-
-.ww-footer small {
-  font-size: 12px;
-  color: #6c757d;
-}
-
-/* Responsive */
-@media (max-width: 576px) {
-  .ww-modal {
-    width: 95%;
-    max-height: 95vh;
-    border-radius: 16px;
-  }
-
-  .ww-header {
-    padding: 16px 20px;
-  }
-
-  .ww-header-title h3 {
-    font-size: 18px;
-  }
-
-  .ww-search-form {
-    padding: 12px 20px;
-  }
-
-  .ww-location-btn {
-    width: calc(100% - 40px);
-    margin: 0 20px 12px;
-  }
-
-  .ww-content {
-    padding: 0 20px 20px;
-  }
-
-  .ww-main-info {
-    padding: 20px 0;
-  }
-
-  .ww-temp {
-    font-size: 40px;
-  }
-
-  .ww-weather-icon {
-    width: 80px;
-    height: 80px;
-  }
-
-  .ww-details-grid {
-    gap: 12px;
-    margin: 20px 0;
-  }
-
-  .ww-detail-item {
-    padding: 12px;
-  }
-
-  .ww-detail-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .ww-detail-value {
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 360px) {
-  .ww-temp-wrapper {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .ww-temp-info {
-    text-align: center;
-  }
-
-  .ww-details-grid {
-    grid-template-columns: 1fr;
-  }
 }

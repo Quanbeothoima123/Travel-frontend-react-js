@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Cloud,
   MapPin,
@@ -9,6 +9,10 @@ import {
   X,
   Search,
   Loader,
+  Sun,
+  CloudRain,
+  CloudSnow,
+  CloudDrizzle,
 } from "lucide-react";
 import "./WeatherWidget.css";
 
@@ -19,10 +23,14 @@ const WeatherWidget = () => {
   const [error, setError] = useState(null);
   const [cityInput, setCityInput] = useState("");
   const [locationPermission, setLocationPermission] = useState("prompt");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const inputRef = useRef(null);
+  const suggestionsRef = useRef(null);
 
-  // API key từ environment variable (demo: sử dụng key mẫu)
   const API_KEY =
-    process.env.REACT_APP_OPENWEATHER_KEY || "demo_key_replace_with_real";
+    process.env.REACT_APP_OPENWEATHER_KEY || "a6844b78148e1f3da68f878bcd6f1acf";
   const DEFAULT_CITY = "Hanoi";
 
   // Load thời tiết mặc định khi mở widget lần đầu
@@ -32,6 +40,144 @@ const WeatherWidget = () => {
     }
   }, [isOpen]);
 
+  // Xử lý click bên ngoài để đóng suggestions
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        suggestionsRef.current &&
+        !suggestionsRef.current.contains(event.target) &&
+        inputRef.current &&
+        !inputRef.current.contains(event.target)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Debounce cho autocomplete
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (cityInput.trim().length >= 2) {
+        fetchCitySuggestions(cityInput.trim());
+      } else {
+        setSuggestions([]);
+        setShowSuggestions(false);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [cityInput]);
+
+  // Hàm gọi API gợi ý thành phố (Autocomplete)
+  const fetchCitySuggestions = async (query) => {
+    setLoadingSuggestions(true);
+    try {
+      const response = await fetch(
+        `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(
+          query
+        )}&limit=5&appid=${API_KEY}`
+      );
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("API key không hợp lệ");
+        }
+        throw new Error("Không thể tải gợi ý thành phố");
+      }
+
+      const data = await response.json();
+      setSuggestions(data);
+      setShowSuggestions(data.length > 0);
+    } catch (err) {
+      console.error("Error fetching suggestions:", err);
+      setSuggestions([]);
+      setShowSuggestions(false);
+    } finally {
+      setLoadingSuggestions(false);
+    }
+  };
+
+  // Hàm lấy tên địa điểm từ tọa độ (Reverse Geocoding) - Dùng Nominatim (OpenStreetMap)
+  const getLocationName = async (lat, lon) => {
+    try {
+      // Dùng Nominatim API (miễn phí, chính xác cho VN)
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1&accept-language=vi`,
+        {
+          headers: {
+            "User-Agent": "WeatherWidget/1.0", // Nominatim yêu cầu User-Agent
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Không thể lấy tên địa điểm");
+      }
+
+      const data = await response.json();
+
+      // Xây dựng tên địa điểm từ các thành phần
+      const address = data.address;
+      let locationName = "";
+
+      // Ưu tiên: Phường/Xã > Quận/Huyện > Thành phố/Tỉnh
+      if (address.suburb || address.quarter || address.neighbourhood) {
+        locationName =
+          address.suburb || address.quarter || address.neighbourhood;
+      } else if (address.village || address.hamlet) {
+        locationName = address.village || address.hamlet;
+      } else if (address.city_district || address.county) {
+        locationName = address.city_district || address.county;
+      } else if (address.city || address.town) {
+        locationName = address.city || address.town;
+      } else if (address.state) {
+        locationName = address.state;
+      } else {
+        locationName = data.display_name.split(",")[0];
+      }
+
+      // Thêm quận/huyện nếu có
+      const district = address.city_district || address.county;
+      if (district && !locationName.includes(district)) {
+        locationName += `, ${district}`;
+      }
+
+      // Thêm thành phố/tỉnh
+      const city = address.city || address.town || address.state;
+      if (city && !locationName.includes(city)) {
+        locationName += `, ${city}`;
+      }
+
+      return locationName;
+    } catch (err) {
+      console.error("Error in reverse geocoding:", err);
+      // Fallback: dùng OpenWeatherMap geocoding
+      try {
+        const fallbackResponse = await fetch(
+          `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${API_KEY}`
+        );
+        if (fallbackResponse.ok) {
+          const fallbackData = await fallbackResponse.json();
+          if (fallbackData && fallbackData.length > 0) {
+            const location = fallbackData[0];
+            let name = location.local_names?.vi || location.name;
+            if (location.state) {
+              name += `, ${location.state}`;
+            }
+            return name;
+          }
+        }
+      } catch (fallbackErr) {
+        console.error("Fallback geocoding failed:", fallbackErr);
+      }
+
+      return null; // Trả về null nếu không lấy được tên
+    }
+  };
+
   // Hàm gọi API theo tên thành phố
   const fetchWeatherByCity = async (city) => {
     setLoading(true);
@@ -39,15 +185,21 @@ const WeatherWidget = () => {
 
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=vi`
+        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+          city
+        )}&appid=${API_KEY}&units=metric&lang=vi`
       );
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("API key không hợp lệ. Vui lòng kiểm tra lại.");
+        }
         throw new Error("Không tìm thấy thành phố");
       }
 
       const data = await response.json();
       setWeather(data);
+      setShowSuggestions(false);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -55,22 +207,37 @@ const WeatherWidget = () => {
     }
   };
 
-  // Hàm gọi API theo tọa độ GPS
+  // Hàm gọi API theo tọa độ GPS - IMPROVED: Lấy tên địa điểm chính xác từ Nominatim
   const fetchWeatherByCoords = async (lat, lon) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(
+      // Bước 1: Lấy dữ liệu thời tiết từ OpenWeatherMap
+      const weatherResponse = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=vi`
       );
 
-      if (!response.ok) {
+      if (!weatherResponse.ok) {
+        if (weatherResponse.status === 401) {
+          throw new Error("API key không hợp lệ. Vui lòng kiểm tra lại.");
+        }
         throw new Error("Không thể lấy dữ liệu thời tiết");
       }
 
-      const data = await response.json();
-      setWeather(data);
+      const weatherData = await weatherResponse.json();
+
+      // Bước 2: Lấy tên địa điểm chính xác từ Nominatim
+      const locationName = await getLocationName(lat, lon);
+
+      // Nếu lấy được tên từ Nominatim thì thay thế, không thì giữ nguyên
+      if (locationName) {
+        weatherData.name = locationName;
+        // Xóa country code vì đã có tên đầy đủ
+        weatherData.displayName = locationName;
+      }
+
+      setWeather(weatherData);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -107,12 +274,53 @@ const WeatherWidget = () => {
     e.preventDefault();
     if (cityInput.trim()) {
       fetchWeatherByCity(cityInput.trim());
+      setCityInput("");
     }
   };
 
-  // Lấy icon thời tiết
+  // Xử lý khi click vào suggestion
+  const handleSuggestionClick = (suggestion) => {
+    fetchWeatherByCoords(suggestion.lat, suggestion.lon);
+    setCityInput("");
+    setShowSuggestions(false);
+  };
+
+  // Lấy icon thời tiết từ OpenWeather
   const getWeatherIcon = (iconCode) => {
     return `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+  };
+
+  // Lấy icon tùy chỉnh từ Lucide
+  const getCustomWeatherIcon = (weatherMain) => {
+    const iconProps = { size: 60, strokeWidth: 1.5 };
+
+    switch (weatherMain?.toLowerCase()) {
+      case "clear":
+        return <Sun {...iconProps} className="ww-custom-icon ww-icon-sun" />;
+      case "clouds":
+        return (
+          <Cloud {...iconProps} className="ww-custom-icon ww-icon-cloud" />
+        );
+      case "rain":
+        return (
+          <CloudRain {...iconProps} className="ww-custom-icon ww-icon-rain" />
+        );
+      case "drizzle":
+        return (
+          <CloudDrizzle
+            {...iconProps}
+            className="ww-custom-icon ww-icon-drizzle"
+          />
+        );
+      case "snow":
+        return (
+          <CloudSnow {...iconProps} className="ww-custom-icon ww-icon-snow" />
+        );
+      default:
+        return (
+          <Cloud {...iconProps} className="ww-custom-icon ww-icon-cloud" />
+        );
+    }
   };
 
   return (
@@ -146,23 +354,73 @@ const WeatherWidget = () => {
               </button>
             </div>
 
-            {/* Search bar */}
-            <form className="ww-search-form" onSubmit={handleSearch}>
-              <input
-                type="text"
-                className="ww-search-input"
-                placeholder="Nhập tên thành phố..."
-                value={cityInput}
-                onChange={(e) => setCityInput(e.target.value)}
-              />
-              <button
-                type="submit"
-                className="ww-search-btn"
-                aria-label="Tìm kiếm"
-              >
-                <Search size={18} />
-              </button>
-            </form>
+            {/* Search bar với autocomplete */}
+            <div className="ww-search-wrapper">
+              <div className="ww-search-form" onSubmit={handleSearch}>
+                <div className="ww-search-input-container">
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    className="ww-search-input"
+                    placeholder="Nhập tên thành phố..."
+                    value={cityInput}
+                    onChange={(e) => setCityInput(e.target.value)}
+                    onFocus={() =>
+                      suggestions.length > 0 && setShowSuggestions(true)
+                    }
+                    onKeyPress={(e) => {
+                      if (e.key === "Enter") {
+                        handleSearch(e);
+                      }
+                    }}
+                  />
+
+                  {/* Dropdown gợi ý */}
+                  {showSuggestions && (
+                    <div
+                      ref={suggestionsRef}
+                      className="ww-suggestions-dropdown"
+                    >
+                      {loadingSuggestions ? (
+                        <div className="ww-suggestions-loading">
+                          <Loader className="ww-spinner" size={20} />
+                          <span>Đang tìm kiếm...</span>
+                        </div>
+                      ) : (
+                        suggestions.map((suggestion, index) => (
+                          <button
+                            key={index}
+                            type="button"
+                            className="ww-suggestion-item"
+                            onClick={() => handleSuggestionClick(suggestion)}
+                          >
+                            <MapPin size={16} className="ww-suggestion-icon" />
+                            <div className="ww-suggestion-info">
+                              <div className="ww-suggestion-name">
+                                {suggestion.name}
+                              </div>
+                              <div className="ww-suggestion-location">
+                                {suggestion.state && `${suggestion.state}, `}
+                                {suggestion.country}
+                              </div>
+                            </div>
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  className="ww-search-btn"
+                  onClick={handleSearch}
+                  aria-label="Tìm kiếm"
+                >
+                  <Search size={18} />
+                </button>
+              </div>
+            </div>
 
             {/* Location button */}
             <button
@@ -202,16 +460,20 @@ const WeatherWidget = () => {
                     <div className="ww-location">
                       <MapPin size={18} />
                       <h2>
-                        {weather.name}, {weather.sys.country}
+                        {weather.displayName ||
+                          `${weather.name}, ${weather.sys.country}`}
                       </h2>
                     </div>
 
                     <div className="ww-temp-wrapper">
-                      <img
-                        src={getWeatherIcon(weather.weather[0].icon)}
-                        alt={weather.weather[0].description}
-                        className="ww-weather-icon"
-                      />
+                      <div className="ww-weather-icons">
+                        {getCustomWeatherIcon(weather.weather[0].main)}
+                        <img
+                          src={getWeatherIcon(weather.weather[0].icon)}
+                          alt={weather.weather[0].description}
+                          className="ww-weather-icon"
+                        />
+                      </div>
                       <div className="ww-temp-info">
                         <div className="ww-temp">
                           {Math.round(weather.main.temp)}°C
@@ -298,7 +560,7 @@ const WeatherWidget = () => {
 
             {/* Footer */}
             <div className="ww-footer">
-              <small>Dữ liệu từ OpenWeatherMap API</small>
+              <small>Dữ liệu từ OpenWeatherMap & OpenStreetMap</small>
             </div>
           </div>
         </div>
