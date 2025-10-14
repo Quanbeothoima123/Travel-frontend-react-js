@@ -11,9 +11,7 @@ const ContactFloating = () => {
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const response = await fetch(`${API_BASE}/api/v1/admin/site-config`, {
-          credentials: "include",
-        });
+        const response = await fetch(`${API_BASE}/api/v1/site-config`);
 
         if (response.ok) {
           const config = await response.json();
