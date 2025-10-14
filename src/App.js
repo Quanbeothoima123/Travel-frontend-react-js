@@ -12,6 +12,9 @@ import { ToastProvider } from "./contexts/ToastContext";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import ContactFloating from "./components/common/ContactFloating";
+
+import WeatherWidget from "./components/common/WeatherWidget";
+
 import Home from "./pages/Home";
 import DetailTour from "./pages/DetailTour";
 import Login from "./pages/Auth/Login";
@@ -212,6 +215,9 @@ function AppContent() {
 
       {/* ContactFloating chỉ hiển thị trên trang public */}
       {!hideLayoutComponents && <ContactFloating />}
+
+      {/* WeatherWiget chỉ hiển thị trên trang public */}
+      {!hideLayoutComponents && <WeatherWidget />}
 
       {/* Footer chỉ hiển thị trên trang public */}
       {!hideLayoutComponents && <Footer />}
