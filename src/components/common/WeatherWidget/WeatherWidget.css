@@ -1,0 +1,493 @@
+/* Weather Widget Styles - Prefix: ww- */
+
+/* Trigger button */
+.ww-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.ww-trigger-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.ww-trigger-btn:active {
+  transform: translateY(0);
+}
+
+/* Overlay */
+.ww-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: ww-fadeIn 0.3s ease;
+}
+
+@keyframes ww-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal */
+.ww-modal {
+  background: white;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 450px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: ww-slideUp 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes ww-slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Header */
+.ww-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.ww-header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ww-header-title h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.ww-close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ww-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+/* Search form */
+.ww-search-form {
+  display: flex;
+  gap: 8px;
+  padding: 16px 24px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.ww-search-input {
+  flex: 1;
+  padding: 10px 16px;
+  border: 2px solid #dee2e6;
+  border-radius: 12px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.ww-search-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.ww-search-btn {
+  padding: 10px 16px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ww-search-btn:hover {
+  background: #5568d3;
+  transform: scale(1.05);
+}
+
+.ww-search-btn:active {
+  transform: scale(0.95);
+}
+
+/* Location button */
+.ww-location-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: calc(100% - 48px);
+  margin: 0 24px 16px;
+  padding: 10px 16px;
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ww-location-btn:hover:not(:disabled) {
+  background: #667eea;
+  color: white;
+}
+
+.ww-location-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Content area */
+.ww-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 24px 24px;
+}
+
+/* Loading state */
+.ww-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #667eea;
+}
+
+.ww-spinner {
+  animation: ww-spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes ww-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ww-loading p {
+  margin: 0;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+/* Error state */
+.ww-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.ww-error p {
+  color: #dc3545;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.ww-retry-btn {
+  padding: 8px 20px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ww-retry-btn:hover {
+  background: #5568d3;
+  transform: scale(1.05);
+}
+
+/* Weather display */
+.ww-weather-display {
+  animation: ww-fadeIn 0.4s ease;
+}
+
+/* Main info */
+.ww-main-info {
+  text-align: center;
+  padding: 24px 0;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.ww-location {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  color: #495057;
+}
+
+.ww-location h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.ww-temp-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.ww-weather-icon {
+  width: 100px;
+  height: 100px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.ww-temp-info {
+  text-align: left;
+}
+
+.ww-temp {
+  font-size: 48px;
+  font-weight: 700;
+  color: #212529;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.ww-description {
+  font-size: 16px;
+  color: #6c757d;
+  text-transform: capitalize;
+}
+
+.ww-feels-like {
+  font-size: 14px;
+  color: #6c757d;
+  margin-top: 8px;
+}
+
+/* Details grid */
+.ww-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.ww-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.ww-detail-item:hover {
+  background: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.ww-detail-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 10px;
+  color: #667eea;
+  flex-shrink: 0;
+}
+
+.ww-detail-info {
+  flex: 1;
+}
+
+.ww-detail-label {
+  font-size: 12px;
+  color: #6c757d;
+  margin-bottom: 4px;
+}
+
+.ww-detail-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #212529;
+}
+
+/* Additional info */
+.ww-additional-info {
+  padding: 16px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  margin-top: 16px;
+}
+
+.ww-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #495057;
+}
+
+.ww-info-row:not(:last-child) {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.ww-info-row strong {
+  color: #212529;
+  font-weight: 600;
+}
+
+/* Footer */
+.ww-footer {
+  padding: 16px 24px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  text-align: center;
+}
+
+.ww-footer small {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .ww-modal {
+    width: 95%;
+    max-height: 95vh;
+    border-radius: 16px;
+  }
+
+  .ww-header {
+    padding: 16px 20px;
+  }
+
+  .ww-header-title h3 {
+    font-size: 18px;
+  }
+
+  .ww-search-form {
+    padding: 12px 20px;
+  }
+
+  .ww-location-btn {
+    width: calc(100% - 40px);
+    margin: 0 20px 12px;
+  }
+
+  .ww-content {
+    padding: 0 20px 20px;
+  }
+
+  .ww-main-info {
+    padding: 20px 0;
+  }
+
+  .ww-temp {
+    font-size: 40px;
+  }
+
+  .ww-weather-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .ww-details-grid {
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .ww-detail-item {
+    padding: 12px;
+  }
+
+  .ww-detail-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ww-detail-value {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .ww-temp-wrapper {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ww-temp-info {
+    text-align: center;
+  }
+
+  .ww-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
