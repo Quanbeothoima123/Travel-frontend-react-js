@@ -40,6 +40,8 @@ import ChatPage from "./pages/ChatPage";
 import AdminLayout from "./admin/components/layout/AdminLayout";
 import { AuthProvider } from "./contexts/AuthContext";
 
+import BookingManagement from "./admin/pages/BookingManagement";
+
 // Quản lí danh mục tour
 import TourCategoryManager from "./admin/pages/tour-category/TourCategoryManager";
 import TourCategoryCreate from "./admin/pages/tour-category/TourCategoryCreate";
@@ -209,6 +211,8 @@ function AppContent() {
             <Route path="config-basic" element={<SiteConfig />} />
 
             <Route path="about-us" element={<AboutUsManager />} />
+
+            <Route path="booking-tour" element={<BookingManagement />} />
           </Route>
         </Routes>
       </div>
