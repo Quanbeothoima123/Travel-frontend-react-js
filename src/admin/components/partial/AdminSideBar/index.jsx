@@ -11,6 +11,7 @@ import {
   FaTachometerAlt,
   FaUserCircle,
   FaCog,
+  FaHeadset,
 } from "react-icons/fa";
 
 const DefaultIcon = FaUserCircle;
@@ -89,6 +90,18 @@ export default function AdminSidebar({ isOpen, onClose }) {
             id: "gallery",
             title: "Bộ sưu tập",
             path: "/admin/gallery",
+          },
+        ],
+      },
+      {
+        id: "suport",
+        title: "Hỗ trợ khách hàng",
+        icon: FaHeadset,
+        children: [
+          {
+            id: "suppoert-page",
+            title: "Nhắn tin với khách",
+            path: "/admin/support",
           },
         ],
       },
