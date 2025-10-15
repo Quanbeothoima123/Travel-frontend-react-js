@@ -37,7 +37,12 @@ export default function AdminSidebar({ isOpen, onClose }) {
             title: "Danh mục Tour",
             path: "/admin/tour-categories",
           },
-          { id: "tour", title: "Danh sách Tour", path: "/admin/tours" },
+          { id: "tour-list", title: "Danh sách Tour", path: "/admin/tours" },
+          {
+            id: "booking-tour",
+            title: "Quản lí đặt tour",
+            path: "/admin/booking-tour",
+          },
         ],
       },
       {
