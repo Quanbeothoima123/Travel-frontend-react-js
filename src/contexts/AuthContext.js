@@ -1,9 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-
+const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true); // chặn nháy UI khi chưa xác định
 
