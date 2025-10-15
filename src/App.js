@@ -9,10 +9,12 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import { ToastProvider } from "./contexts/ToastContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import { AdminProvider } from "./admin/contexts/AdminContext"; // 👈 Import AdminProvider
+
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import ContactFloating from "./components/common/ContactFloating";
-
 import WeatherWidget from "./components/common/WeatherWidget";
 
 import Home from "./pages/Home";
@@ -34,11 +36,14 @@ import MomoPaymentResultPage from "./pages/MomoPaymentResultPage";
 import HistoryTourOrder from "./pages/HistoryTourOrder";
 import UploadShortVideo from "./components/common/UploadShortVideo";
 import Shorts from "./pages/Shorts";
-//  Import ChatPage
 import ChatPage from "./pages/ChatPage";
 
+// 👈 Import SupportChatWidget
+import SupportChatWidget from "./components/common/SupportChatWidget";
+
 import AdminLayout from "./admin/components/layout/AdminLayout";
-import { AuthProvider } from "./contexts/AuthContext";
+import AdminLogin from "./admin/pages/Login";
+import AdminPrivateRoute from "./admin/components/routes/AdminPrivateRoute";
 
 import BookingManagement from "./admin/pages/BookingManagement";
 
@@ -78,11 +83,12 @@ import TourCreatePage from "./admin/pages/tour/TourCreate";
 import AdminTourDetail from "./admin/pages/tour/AdminTourDetail";
 import TourEditPage from "./admin/pages/tour/TourEdit";
 
-import AdminLogin from "./admin/pages/Login";
-import AdminPrivateRoute from "./admin/components/routes/AdminPrivateRoute";
-
 import SiteConfig from "./admin/pages/SiteConfig";
 import AboutUsManager from "./admin/pages/AboutUsManager";
+
+// 👈 Import Admin Support Page
+import AdminSupportPage from "./admin/pages/AdminSupportPage";
+
 // Component để xử lý hiển thị Header, Footer và ContactFloating có điều kiện
 function AppContent() {
   const location = useLocation();
@@ -146,7 +152,10 @@ function AppContent() {
             path="/admin"
             element={
               <AdminPrivateRoute>
-                <AdminLayout />
+                <AdminProvider>
+                  {/*  Wrap AdminLayout với AdminProvider */}
+                  <AdminLayout />
+                </AdminProvider>
               </AdminPrivateRoute>
             }
           >
@@ -213,6 +222,9 @@ function AppContent() {
             <Route path="about-us" element={<AboutUsManager />} />
 
             <Route path="booking-tour" element={<BookingManagement />} />
+
+            {/*  Route Admin Support */}
+            <Route path="support" element={<AdminSupportPage />} />
           </Route>
         </Routes>
       </div>
@@ -220,7 +232,10 @@ function AppContent() {
       {/* ContactFloating chỉ hiển thị trên trang public */}
       {!hideLayoutComponents && <ContactFloating />}
 
-      {/* WeatherWiget chỉ hiển thị trên trang public */}
+      {/*  SupportChatWidget - Hiển thị trên tất cả trang PUBLIC (không hiển thị ở admin) */}
+      {!location.pathname.startsWith("/admin") && <SupportChatWidget />}
+
+      {/* WeatherWidget chỉ hiển thị trên trang public */}
       {!hideLayoutComponents && <WeatherWidget />}
 
       {/* Footer chỉ hiển thị trên trang public */}
