@@ -15,6 +15,7 @@ import {
   CloudDrizzle,
 } from "lucide-react";
 import "./WeatherWidget.css";
+
 const WeatherWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [weather, setWeather] = useState(null);
@@ -28,6 +29,7 @@ const WeatherWidget = () => {
   const inputRef = useRef(null);
   const suggestionsRef = useRef(null);
   const locationUpdateTimerRef = useRef(null);
+  const hasInitializedRef = useRef(false); // ✅ Thêm ref này để track đã init chưa
 
   const API_KEY = process.env.REACT_APP_OPENWEATHER_KEY;
   const DEFAULT_CITY = "Hanoi";
@@ -72,14 +74,21 @@ const WeatherWidget = () => {
     return null;
   };
 
+  // ✅ useEffect đầu tiên - CHỈ fetch lần đầu mở modal
   useEffect(() => {
-    if (isOpen && !weather) {
+    if (isOpen && !weather && !hasInitializedRef.current) {
+      hasInitializedRef.current = true; // Đánh dấu đã init
       const savedLocation = getLocationFromCookie();
       if (savedLocation && savedLocation.lat && savedLocation.lon) {
         fetchWeatherByCoords(savedLocation.lat, savedLocation.lon);
       } else {
         fetchWeatherByCity(DEFAULT_CITY);
       }
+    }
+
+    // Reset flag khi đóng modal
+    if (!isOpen) {
+      hasInitializedRef.current = false;
     }
   }, [isOpen]);
 
@@ -260,7 +269,8 @@ const WeatherWidget = () => {
     }
   };
 
-  const fetchWeatherByCoords = async (lat, lon) => {
+  // ✅ Thêm tham số saveLocation để quyết định có lưu cookie không
+  const fetchWeatherByCoords = async (lat, lon, saveLocation = false) => {
     setLoading(true);
     setError(null);
 
@@ -285,6 +295,11 @@ const WeatherWidget = () => {
       }
 
       setWeather(weatherData);
+
+      // ✅ Chỉ save location khi đó là vị trí hiện tại của người dùng
+      if (saveLocation) {
+        saveLocationToCookie(lat, lon);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -292,6 +307,7 @@ const WeatherWidget = () => {
     }
   };
 
+  // ✅ Truyền saveLocation = true khi dùng vị trí hiện tại
   const updateCurrentLocation = (silent = false) => {
     if (!navigator.geolocation) {
       if (!silent) setError("Trình duyệt không hỗ trợ định vị");
@@ -303,8 +319,7 @@ const WeatherWidget = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        saveLocationToCookie(latitude, longitude);
-        fetchWeatherByCoords(latitude, longitude);
+        fetchWeatherByCoords(latitude, longitude, true); // ✅ Save location = true
         setLocationPermission("granted");
       },
       (err) => {
@@ -331,8 +346,10 @@ const WeatherWidget = () => {
     }
   };
 
+  // ✅ Truyền saveLocation = false khi chọn từ suggestion
   const handleSuggestionClick = (suggestion) => {
-    fetchWeatherByCoords(suggestion.lat, suggestion.lon);
+    // Không lưu cookie khi search thành phố, chỉ hiển thị
+    fetchWeatherByCoords(suggestion.lat, suggestion.lon, false);
     setCityInput("");
     setShowSuggestions(false);
   };
