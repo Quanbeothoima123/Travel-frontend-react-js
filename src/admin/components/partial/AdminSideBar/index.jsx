@@ -14,6 +14,7 @@ import {
   FaHeadset,
   FaUsersCog,
   FaUserShield,
+  FaUsers,
 } from "react-icons/fa";
 
 const DefaultIcon = FaUserCircle;
@@ -92,6 +93,23 @@ export default function AdminSidebar({ isOpen, onClose }) {
             id: "gallery",
             title: "Bộ sưu tập",
             path: "/admin/gallery",
+          },
+        ],
+      },
+      {
+        id: "user-management",
+        title: "Quản lý người dùng",
+        icon: FaUsers, // Biểu tượng cho một nhóm người dùng
+        children: [
+          {
+            id: "user-list",
+            title: "Danh sách người dùng",
+            path: "/admin/users",
+          },
+          {
+            id: "locked-accounts",
+            title: "Tài khoản bị khóa",
+            path: "/admin/users/locked",
           },
         ],
       },
