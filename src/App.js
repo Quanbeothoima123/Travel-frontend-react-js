@@ -89,6 +89,14 @@ import AboutUsManager from "./admin/pages/AboutUsManager";
 // 👈 Import Admin Support Page
 import AdminSupportPage from "./admin/pages/AdminSupportPage";
 
+import PermissionsManagement from "./admin/pages/PermissionsManagement";
+
+import RolePermissionsAssignment from "./admin/pages/RolePermissionsAssignment";
+
+import RolesManagement from "./admin/pages/RolesManagement";
+
+import AdminAccountsManagement from "./admin/pages/admin-account/AdminAccountsManagement";
+
 // Component để xử lý hiển thị Header, Footer và ContactFloating có điều kiện
 function AppContent() {
   const location = useLocation();
@@ -225,6 +233,16 @@ function AppContent() {
 
             {/*  Route Admin Support */}
             <Route path="support" element={<AdminSupportPage />} />
+
+            <Route path="roles" element={<RolesManagement />} />
+
+            <Route path="permissions" element={<PermissionsManagement />} />
+
+            <Route
+              path="role-permissions"
+              element={<RolePermissionsAssignment />}
+            />
+            <Route path="accounts" element={<AdminAccountsManagement />} />
           </Route>
         </Routes>
       </div>
