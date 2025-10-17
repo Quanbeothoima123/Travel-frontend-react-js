@@ -12,6 +12,8 @@ import {
   FaUserCircle,
   FaCog,
   FaHeadset,
+  FaUsersCog,
+  FaUserShield,
 } from "react-icons/fa";
 
 const DefaultIcon = FaUserCircle;
@@ -102,6 +104,45 @@ export default function AdminSidebar({ isOpen, onClose }) {
             id: "suppoert-page",
             title: "Nhắn tin với khách",
             path: "/admin/support",
+          },
+        ],
+      },
+      {
+        id: "admin-accounts",
+        title: "Quản lý tài khoản",
+        icon: FaUserShield,
+        children: [
+          {
+            id: "account-list",
+            title: "Danh sách tài khoản",
+            path: "/admin/accounts",
+          },
+          {
+            id: "create-account",
+            title: "Tạo tài khoản mới",
+            path: "/admin/accounts/create",
+          },
+        ],
+      },
+      {
+        id: "authorization",
+        title: "Quản lý phân quyền",
+        icon: FaUsersCog, // Hoặc FaShieldAlt, FaKey
+        children: [
+          {
+            id: "roles-management",
+            title: "Quản lý vai trò", // Tên trang RolesManagement
+            path: "/admin/roles",
+          },
+          {
+            id: "permissions-management",
+            title: "Quản lý quyền", // Tên trang PermissionsManagement
+            path: "/admin/permissions",
+          },
+          {
+            id: "role-permissions-assignment",
+            title: "Phân quyền", // Tên trang RolePermissionsAssignment
+            path: "/admin/role-permissions",
           },
         ],
       },
