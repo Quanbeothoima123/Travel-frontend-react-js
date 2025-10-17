@@ -89,6 +89,8 @@ import AboutUsManager from "./admin/pages/AboutUsManager";
 // 👈 Import Admin Support Page
 import AdminSupportPage from "./admin/pages/AdminSupportPage";
 
+import UserManagement from "./admin/pages/user-account/UserManagerment";
+
 import PermissionsManagement from "./admin/pages/PermissionsManagement";
 
 import RolePermissionsAssignment from "./admin/pages/RolePermissionsAssignment";
@@ -96,6 +98,7 @@ import RolePermissionsAssignment from "./admin/pages/RolePermissionsAssignment";
 import RolesManagement from "./admin/pages/RolesManagement";
 
 import AdminAccountsManagement from "./admin/pages/admin-account/AdminAccountsManagement";
+import { User } from "lucide-react";
 
 // Component để xử lý hiển thị Header, Footer và ContactFloating có điều kiện
 function AppContent() {
@@ -243,6 +246,8 @@ function AppContent() {
               element={<RolePermissionsAssignment />}
             />
             <Route path="accounts" element={<AdminAccountsManagement />} />
+
+            <Route path="users" element={<UserManagement />} />
           </Route>
         </Routes>
       </div>
