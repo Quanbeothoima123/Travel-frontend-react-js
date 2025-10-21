@@ -17,8 +17,10 @@ import {
   AlertCircle,
   Check,
 } from "lucide-react";
+import "./FlightSearchPage.css";
 
-const API_BASE = process.env.REACT_APP_DOMAIN_BACKEND;
+const API_BASE =
+  process.env.REACT_APP_DOMAIN_BACKEND || "http://localhost:5000";
 
 // Airport Autocomplete Component
 const AirportAutocomplete = ({
@@ -54,7 +56,9 @@ const AirportAutocomplete = ({
       setLoading(true);
       try {
         const response = await fetch(
-          `${API_BASE}/api/v1/flight/airports/search?keyword=${inputValue}`
+          `${API_BASE}/api/v1/flight/airports/search?keyword=${encodeURIComponent(
+            inputValue
+          )}`
         );
         const data = await response.json();
         if (data.success) {
@@ -462,8 +466,8 @@ const FlightCard = ({ flight, dictionaries, onSelect }) => {
     firstSegment.carrierCode;
   const stops = itinerary.segments.length - 1;
 
-  // Tính giá trung bình để hiển thị badge "Giá tốt"
-  const isPriceGood = parseFloat(flight.price.total) < 2000000;
+  const isPriceGood =
+    flight.price?.total && parseFloat(flight.price.total) < 2000000;
 
   return (
     <div className="fs-flight-card">
@@ -517,12 +521,18 @@ const FlightCard = ({ flight, dictionaries, onSelect }) => {
               Giá tốt
             </div>
           )}
-          <div className="fs-price-amount">
-            {parseInt(flight.price.total).toLocaleString("vi-VN")} ₫
-          </div>
-          <div className="fs-price-label">
-            Tổng giá cho {flight.travelerPricings.length} người
-          </div>
+          {flight.price?.total ? (
+            <>
+              <div className="fs-price-amount">
+                {parseInt(flight.price.total).toLocaleString("vi-VN")} ₫
+              </div>
+              <div className="fs-price-label">
+                Tổng giá cho {flight.travelerPricings?.length || 1} người
+              </div>
+            </>
+          ) : (
+            <div className="fs-price-amount">Liên hệ</div>
+          )}
           <button className="fs-select-btn" onClick={() => onSelect(flight)}>
             <Check size={16} />
             Chọn chuyến bay
@@ -534,15 +544,19 @@ const FlightCard = ({ flight, dictionaries, onSelect }) => {
         <div className="fs-flight-info">
           <div className="fs-info-item">
             <Luggage size={14} />
-            {flight.travelerPricings[0]?.fareDetailsBySegment[0]
-              ?.includedCheckedBags?.quantity || 0}{" "}
-            hành lý ký gửi
+            {flight.travelerPricings?.[0]?.fareDetailsBySegment?.[0]
+              ?.includedCheckedBags?.weight
+              ? `${flight.travelerPricings[0].fareDetailsBySegment[0].includedCheckedBags.weight} kg`
+              : "Xem chi tiết"}
           </div>
           <div className="fs-info-item">
             <Coffee size={14} />
-            Hạng {flight.travelerPricings[0]?.fareDetailsBySegment[0]?.cabin}
+            {flight.travelerPricings?.[0]?.fareDetailsBySegment?.[0]?.amenities
+              ?.length > 0
+              ? "Có dịch vụ"
+              : "Không bao gồm"}
           </div>
-          {flight.numberOfBookableSeats && (
+          {flight.numberOfBookableSeats <= 5 && (
             <div className="fs-info-item fs-seats-warning">
               <AlertCircle size={14} />
               Chỉ còn {flight.numberOfBookableSeats} chỗ
@@ -554,23 +568,15 @@ const FlightCard = ({ flight, dictionaries, onSelect }) => {
           className="fs-details-toggle"
           onClick={() => setExpanded(!expanded)}
         >
-          {expanded ? (
-            <>
-              <X size={16} />
-              Đóng chi tiết
-            </>
-          ) : (
-            <>
-              <ChevronDown size={16} />
-              Xem chi tiết chuyến bay
-            </>
-          )}
+          {expanded ? "Thu gọn" : "Xem chi tiết"}
+          {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </button>
       </div>
 
       {expanded && (
         <div className="fs-flight-details">
           <div className="fs-segments">
+            <h4 className="fs-breakdown-title">Chi tiết hành trình</h4>
             {itinerary.segments.map((segment, idx) => (
               <div key={idx} className="fs-segment">
                 <div className="fs-segment-header">
@@ -582,7 +588,6 @@ const FlightCard = ({ flight, dictionaries, onSelect }) => {
                     {parseDuration(segment.duration)}
                   </div>
                 </div>
-
                 <div className="fs-segment-body">
                   <div className="fs-segment-dep">
                     <div className="fs-segment-time">
@@ -597,21 +602,19 @@ const FlightCard = ({ flight, dictionaries, onSelect }) => {
                       {formatDate(segment.departure.at)}
                     </div>
                   </div>
-
                   <div className="fs-segment-flight">
+                    <Plane size={20} />
                     <div className="fs-flight-line-vertical"></div>
                     <div className="fs-segment-aircraft">
-                      <Plane size={16} />
-                      <div>
-                        {dictionaries?.carriers?.[segment.carrierCode]}{" "}
-                        {segment.number}
-                      </div>
+                      {dictionaries?.carriers?.[segment.carrierCode] ||
+                        segment.carrierCode}{" "}
+                      {segment.number}
                       <div className="fs-aircraft-code">
-                        Máy bay: {segment.aircraft}
+                        {dictionaries?.aircraft?.[segment.aircraft] ||
+                          segment.aircraft}
                       </div>
                     </div>
                   </div>
-
                   <div className="fs-segment-arr">
                     <div className="fs-segment-time">
                       {formatTime(segment.arrival.at)}
@@ -630,27 +633,31 @@ const FlightCard = ({ flight, dictionaries, onSelect }) => {
             ))}
           </div>
 
-          <div className="fs-price-breakdown">
-            <div className="fs-breakdown-title">Chi tiết giá</div>
-            <div className="fs-breakdown-row">
-              <span>Giá cơ bản</span>
-              <span>
-                {parseInt(flight.price.base).toLocaleString("vi-VN")} ₫
-              </span>
-            </div>
-            {flight.price.fees?.map((fee, idx) => (
-              <div key={idx} className="fs-breakdown-row">
-                <span>Phí {fee.type}</span>
-                <span>{parseInt(fee.amount).toLocaleString("vi-VN")} ₫</span>
+          {flight.price && (
+            <div className="fs-price-breakdown">
+              <h4 className="fs-breakdown-title">Chi tiết giá</h4>
+              {flight.travelerPricings?.map((pricing, idx) => (
+                <div key={idx} className="fs-breakdown-row">
+                  <span>
+                    {pricing.travelerType === "ADULT"
+                      ? "Người lớn"
+                      : pricing.travelerType === "CHILD"
+                      ? "Trẻ em"
+                      : "Em bé"}
+                  </span>
+                  <span>
+                    {parseInt(pricing.price.total).toLocaleString("vi-VN")} ₫
+                  </span>
+                </div>
+              ))}
+              <div className="fs-breakdown-row fs-breakdown-total">
+                <span>Tổng cộng</span>
+                <span>
+                  {parseInt(flight.price.total).toLocaleString("vi-VN")} ₫
+                </span>
               </div>
-            ))}
-            <div className="fs-breakdown-row fs-breakdown-total">
-              <span>Tổng cộng</span>
-              <span>
-                {parseInt(flight.price.grandTotal).toLocaleString("vi-VN")} ₫
-              </span>
             </div>
-          </div>
+          )}
         </div>
       )}
     </div>
@@ -658,36 +665,41 @@ const FlightCard = ({ flight, dictionaries, onSelect }) => {
 };
 
 // Main Component
-export default function FlightSearchPage() {
+const FlightSearchPage = () => {
   const [flights, setFlights] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
+  const [dictionaries, setDictionaries] = useState(null);
   const [searchParams, setSearchParams] = useState(null);
-  const [sortBy, setSortBy] = useState("price");
 
   const handleSearch = async (params) => {
     setLoading(true);
-    setError("");
+    setError(null);
     setSearchParams(params);
 
     try {
-      const queryString = new URLSearchParams(
-        Object.entries(params).filter(([_, v]) => v != null)
-      ).toString();
+      // ✅ Loại bỏ các giá trị null/undefined
+      const cleanParams = Object.entries(params).reduce((acc, [key, value]) => {
+        if (value !== null && value !== undefined && value !== "") {
+          acc[key] = value;
+        }
+        return acc;
+      }, {});
 
+      const queryString = new URLSearchParams(cleanParams).toString();
       const response = await fetch(
         `${API_BASE}/api/v1/flight/flights/search?${queryString}`
       );
       const data = await response.json();
 
-      if (data.success) {
-        setFlights(data.data);
-      } else {
-        setError(data.message);
-        setFlights([]);
+      if (!data.success) {
+        throw new Error(data.message || "Không thể tìm kiếm chuyến bay");
       }
+
+      setFlights(data.data || []);
+      setDictionaries(data.dictionaries);
     } catch (err) {
-      setError("Không thể kết nối đến máy chủ");
+      setError(err.message);
       setFlights([]);
     } finally {
       setLoading(false);
@@ -695,125 +707,81 @@ export default function FlightSearchPage() {
   };
 
   const handleSelectFlight = (flight) => {
-    alert(
-      `Bạn đã chọn chuyến bay ${flight.id}. Tính năng đặt vé sẽ được phát triển tiếp!`
-    );
-  };
-
-  const sortedFlights = [...flights].sort((a, b) => {
-    if (sortBy === "price")
-      return parseFloat(a.price.total) - parseFloat(b.price.total);
-    if (sortBy === "duration") {
-      const durationA = a.itineraries[0].segments.reduce((sum, seg) => {
-        const match = seg.duration.match(/PT(\d+H)?(\d+M)?/);
-        return (
-          sum +
-          (match[1] ? parseInt(match[1]) * 60 : 0) +
-          (match[2] ? parseInt(match[2]) : 0)
-        );
-      }, 0);
-      const durationB = b.itineraries[0].segments.reduce((sum, seg) => {
-        const match = seg.duration.match(/PT(\d+H)?(\d+M)?/);
-        return (
-          sum +
-          (match[1] ? parseInt(match[1]) * 60 : 0) +
-          (match[2] ? parseInt(match[2]) : 0)
-        );
-      }, 0);
-      return durationA - durationB;
-    }
-    return 0;
-  });
-
-  const dictionaries = flights.length > 0 ? flights[0].dictionaries : {};
-
-  const parseDuration = (duration) => {
-    if (!duration) return "N/A";
-    const match = duration.match(/PT(\d+H)?(\d+M)?/);
-    const hours = match[1] ? parseInt(match[1]) : 0;
-    const minutes = match[2] ? parseInt(match[2]) : 0;
-    return `${hours}g ${minutes}p`;
+    console.log("Selected flight:", flight);
+    alert("Chức năng đặt vé đang được phát triển!");
   };
 
   return (
     <div className="fs-container">
-      <div className="fs-header">
+      <header className="fs-header">
         <div className="fs-header-content">
           <Plane size={32} className="fs-logo" />
           <h1 className="fs-header-title">Tìm kiếm chuyến bay</h1>
         </div>
-      </div>
+      </header>
 
-      <div className="fs-main">
+      <main className="fs-main">
         <FlightSearchForm onSearch={handleSearch} loading={loading} />
 
         {loading && (
-          <div className="fs-results">
-            <div className="fs-loading">
-              <div className="fs-loading-spinner"></div>
-              <div className="fs-loading-text">
-                Đang tìm kiếm chuyến bay tốt nhất cho bạn...
-              </div>
-            </div>
+          <div className="fs-loading">
+            <div className="fs-loading-spinner"></div>
+            <p className="fs-loading-text">
+              Đang tìm kiếm chuyến bay tốt nhất cho bạn...
+            </p>
           </div>
         )}
 
         {error && (
-          <div className="fs-results">
-            <div className="fs-error">
-              <AlertCircle size={20} />
-              {error}
-            </div>
+          <div className="fs-error">
+            <AlertCircle size={20} />
+            <span>{error}</span>
           </div>
         )}
 
         {!loading && !error && flights.length > 0 && (
           <div className="fs-results">
             <div className="fs-results-header">
-              <div className="fs-results-title">
+              <h2 className="fs-results-title">
                 Tìm thấy {flights.length} chuyến bay
-              </div>
-              <select
-                className="fs-sort-select"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-              >
-                <option value="price">Giá tăng dần</option>
-                <option value="duration">Thời gian bay</option>
-              </select>
+              </h2>
             </div>
 
             <div className="fs-stats-bar">
               <div className="fs-stat-item">
-                <TrendingDown size={18} className="fs-stat-icon" />
+                <div className="fs-stat-icon">
+                  <TrendingDown size={20} />
+                </div>
                 <div>
                   <div className="fs-stat-label">Giá thấp nhất</div>
                   <div className="fs-stat-value">
                     {Math.min(
-                      ...flights.map((f) => parseFloat(f.price.total))
+                      ...flights.map((f) => parseFloat(f.price?.total || 0))
                     ).toLocaleString("vi-VN")}{" "}
                     ₫
                   </div>
                 </div>
               </div>
-
               <div className="fs-stat-item">
-                <Clock size={18} className="fs-stat-icon" />
+                <div className="fs-stat-icon">
+                  <Clock size={20} />
+                </div>
                 <div>
-                  <div className="fs-stat-label">Bay nhanh nhất</div>
+                  <div className="fs-stat-label">Thời gian ngắn nhất</div>
                   <div className="fs-stat-value">
-                    {parseDuration(
-                      flights.reduce((min, f) => {
-                        const duration = f.itineraries[0].duration;
-                        return !min || duration < min ? duration : min;
-                      }, null)
-                    )}
+                    {flights
+                      .map((f) => f.itineraries[0].duration)
+                      .sort()[0]
+                      .replace("PT", "")
+                      .replace("H", "g ")
+                      .replace("M", "p")}
                   </div>
                 </div>
               </div>
-
               <div className="fs-stat-item">
-                <Check size={18} className="fs-stat-icon" />
+                <div className="fs-stat-icon">
+                  <Plane size={20} />
+                </div>
                 <div>
                   <div className="fs-stat-label">Bay thẳng</div>
                   <div className="fs-stat-value">
@@ -828,9 +796,9 @@ export default function FlightSearchPage() {
               </div>
             </div>
 
-            {sortedFlights.map((flight, idx) => (
+            {flights.map((flight) => (
               <FlightCard
-                key={idx}
+                key={flight.id}
                 flight={flight}
                 dictionaries={dictionaries}
                 onSelect={handleSelectFlight}
@@ -840,17 +808,15 @@ export default function FlightSearchPage() {
         )}
 
         {!loading && !error && flights.length === 0 && searchParams && (
-          <div className="fs-results">
-            <div className="fs-empty">
-              <Plane size={64} className="fs-empty-icon" />
-              <p>
-                Không tìm thấy chuyến bay phù hợp. Vui lòng thử tìm kiếm với
-                tiêu chí khác.
-              </p>
-            </div>
+          <div className="fs-empty">
+            <Plane size={80} className="fs-empty-icon" />
+            <h3>Không tìm thấy chuyến bay phù hợp</h3>
+            <p>Vui lòng thử thay đổi điều kiện tìm kiếm</p>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
-}
+};
+
+export default FlightSearchPage;

@@ -17,6 +17,8 @@ import Footer from "./components/layout/Footer";
 import ContactFloating from "./components/common/ContactFloating";
 import WeatherWidget from "./components/common/WeatherWidget";
 
+import FlightSearchPage from "./pages/FlightSearchPage";
+
 import Home from "./pages/Home";
 import DetailTour from "./pages/DetailTour";
 import Login from "./pages/Auth/Login";
@@ -98,7 +100,6 @@ import RolePermissionsAssignment from "./admin/pages/RolePermissionsAssignment";
 import RolesManagement from "./admin/pages/RolesManagement";
 
 import AdminAccountsManagement from "./admin/pages/admin-account/AdminAccountsManagement";
-import { User } from "lucide-react";
 
 // Component để xử lý hiển thị Header, Footer và ContactFloating có điều kiện
 function AppContent() {
@@ -130,6 +131,11 @@ function AppContent() {
           <Route path="/gallery/:categorySlug" element={<GalleryPage />} />
           <Route path="/gallery/detail/:slug" element={<GalleryDetailPage />} />
           <Route path="/shorts" element={<Shorts />} />
+
+          <Route
+            path="/service/tra-cuu-chuyen-bay"
+            element={<FlightSearchPage />}
+          />
           <Route
             path="/payment/momo/result"
             element={<MomoPaymentResultPage />}
